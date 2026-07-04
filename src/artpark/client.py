@@ -28,7 +28,7 @@ class Calibrate:
 
 
 
-        Defaults to CalibrateEnvironment.PRODUCTION
+        Defaults to CalibrateEnvironment.DEFAULT
 
 
 
@@ -72,7 +72,7 @@ class Calibrate:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
+        environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
         org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
@@ -154,7 +154,7 @@ class AsyncCalibrate:
 
 
 
-        Defaults to CalibrateEnvironment.PRODUCTION
+        Defaults to CalibrateEnvironment.DEFAULT
 
 
 
@@ -198,7 +198,7 @@ class AsyncCalibrate:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
+        environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
         org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,

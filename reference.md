@@ -38,7 +38,7 @@ from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agents.resolve(
@@ -118,7 +118,7 @@ from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agents.list()
@@ -190,7 +190,7 @@ from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.run(
@@ -288,7 +288,7 @@ from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.run_batch(
@@ -368,7 +368,7 @@ from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.get_run(
