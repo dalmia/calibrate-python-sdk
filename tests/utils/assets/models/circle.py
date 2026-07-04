@@ -4,7 +4,7 @@
 
 import typing_extensions
 
-from artpark.core.serialization import FieldMetadata
+from calibrate.core.serialization import FieldMetadata
 
 
 class CircleParams(typing_extensions.TypedDict):

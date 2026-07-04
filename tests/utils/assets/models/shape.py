@@ -8,7 +8,7 @@ import typing
 
 import typing_extensions
 
-from artpark.core.serialization import FieldMetadata
+from calibrate.core.serialization import FieldMetadata
 
 
 class Base(typing_extensions.TypedDict):

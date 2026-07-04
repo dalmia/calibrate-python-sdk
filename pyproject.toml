@@ -1,9 +1,9 @@
 [project]
-name = "calibrate-python-sdk"
+name = "calibrate-sdk"
 dynamic = ["version"]
 
 [tool.poetry]
-name = "calibrate-python-sdk"
+name = "calibrate-sdk"
 version = "0.0.1"
 description = ""
 readme = "README.md"
@@ -30,7 +30,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 packages = [
-    { include = "artpark", from = "src"}
+    { include = "calibrate", from = "src"}
 ]
 
 [tool.poetry.urls]

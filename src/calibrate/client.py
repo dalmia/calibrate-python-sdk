@@ -28,7 +28,7 @@ class Calibrate:
 
 
 
-        Defaults to CalibrateEnvironment.PRODUCTION
+        Defaults to CalibrateEnvironment.DEFAULT
 
 
 
@@ -60,7 +60,7 @@ class Calibrate:
 
     Examples
     --------
-    from artpark import Calibrate
+    from calibrate import Calibrate
 
     client = Calibrate(
         org_uuid="YOUR_ORG_UUID",
@@ -72,7 +72,7 @@ class Calibrate:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
+        environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
         org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
@@ -154,7 +154,7 @@ class AsyncCalibrate:
 
 
 
-        Defaults to CalibrateEnvironment.PRODUCTION
+        Defaults to CalibrateEnvironment.DEFAULT
 
 
 
@@ -186,7 +186,7 @@ class AsyncCalibrate:
 
     Examples
     --------
-    from artpark import AsyncCalibrate
+    from calibrate import AsyncCalibrate
 
     client = AsyncCalibrate(
         org_uuid="YOUR_ORG_UUID",
@@ -198,7 +198,7 @@ class AsyncCalibrate:
         self,
         *,
         base_url: typing.Optional[str] = None,
-        environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
+        environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
         org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,

@@ -1,6 +1,6 @@
 # Reference
 ## Agents
-<details><summary><code>client.agents.<a href="src/artpark/agents/client.py">resolve</a>(...) -> ResolveAgentNamesResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">resolve</a>(...) -> ResolveAgentNamesResponse</code></summary>
 <dl>
 <dd>
 
@@ -33,12 +33,12 @@ matching (non-deleted) agent in the org are returned under `not_found`.
 <dd>
 
 ```python
-from artpark import Calibrate
-from artpark.environment import CalibrateEnvironment
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agents.resolve(
@@ -81,7 +81,7 @@ client.agents.resolve(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/artpark/agents/client.py">list</a>() -> typing.List[RoutersAgentToolsAgentResponse]</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentTestsAgentResponse]</code></summary>
 <dl>
 <dd>
 
@@ -113,12 +113,12 @@ agent UUID in the org without knowing names up front (the run/poll and
 <dd>
 
 ```python
-from artpark import Calibrate
-from artpark.environment import CalibrateEnvironment
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agents.list()
@@ -150,7 +150,7 @@ client.agents.list()
 </details>
 
 ## AgentTests
-<details><summary><code>client.agent_tests.<a href="src/artpark/agent_tests/client.py">run</a>(...) -> TaskCreateResponse</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">run</a>(...) -> TaskCreateResponse</code></summary>
 <dl>
 <dd>
 
@@ -185,12 +185,12 @@ must belong to the caller's org or this 404s.
 <dd>
 
 ```python
-from artpark import Calibrate
-from artpark.environment import CalibrateEnvironment
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.run(
@@ -239,7 +239,7 @@ client.agent_tests.run(
 </dl>
 </details>
 
-<details><summary><code>client.agent_tests.<a href="src/artpark/agent_tests/client.py">run_batch</a>(...) -> BatchTestRunResponse</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">run_batch</a>(...) -> BatchTestRunResponse</code></summary>
 <dl>
 <dd>
 
@@ -283,12 +283,12 @@ Returns one ``runs`` entry per launched agent with ``agent_name``,
 <dd>
 
 ```python
-from artpark import Calibrate, BatchRunRequest
-from artpark.environment import CalibrateEnvironment
+from calibrate import Calibrate, BatchRunRequest
+from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.run_batch(
@@ -329,7 +329,7 @@ client.agent_tests.run_batch(
 </dl>
 </details>
 
-<details><summary><code>client.agent_tests.<a href="src/artpark/agent_tests/client.py">get_run</a>(...) -> TestRunStatusResponse</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">get_run</a>(...) -> TestRunStatusResponse</code></summary>
 <dl>
 <dd>
 
@@ -363,12 +363,12 @@ Returns the current status and, if done, the test results.
 <dd>
 
 ```python
-from artpark import Calibrate
-from artpark.environment import CalibrateEnvironment
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
     api_key="<value>",
-    environment=CalibrateEnvironment.PRODUCTION,
+    environment=CalibrateEnvironment.DEFAULT,
 )
 
 client.agent_tests.get_run(

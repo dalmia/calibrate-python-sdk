@@ -63,7 +63,7 @@ class AgentTestsClient:
 
         Examples
         --------
-        from artpark import Calibrate
+        from calibrate import Calibrate
 
         client = Calibrate(
             org_uuid="YOUR_ORG_UUID",
@@ -116,7 +116,7 @@ class AgentTestsClient:
 
         Examples
         --------
-        from artpark import BatchRunRequest, Calibrate
+        from calibrate import BatchRunRequest, Calibrate
 
         client = Calibrate(
             org_uuid="YOUR_ORG_UUID",
@@ -156,7 +156,7 @@ class AgentTestsClient:
 
         Examples
         --------
-        from artpark import Calibrate
+        from calibrate import Calibrate
 
         client = Calibrate(
             org_uuid="YOUR_ORG_UUID",
@@ -221,7 +221,7 @@ class AsyncAgentTestsClient:
         --------
         import asyncio
 
-        from artpark import AsyncCalibrate
+        from calibrate import AsyncCalibrate
 
         client = AsyncCalibrate(
             org_uuid="YOUR_ORG_UUID",
@@ -282,7 +282,7 @@ class AsyncAgentTestsClient:
         --------
         import asyncio
 
-        from artpark import AsyncCalibrate, BatchRunRequest
+        from calibrate import AsyncCalibrate, BatchRunRequest
 
         client = AsyncCalibrate(
             org_uuid="YOUR_ORG_UUID",
@@ -330,7 +330,7 @@ class AsyncAgentTestsClient:
         --------
         import asyncio
 
-        from artpark import AsyncCalibrate
+        from calibrate import AsyncCalibrate
 
         client = AsyncCalibrate(
             org_uuid="YOUR_ORG_UUID",
