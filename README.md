@@ -13,7 +13,7 @@ pip install calibrate-python-sdk
 ```python
 from calibrate_python_sdk import Calibrate
 
-client = Calibrate(api_key="sk_your_api_key") // get the API key from the UI
+client = Calibrate(api_key="sk_your_api_key") # get the API key from the UI
 
 agents = client.agents.list()
 ```
