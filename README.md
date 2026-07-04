@@ -13,9 +13,7 @@ pip install calibrate-python-sdk
 ```python
 from calibrate_python_sdk import Calibrate
 
-client = Calibrate(token="sk_your_api_key")
+client = Calibrate(api_key="sk_your_api_key") // get the API key from the UI
 
 agents = client.agents.list()
 ```
-
-This SDK is generated from Calibrate's public API with [Fern](https://buildwithfern.com).
