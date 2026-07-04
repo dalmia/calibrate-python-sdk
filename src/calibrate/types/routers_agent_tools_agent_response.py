@@ -6,13 +6,13 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .routers_agent_tests_agent_response_type import RoutersAgentTestsAgentResponseType
+from .routers_agent_tools_agent_response_type import RoutersAgentToolsAgentResponseType
 
 
-class RoutersAgentTestsAgentResponse(UniversalBaseModel):
+class RoutersAgentToolsAgentResponse(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid")]
     name: str
-    type: RoutersAgentTestsAgentResponseType
+    type: RoutersAgentToolsAgentResponseType
     config: typing.Optional[typing.Dict[str, typing.Any]] = None
     created_at: str
     updated_at: str

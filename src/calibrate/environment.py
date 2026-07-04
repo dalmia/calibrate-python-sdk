@@ -4,4 +4,4 @@ import enum
 
 
 class CalibrateEnvironment(enum.Enum):
-    DEFAULT = ""
+    DEFAULT = "https://pense-backend.artpark.ai"
