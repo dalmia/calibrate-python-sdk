@@ -1,0 +1,14 @@
+{
+  "cliVersion": "5.65.0",
+  "generatorName": "fernapi/fern-python-sdk",
+  "generatorVersion": "5.15.2",
+  "generatorConfig": {
+    "client_class_name": "Calibrate"
+  },
+  "originGitCommit": "b95d095ebe7740cf12a68a177230f558e544118b",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "ci",
+  "requestedVersion": "0.0.1",
+  "ciProvider": "github",
+  "sdkVersion": "0.0.1"
+}
