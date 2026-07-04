@@ -62,6 +62,18 @@ jobs:
           curl -sSL https://install.python-poetry.org | python - -y --version 1.5.1
       - name: Install dependencies
         run: poetry install
+      # Fern leaves [tool.poetry].description empty; patch before build/publish.
+      - name: Set PyPI package summary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("pyproject.toml")
+          text = path.read_text()
+          summary = "Python SDK for the Calibrate agent evaluation platform API."
+          needle = 'description = ""'
+          if needle in text:
+              path.write_text(text.replace(needle, f'description = "{summary}"', 1))
+          PY
       - name: Publish to pypi
         run: |
           poetry config repositories.remote https://upload.pypi.org/legacy/
