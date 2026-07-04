@@ -5,12 +5,18 @@ Python client for [Calibrate](https://calibrate.artpark.ai), a framework for eva
 ## Installation
 
 ```sh
-pip install calibrate-python-sdk
+pip install calibrate-sdk
+```
+
+Or with `uv`:
+
+```sh
+uv add calibrate-sdk
 ```
 
 ## Pre-requisites
 
-You need to have a Calibrate API key. You can get the API key from the [UI](https://calibrate.artpark.ai/settings/api-keys).
+You need to have a Calibrate API key. You can get the API key from the [UI](https://calibrate.artpark.ai/workspace-settings?tab=api-keys).
 
 ## Usage
 
