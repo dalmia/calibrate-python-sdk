@@ -32,9 +32,8 @@ class Calibrate:
 
 
 
-    api_key : typing.Optional[str]
     org_uuid : typing.Optional[str]
-    token : typing.Union[str, typing.Callable[[], str]]
+    api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
 
@@ -64,9 +63,8 @@ class Calibrate:
     from artpark import Calibrate
 
     client = Calibrate(
-        api_key="YOUR_API_KEY",
         org_uuid="YOUR_ORG_UUID",
-        token="YOUR_TOKEN",
+        api_key="YOUR_API_KEY",
     )
     """
 
@@ -75,9 +73,8 @@ class Calibrate:
         *,
         base_url: typing.Optional[str] = None,
         environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
-        api_key: typing.Optional[str] = None,
         org_uuid: typing.Optional[str] = None,
-        token: typing.Union[str, typing.Callable[[], str]],
+        api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         timeout: typing.Optional[float] = None,
         max_retries: typing.Optional[int] = None,
@@ -91,9 +88,8 @@ class Calibrate:
         _defaulted_max_retries = max_retries if max_retries is not None else 2
         self._client_wrapper = SyncClientWrapper(
             base_url=_get_base_url(base_url=base_url, environment=environment),
-            api_key=api_key,
             org_uuid=org_uuid,
-            token=token,
+            api_key=api_key,
             headers=headers,
             httpx_client=httpx_client
             if httpx_client is not None
@@ -162,14 +158,10 @@ class AsyncCalibrate:
 
 
 
-    api_key : typing.Optional[str]
     org_uuid : typing.Optional[str]
-    token : typing.Union[str, typing.Callable[[], str]]
+    api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
-
-    async_token : typing.Optional[typing.Callable[[], typing.Awaitable[str]]]
-        An async callable that returns a bearer token. Use this when token acquisition involves async I/O (e.g., refreshing tokens via an async HTTP client). When provided, this is used instead of the synchronous token for async requests.
 
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
@@ -197,9 +189,8 @@ class AsyncCalibrate:
     from artpark import AsyncCalibrate
 
     client = AsyncCalibrate(
-        api_key="YOUR_API_KEY",
         org_uuid="YOUR_ORG_UUID",
-        token="YOUR_TOKEN",
+        api_key="YOUR_API_KEY",
     )
     """
 
@@ -208,11 +199,9 @@ class AsyncCalibrate:
         *,
         base_url: typing.Optional[str] = None,
         environment: CalibrateEnvironment = CalibrateEnvironment.PRODUCTION,
-        api_key: typing.Optional[str] = None,
         org_uuid: typing.Optional[str] = None,
-        token: typing.Union[str, typing.Callable[[], str]],
+        api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
-        async_token: typing.Optional[typing.Callable[[], typing.Awaitable[str]]] = None,
         timeout: typing.Optional[float] = None,
         max_retries: typing.Optional[int] = None,
         stream_reconnection_enabled: typing.Optional[bool] = None,
@@ -225,11 +214,9 @@ class AsyncCalibrate:
         _defaulted_max_retries = max_retries if max_retries is not None else 2
         self._client_wrapper = AsyncClientWrapper(
             base_url=_get_base_url(base_url=base_url, environment=environment),
-            api_key=api_key,
             org_uuid=org_uuid,
-            token=token,
+            api_key=api_key,
             headers=headers,
-            async_token=async_token,
             httpx_client=httpx_client
             if httpx_client is not None
             else _make_default_async_client(timeout=_defaulted_timeout, follow_redirects=follow_redirects),

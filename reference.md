@@ -37,7 +37,7 @@ from artpark import Calibrate
 from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
-    token="<token>",
+    api_key="<value>",
     environment=CalibrateEnvironment.PRODUCTION,
 )
 
@@ -117,7 +117,7 @@ from artpark import Calibrate
 from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
-    token="<token>",
+    api_key="<value>",
     environment=CalibrateEnvironment.PRODUCTION,
 )
 
@@ -189,7 +189,7 @@ from artpark import Calibrate
 from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
-    token="<token>",
+    api_key="<value>",
     environment=CalibrateEnvironment.PRODUCTION,
 )
 
@@ -287,7 +287,7 @@ from artpark import Calibrate, BatchRunRequest
 from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
-    token="<token>",
+    api_key="<value>",
     environment=CalibrateEnvironment.PRODUCTION,
 )
 
@@ -367,7 +367,7 @@ from artpark import Calibrate
 from artpark.environment import CalibrateEnvironment
 
 client = Calibrate(
-    token="<token>",
+    api_key="<value>",
     environment=CalibrateEnvironment.PRODUCTION,
 )
 

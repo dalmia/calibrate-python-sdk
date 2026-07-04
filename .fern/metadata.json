@@ -5,10 +5,10 @@
   "generatorConfig": {
     "client_class_name": "Calibrate"
   },
-  "originGitCommit": "b95d095ebe7740cf12a68a177230f558e544118b",
+  "originGitCommit": "711adcc2b101a874ae52c6bd1b801594cda398ff",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
-  "requestedVersion": "0.0.1",
+  "requestedVersion": "0.0.2",
   "ciProvider": "github",
-  "sdkVersion": "0.0.1"
+  "sdkVersion": "0.0.2"
 }

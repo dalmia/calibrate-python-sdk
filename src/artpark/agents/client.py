@@ -56,9 +56,8 @@ class AgentsClient:
         from artpark import Calibrate
 
         client = Calibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
         client.agents.resolve(
             names=["names"],
@@ -93,9 +92,8 @@ class AgentsClient:
         from artpark import Calibrate
 
         client = Calibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
         client.agents.list()
         """
@@ -149,9 +147,8 @@ class AsyncAgentsClient:
         from artpark import AsyncCalibrate
 
         client = AsyncCalibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
 
 
@@ -194,9 +191,8 @@ class AsyncAgentsClient:
         from artpark import AsyncCalibrate
 
         client = AsyncCalibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
 
 

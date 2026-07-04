@@ -66,9 +66,8 @@ class AgentTestsClient:
         from artpark import Calibrate
 
         client = Calibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
         client.agent_tests.run(
             agent_uuid="agent_uuid",
@@ -120,9 +119,8 @@ class AgentTestsClient:
         from artpark import BatchRunRequest, Calibrate
 
         client = Calibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
         client.agent_tests.run_batch(
             request=BatchRunRequest(),
@@ -161,9 +159,8 @@ class AgentTestsClient:
         from artpark import Calibrate
 
         client = Calibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
         client.agent_tests.get_run(
             task_id="task_id",
@@ -227,9 +224,8 @@ class AsyncAgentTestsClient:
         from artpark import AsyncCalibrate
 
         client = AsyncCalibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
 
 
@@ -289,9 +285,8 @@ class AsyncAgentTestsClient:
         from artpark import AsyncCalibrate, BatchRunRequest
 
         client = AsyncCalibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
 
 
@@ -338,9 +333,8 @@ class AsyncAgentTestsClient:
         from artpark import AsyncCalibrate
 
         client = AsyncCalibrate(
-            api_key="YOUR_API_KEY",
             org_uuid="YOUR_ORG_UUID",
-            token="YOUR_TOKEN",
+            api_key="YOUR_API_KEY",
         )
 
 

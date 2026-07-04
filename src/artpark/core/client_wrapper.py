@@ -11,9 +11,8 @@ class BaseClientWrapper:
     def __init__(
         self,
         *,
-        api_key: typing.Optional[str] = None,
         org_uuid: typing.Optional[str] = None,
-        token: typing.Union[str, typing.Callable[[], str]],
+        api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
         timeout: typing.Optional[float] = None,
@@ -22,9 +21,8 @@ class BaseClientWrapper:
         max_stream_reconnection_attempts: typing.Optional[int] = None,
         logging: typing.Optional[typing.Union[LogConfig, Logger]] = None,
     ):
-        self._api_key = api_key
         self._org_uuid = org_uuid
-        self._token = token
+        self.api_key = api_key
         self._headers = headers
         self._base_url = base_url
         self._timeout = timeout
@@ -37,26 +35,18 @@ class BaseClientWrapper:
         import platform
 
         headers: typing.Dict[str, str] = {
-            "User-Agent": "calibrate-python-sdk/0.0.1",
+            "User-Agent": "calibrate-python-sdk/0.0.2",
             "X-Fern-Language": "Python",
             "X-Fern-Runtime": f"python/{platform.python_version()}",
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             "X-Fern-SDK-Name": "calibrate-python-sdk",
-            "X-Fern-SDK-Version": "0.0.1",
+            "X-Fern-SDK-Version": "0.0.2",
             **(self.get_custom_headers() or {}),
         }
-        if self._api_key is not None:
-            headers["X-API-Key"] = self._api_key
         if self._org_uuid is not None:
             headers["X-Org-UUID"] = self._org_uuid
-        headers["Authorization"] = f"Bearer {self._get_token()}"
+        headers["X-API-Key"] = self.api_key
         return headers
-
-    def _get_token(self) -> str:
-        if isinstance(self._token, str):
-            return self._token
-        else:
-            return self._token()
 
     def get_custom_headers(self) -> typing.Optional[typing.Dict[str, str]]:
         return self._headers
@@ -81,9 +71,8 @@ class SyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        api_key: typing.Optional[str] = None,
         org_uuid: typing.Optional[str] = None,
-        token: typing.Union[str, typing.Callable[[], str]],
+        api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
         timeout: typing.Optional[float] = None,
@@ -94,9 +83,8 @@ class SyncClientWrapper(BaseClientWrapper):
         httpx_client: httpx.Client,
     ):
         super().__init__(
-            api_key=api_key,
             org_uuid=org_uuid,
-            token=token,
+            api_key=api_key,
             headers=headers,
             base_url=base_url,
             timeout=timeout,
@@ -119,9 +107,8 @@ class AsyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        api_key: typing.Optional[str] = None,
         org_uuid: typing.Optional[str] = None,
-        token: typing.Union[str, typing.Callable[[], str]],
+        api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
         timeout: typing.Optional[float] = None,
@@ -133,9 +120,8 @@ class AsyncClientWrapper(BaseClientWrapper):
         httpx_client: httpx.AsyncClient,
     ):
         super().__init__(
-            api_key=api_key,
             org_uuid=org_uuid,
-            token=token,
+            api_key=api_key,
             headers=headers,
             base_url=base_url,
             timeout=timeout,
