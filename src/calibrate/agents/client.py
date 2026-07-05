@@ -5,7 +5,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agent_tests_agent_response import RoutersAgentTestsAgentResponse
+from ..types.routers_agent_tools_agent_response import RoutersAgentToolsAgentResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
 
 # this is used as the default value for optional parameters
@@ -68,7 +68,7 @@ class AgentsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsAgentResponse]:
+    ) -> typing.List[RoutersAgentToolsAgentResponse]:
         """
         List all agents for the caller's current org.
 
@@ -84,7 +84,7 @@ class AgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsAgentResponse]
+        typing.List[RoutersAgentToolsAgentResponse]
             Successful Response
 
         Examples
@@ -165,7 +165,7 @@ class AsyncAgentsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsAgentResponse]:
+    ) -> typing.List[RoutersAgentToolsAgentResponse]:
         """
         List all agents for the caller's current org.
 
@@ -181,7 +181,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsAgentResponse]
+        typing.List[RoutersAgentToolsAgentResponse]
             Successful Response
 
         Examples

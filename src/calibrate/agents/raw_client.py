@@ -12,7 +12,7 @@ from ..core.request_options import RequestOptions
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.http_validation_error import HttpValidationError
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agent_tests_agent_response import RoutersAgentTestsAgentResponse
+from ..types.routers_agent_tools_agent_response import RoutersAgentToolsAgentResponse
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -91,7 +91,7 @@ class RawAgentsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RoutersAgentTestsAgentResponse]]:
+    ) -> HttpResponse[typing.List[RoutersAgentToolsAgentResponse]]:
         """
         List all agents for the caller's current org.
 
@@ -107,7 +107,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersAgentTestsAgentResponse]]
+        HttpResponse[typing.List[RoutersAgentToolsAgentResponse]]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -118,9 +118,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentTestsAgentResponse],
+                    typing.List[RoutersAgentToolsAgentResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentTestsAgentResponse],  # type: ignore
+                        type_=typing.List[RoutersAgentToolsAgentResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -218,7 +218,7 @@ class AsyncRawAgentsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RoutersAgentTestsAgentResponse]]:
+    ) -> AsyncHttpResponse[typing.List[RoutersAgentToolsAgentResponse]]:
         """
         List all agents for the caller's current org.
 
@@ -234,7 +234,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersAgentTestsAgentResponse]]
+        AsyncHttpResponse[typing.List[RoutersAgentToolsAgentResponse]]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -245,9 +245,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentTestsAgentResponse],
+                    typing.List[RoutersAgentToolsAgentResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentTestsAgentResponse],  # type: ignore
+                        type_=typing.List[RoutersAgentToolsAgentResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
