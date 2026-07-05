@@ -1,15 +1,20 @@
-# Artpark Python Library
+# Calibrate Python Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fdalmia%2Fcalibrate-python-sdk)
 [![pypi](https://img.shields.io/pypi/v/calibrate-sdk)](https://pypi.python.org/pypi/calibrate-sdk)
 
-The Artpark Python library provides convenient access to the Artpark APIs from Python.
+The Calibrate Python SDK provides convenient, typed access to the Calibrate
+agent evaluation platform API. Authenticate with an API key (`sk_…`) scoped
+to your organization to run agent tests and poll their results.
+
 
 ## Table of Contents
 
+- [Documentation](#documentation)
 - [Installation](#installation)
 - [Pre Requisites](#pre-requisites)
 - [Reference](#reference)
+- [Quick Start](#quick-start)
 - [Usage](#usage)
 - [Environments](#environments)
 - [Async Client](#async-client)
@@ -19,7 +24,10 @@ The Artpark Python library provides convenient access to the Artpark APIs from P
   - [Retries](#retries)
   - [Timeouts](#timeouts)
   - [Custom Client](#custom-client)
-- [Contributing](#contributing)
+
+## Documentation
+
+API reference documentation is available [here](${PUBLIC_API_BASE_URL}/public-api/docs).
 
 ## Installation
 
@@ -34,6 +42,22 @@ You need to have a Calibrate API key. You can get the API key from the [UI](http
 ## Reference
 
 A full reference for this library is available [here](https://github.com/dalmia/calibrate-python-sdk/blob/HEAD/./reference.md).
+
+## Quick Start
+
+```python
+from calibrate import Calibrate
+
+client = Calibrate(api_key="sk_...")
+
+# List the agents in your organization
+agents = client.agents.list()
+
+# Kick off a test run for an agent and poll for the result
+run = client.agent_tests.run(agent_uuid="<agent-uuid>")
+result = client.agent_tests.get_run(task_id=run.task_id)
+```
+
 
 ## Usage
 
@@ -186,12 +210,3 @@ client = Calibrate(
 )
 ```
 
-## Contributing
-
-While we value open-source contributions to this SDK, this library is generated programmatically.
-Additions made directly to this library would have to be moved over to our generation code,
-otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
-a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
-an issue first to discuss with us!
-
-On the other hand, contributions to the README are always very welcome!
