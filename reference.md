@@ -81,7 +81,7 @@ client.agents.resolve(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentToolsAgentResponse]</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentTestsAgentResponse]</code></summary>
 <dl>
 <dd>
 

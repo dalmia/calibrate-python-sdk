@@ -13,8 +13,8 @@ if typing.TYPE_CHECKING:
     from .http_validation_error import HttpValidationError
     from .judge_result import JudgeResult
     from .resolve_agent_names_response import ResolveAgentNamesResponse
-    from .routers_agent_tools_agent_response import RoutersAgentToolsAgentResponse
-    from .routers_agent_tools_agent_response_type import RoutersAgentToolsAgentResponseType
+    from .routers_agent_tests_agent_response import RoutersAgentTestsAgentResponse
+    from .routers_agent_tests_agent_response_type import RoutersAgentTestsAgentResponseType
     from .task_create_response import TaskCreateResponse
     from .test_case_result import TestCaseResult
     from .test_output import TestOutput
@@ -30,8 +30,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "HttpValidationError": ".http_validation_error",
     "JudgeResult": ".judge_result",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
-    "RoutersAgentToolsAgentResponse": ".routers_agent_tools_agent_response",
-    "RoutersAgentToolsAgentResponseType": ".routers_agent_tools_agent_response_type",
+    "RoutersAgentTestsAgentResponse": ".routers_agent_tests_agent_response",
+    "RoutersAgentTestsAgentResponseType": ".routers_agent_tests_agent_response_type",
     "TaskCreateResponse": ".task_create_response",
     "TestCaseResult": ".test_case_result",
     "TestOutput": ".test_output",
@@ -71,8 +71,8 @@ __all__ = [
     "HttpValidationError",
     "JudgeResult",
     "ResolveAgentNamesResponse",
-    "RoutersAgentToolsAgentResponse",
-    "RoutersAgentToolsAgentResponseType",
+    "RoutersAgentTestsAgentResponse",
+    "RoutersAgentTestsAgentResponseType",
     "TaskCreateResponse",
     "TestCaseResult",
     "TestOutput",
