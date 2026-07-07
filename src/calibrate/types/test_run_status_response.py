@@ -18,7 +18,7 @@ class TestRunStatusResponse(UniversalBaseModel):
 
     status: TaskStatus = pydantic.Field()
     """
-    Current status: `queued`, `in_progress`, `done`, or `failed`
+    Current status of the test run
     """
 
     total_tests: typing.Optional[int] = pydantic.Field(default=None)

@@ -4,7 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .task_status import TaskStatus
+from .batch_test_run_status import BatchTestRunStatus
 
 
 class BatchTestRun(UniversalBaseModel):
@@ -23,9 +23,9 @@ class BatchTestRun(UniversalBaseModel):
     Test run job ID. Poll for status and results
     """
 
-    status: TaskStatus = pydantic.Field()
+    status: BatchTestRunStatus = pydantic.Field()
     """
-    Initial status: `queued` or `in_progress`
+    Initial status of the test run
     """
 
     if IS_PYDANTIC_V2:

@@ -8,9 +8,11 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .agent_create_response import AgentCreateResponse
     from .agent_test_run_create_response import AgentTestRunCreateResponse
+    from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
     from .batch_run_request import BatchRunRequest
     from .batch_test_run import BatchTestRun
     from .batch_test_run_response import BatchTestRunResponse
+    from .batch_test_run_status import BatchTestRunStatus
     from .batch_test_skip import BatchTestSkip
     from .bulk_test_item import BulkTestItem
     from .bulk_test_upload_response import BulkTestUploadResponse
@@ -36,9 +38,11 @@ if typing.TYPE_CHECKING:
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".agent_create_response",
     "AgentTestRunCreateResponse": ".agent_test_run_create_response",
+    "AgentTestRunCreateResponseStatus": ".agent_test_run_create_response_status",
     "BatchRunRequest": ".batch_run_request",
     "BatchTestRun": ".batch_test_run",
     "BatchTestRunResponse": ".batch_test_run_response",
+    "BatchTestRunStatus": ".batch_test_run_status",
     "BatchTestSkip": ".batch_test_skip",
     "BulkTestItem": ".bulk_test_item",
     "BulkTestUploadResponse": ".bulk_test_upload_response",
@@ -88,9 +92,11 @@ def __dir__():
 __all__ = [
     "AgentCreateResponse",
     "AgentTestRunCreateResponse",
+    "AgentTestRunCreateResponseStatus",
     "BatchRunRequest",
     "BatchTestRun",
     "BatchTestRunResponse",
+    "BatchTestRunStatus",
     "BatchTestSkip",
     "BulkTestItem",
     "BulkTestUploadResponse",

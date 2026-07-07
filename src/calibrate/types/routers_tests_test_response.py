@@ -20,7 +20,7 @@ class RoutersTestsTestResponse(UniversalBaseModel):
 
     type: RoutersTestsTestResponseType = pydantic.Field()
     """
-    Test kind: `response`, `tool_call`, or `conversation`
+    Test kind
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)

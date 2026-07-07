@@ -4,7 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .task_status import TaskStatus
+from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
 
 
 class AgentTestRunCreateResponse(UniversalBaseModel):
@@ -13,9 +13,9 @@ class AgentTestRunCreateResponse(UniversalBaseModel):
     Test run job ID. Poll for status and results
     """
 
-    status: TaskStatus = pydantic.Field()
+    status: AgentTestRunCreateResponseStatus = pydantic.Field()
     """
-    Current status of the test run: `queued` or `in_progress`
+    Current status of the test run
     """
 
     if IS_PYDANTIC_V2:
