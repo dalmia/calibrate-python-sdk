@@ -35,12 +35,12 @@ class RawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[AgentTestRunCreateResponse]:
         """
-        Run tests for an agent as a background job.
+        Run an agent's linked tests as a background job, returning a task ID to poll
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test. Must be in your workspace.
+            The agent to test.
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -102,7 +102,7 @@ class RawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[BatchTestRunResponse]:
         """
-        Run agent tests for every agent in your workspace, or for a selected set.
+        Run agent tests for every agent, or for a selected set
 
         Parameters
         ----------
@@ -159,7 +159,7 @@ class RawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[TestRunStatusResponse]:
         """
-        Get the status and results of a test run.
+        Poll a test run for its status and evaluation results
 
         Parameters
         ----------
@@ -222,12 +222,12 @@ class AsyncRawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[AgentTestRunCreateResponse]:
         """
-        Run tests for an agent as a background job.
+        Run an agent's linked tests as a background job, returning a task ID to poll
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test. Must be in your workspace.
+            The agent to test.
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -289,7 +289,7 @@ class AsyncRawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[BatchTestRunResponse]:
         """
-        Run agent tests for every agent in your workspace, or for a selected set.
+        Run agent tests for every agent, or for a selected set
 
         Parameters
         ----------
@@ -346,7 +346,7 @@ class AsyncRawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[TestRunStatusResponse]:
         """
-        Get the status and results of a test run.
+        Poll a test run for its status and evaluation results
 
         Parameters
         ----------

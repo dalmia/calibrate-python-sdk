@@ -12,7 +12,7 @@ from .routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
 class BulkTestItem(UniversalBaseModel):
     name: str = pydantic.Field()
     """
-    Test name, unique within the batch
+    Name of the test, unique within the workspace and within the batch
     """
 
     conversation_history: typing.List[ChatMessage] = pydantic.Field()
@@ -22,7 +22,7 @@ class BulkTestItem(UniversalBaseModel):
 
     evaluators: typing.Optional[typing.List[RoutersTestsEvaluatorRef]] = pydantic.Field(default=None)
     """
-    Evaluators to link. **Required for `response`/`conversation` batches**
+    Evaluators to link. Used by `response` and `conversation` tests
     """
 
     tool_calls: typing.Optional[typing.List[ExpectedToolCall]] = pydantic.Field(default=None)

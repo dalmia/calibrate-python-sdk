@@ -19,7 +19,7 @@ class BulkTestUploadResponse(UniversalBaseModel):
 
     message: str = pydantic.Field()
     """
-    Human-readable confirmation message
+    Confirmation message
     """
 
     warnings: typing.Optional[typing.List[str]] = pydantic.Field(default=None)

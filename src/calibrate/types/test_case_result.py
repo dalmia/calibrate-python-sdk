@@ -11,12 +11,12 @@ from .test_output import TestOutput
 class TestCaseResult(UniversalBaseModel):
     test_case_id: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Identifier of the test case within the run
+    ID of the test case within the run
     """
 
     name: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Test name; present during in-progress and done states
+    Name of the test
     """
 
     passed: typing.Optional[bool] = pydantic.Field(default=None)
@@ -26,7 +26,7 @@ class TestCaseResult(UniversalBaseModel):
 
     reasoning: typing.Optional[str] = pydantic.Field(default=None)
     """
-    LLM judge reasoning or deterministic tool-call diff; null for passing tool-call tests
+    Judge reasoning, or the tool-call diff for tool-call tests
     """
 
     output: typing.Optional[TestOutput] = pydantic.Field(default=None)
@@ -41,17 +41,17 @@ class TestCaseResult(UniversalBaseModel):
 
     judge_results: typing.Optional[typing.List[JudgeResult]] = pydantic.Field(default=None)
     """
-    Per-evaluator verdicts for response/conversation tests; null for tool-call tests or in-progress rows
+    One verdict per evaluator, for response and conversation tests. Null for tool-call tests or rows still running
     """
 
     latency_ms: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Response-generation latency in ms for the agent under test (not the judge). Present only for live runs; null for in-progress and eval-only runs. Float, since external agents may self-report a fractional value
+    Response latency in milliseconds for the agent under test
     """
 
     cost: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Per-case cost in USD, lifted from calibrate's nested `output.cost`. Null when the provider/agent reports none (e.g. `--provider openai`)
+    Cost of this case in USD
     """
 
     if IS_PYDANTIC_V2:

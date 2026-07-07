@@ -31,6 +31,8 @@ if typing.TYPE_CHECKING:
     from .test_case_result import TestCaseResult
     from .test_create_response import TestCreateResponse
     from .test_output import TestOutput
+    from .test_run_evaluator import TestRunEvaluator
+    from .test_run_evaluator_output_type import TestRunEvaluatorOutputType
     from .test_run_status_response import TestRunStatusResponse
     from .tool_call_output import ToolCallOutput
     from .validation_error import ValidationError
@@ -61,6 +63,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestCaseResult": ".test_case_result",
     "TestCreateResponse": ".test_create_response",
     "TestOutput": ".test_output",
+    "TestRunEvaluator": ".test_run_evaluator",
+    "TestRunEvaluatorOutputType": ".test_run_evaluator_output_type",
     "TestRunStatusResponse": ".test_run_status_response",
     "ToolCallOutput": ".tool_call_output",
     "ValidationError": ".validation_error",
@@ -115,6 +119,8 @@ __all__ = [
     "TestCaseResult",
     "TestCreateResponse",
     "TestOutput",
+    "TestRunEvaluator",
+    "TestRunEvaluatorOutputType",
     "TestRunStatusResponse",
     "ToolCallOutput",
     "ValidationError",

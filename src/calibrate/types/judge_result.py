@@ -9,7 +9,7 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 class JudgeResult(UniversalBaseModel):
     evaluator_uuid: typing.Optional[str] = pydantic.Field(default=None)
     """
-    ID of the evaluator that produced this verdict; null for legacy runs or when the evaluator can't be resolved from the snapshot
+    ID of the evaluator that produced this verdict
     """
 
     reasoning: typing.Optional[str] = pydantic.Field(default=None)
@@ -19,22 +19,22 @@ class JudgeResult(UniversalBaseModel):
 
     match: typing.Optional[bool] = pydantic.Field(default=None)
     """
-    Binary evaluator pass/fail. **Set only for binary evaluators** (else null; `score` is set instead)
+    Pass/fail verdict, for binary evaluators
     """
 
     score: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Rating evaluator numeric score. **Set only for rating evaluators** (else null; `match` is set instead)
+    Numeric score, for rating evaluators
     """
 
     value_name: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Human-readable label for `match`/`score` resolved against the run's rubric. Falls back to `Correct`/`Wrong` (binary) or the stringified score (rating) when the snapshot lacks named scale entries
+    Readable label for the verdict, from the run's rubric
     """
 
     variable_values: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    `{{var}}` substitutions used for this evaluator on this test case, frozen at submission time; null when none
+    `{{var}}` substitutions used for this evaluator on this test case
     """
 
     if IS_PYDANTIC_V2:

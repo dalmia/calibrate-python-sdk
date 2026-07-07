@@ -14,7 +14,7 @@ class TestCreateResponse(UniversalBaseModel):
     ]
     message: str = pydantic.Field()
     """
-    Human-readable confirmation message
+    Confirmation message
     """
 
     if IS_PYDANTIC_V2:

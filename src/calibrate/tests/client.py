@@ -43,12 +43,18 @@ class TestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BulkTestUploadResponse:
         """
-        Create many tests of one type in a single call, optionally linking them to agents.
+        Create many test cases at once and link them to your agents
 
         Parameters
         ----------
         type : BulkTestUploadType
-            Test kind applied to every item in the batch
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
+
+            Applied to every test in the batch.
 
         tests : typing.Sequence[BulkTestItem]
             Test items to create (non-empty, max 500 per request, names unique within the batch)
@@ -82,7 +88,7 @@ class TestsClient:
                     name="name",
                     conversation_history=[
                         ChatMessage(
-                            role="system",
+                            role="user",
                         )
                     ],
                 )
@@ -96,7 +102,7 @@ class TestsClient:
 
     def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RoutersTestsTestResponse]:
         """
-        List all tests for your workspace, each with its linked evaluators.
+        List all the test cases for your agents
 
         Parameters
         ----------
@@ -131,21 +137,72 @@ class TestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TestCreateResponse:
         """
-        Create a test in your workspace.
+        Create a test that runs your agent against a conversation and evaluates its answer quality or the tools it calls
 
         Parameters
         ----------
         name : str
-            Human-readable test name, unique within the workspace
+            Name of the test, unique within the workspace
 
         type : TestCreateType
-            Test kind (immutable after creation): `response` judges the generated reply, `tool_call` diffs generated tool calls, `conversation` judges the full conversation
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Calibrate test config (`history`, `evaluation`, optional `settings`). Omit to create an empty shell to fill in later
+            The calibrate test config. Three top-level keys.
+
+            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
+            - `settings` (object, optional): e.g. `{"language": "en"}`.
+
+            `evaluation` by test type:
+            - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
+            - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
+            - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+
+            For `tool_call`, each expected argument value is one of:
+            - `{"match_type": "exact", "value": <any>}`: must equal `value`
+            - `{"match_type": "llm_judge", "criteria": "..."}`: judged against the criteria
+            - `{"match_type": "any"}`: any value, only checks the argument was passed
+
+            `response` / `conversation` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "What is your return policy?"}],
+              "evaluation": {"type": "response"},
+              "settings": {"language": "en"}
+            }
+            ```
+
+            `tool_call` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
+              "evaluation": {
+                "type": "tool_call",
+                "tool_calls": [
+                  {
+                    "tool": "book_room",
+                    "arguments": {
+                      "room": {"match_type": "exact", "value": "101"},
+                      "date": {"match_type": "llm_judge", "criteria": "tomorrow's date"}
+                    },
+                    "accept_any_arguments": false
+                  }
+                ]
+              }
+            }
+            ```
+
+            Evaluators are linked via the separate `evaluators` field, not inside `config`.
+
+            Omit to create the test with no config and fill it in later via update.
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
-            Evaluators to link. **Required (>=1) for `type=conversation`** (no fallback judge). Omit for `response`/`tool_call` to link none
+            Evaluators to link. Used by `response` and `conversation` tests
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -177,7 +234,7 @@ class TestsClient:
         self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> RoutersTestsTestResponse:
         """
-        Get a test by ID, including its linked evaluators.
+        Get an agent test case by its ID
 
         Parameters
         ----------
@@ -218,7 +275,7 @@ class TestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> RoutersTestsTestResponse:
         """
-        Update a test's name, config, and/or evaluator links.
+        Update an agent test case
 
         Parameters
         ----------
@@ -229,13 +286,66 @@ class TestsClient:
             New test name. Omit to leave unchanged
 
         type : typing.Optional[TestUpdateType]
-            Test type. Immutable — may only echo the existing value; a different value is rejected (400). Omit to leave unchanged
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
+
+            Immutable. Omit, or send the existing value. A different value is rejected (400).
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement calibrate config. Omit to leave unchanged
+            The calibrate test config. Three top-level keys.
+
+            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
+            - `settings` (object, optional): e.g. `{"language": "en"}`.
+
+            `evaluation` by test type:
+            - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
+            - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
+            - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+
+            For `tool_call`, each expected argument value is one of:
+            - `{"match_type": "exact", "value": <any>}`: must equal `value`
+            - `{"match_type": "llm_judge", "criteria": "..."}`: judged against the criteria
+            - `{"match_type": "any"}`: any value, only checks the argument was passed
+
+            `response` / `conversation` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "What is your return policy?"}],
+              "evaluation": {"type": "response"},
+              "settings": {"language": "en"}
+            }
+            ```
+
+            `tool_call` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
+              "evaluation": {
+                "type": "tool_call",
+                "tool_calls": [
+                  {
+                    "tool": "book_room",
+                    "arguments": {
+                      "room": {"match_type": "exact", "value": "101"},
+                      "date": {"match_type": "llm_judge", "criteria": "tomorrow's date"}
+                    },
+                    "accept_any_arguments": false
+                  }
+                ]
+              }
+            }
+            ```
+
+            Evaluators are linked via the separate `evaluators` field, not inside `config`.
+
+            Replaces the stored config. Omit to leave unchanged.
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
-            Replacement evaluator links (replaces the existing set). Omit to leave links unchanged; an empty list clears them (**rejected for `conversation` tests**)
+            New evaluator links for the test. Omit to leave unchanged. An empty list clears them, except on `conversation` tests, which must keep at least one
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -288,12 +398,18 @@ class AsyncTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BulkTestUploadResponse:
         """
-        Create many tests of one type in a single call, optionally linking them to agents.
+        Create many test cases at once and link them to your agents
 
         Parameters
         ----------
         type : BulkTestUploadType
-            Test kind applied to every item in the batch
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
+
+            Applied to every test in the batch.
 
         tests : typing.Sequence[BulkTestItem]
             Test items to create (non-empty, max 500 per request, names unique within the batch)
@@ -332,7 +448,7 @@ class AsyncTestsClient:
                         name="name",
                         conversation_history=[
                             ChatMessage(
-                                role="system",
+                                role="user",
                             )
                         ],
                     )
@@ -351,7 +467,7 @@ class AsyncTestsClient:
         self, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.List[RoutersTestsTestResponse]:
         """
-        List all tests for your workspace, each with its linked evaluators.
+        List all the test cases for your agents
 
         Parameters
         ----------
@@ -394,21 +510,72 @@ class AsyncTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TestCreateResponse:
         """
-        Create a test in your workspace.
+        Create a test that runs your agent against a conversation and evaluates its answer quality or the tools it calls
 
         Parameters
         ----------
         name : str
-            Human-readable test name, unique within the workspace
+            Name of the test, unique within the workspace
 
         type : TestCreateType
-            Test kind (immutable after creation): `response` judges the generated reply, `tool_call` diffs generated tool calls, `conversation` judges the full conversation
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Calibrate test config (`history`, `evaluation`, optional `settings`). Omit to create an empty shell to fill in later
+            The calibrate test config. Three top-level keys.
+
+            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
+            - `settings` (object, optional): e.g. `{"language": "en"}`.
+
+            `evaluation` by test type:
+            - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
+            - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
+            - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+
+            For `tool_call`, each expected argument value is one of:
+            - `{"match_type": "exact", "value": <any>}`: must equal `value`
+            - `{"match_type": "llm_judge", "criteria": "..."}`: judged against the criteria
+            - `{"match_type": "any"}`: any value, only checks the argument was passed
+
+            `response` / `conversation` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "What is your return policy?"}],
+              "evaluation": {"type": "response"},
+              "settings": {"language": "en"}
+            }
+            ```
+
+            `tool_call` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
+              "evaluation": {
+                "type": "tool_call",
+                "tool_calls": [
+                  {
+                    "tool": "book_room",
+                    "arguments": {
+                      "room": {"match_type": "exact", "value": "101"},
+                      "date": {"match_type": "llm_judge", "criteria": "tomorrow's date"}
+                    },
+                    "accept_any_arguments": false
+                  }
+                ]
+              }
+            }
+            ```
+
+            Evaluators are linked via the separate `evaluators` field, not inside `config`.
+
+            Omit to create the test with no config and fill it in later via update.
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
-            Evaluators to link. **Required (>=1) for `type=conversation`** (no fallback judge). Omit for `response`/`tool_call` to link none
+            Evaluators to link. Used by `response` and `conversation` tests
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -448,7 +615,7 @@ class AsyncTestsClient:
         self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> RoutersTestsTestResponse:
         """
-        Get a test by ID, including its linked evaluators.
+        Get an agent test case by its ID
 
         Parameters
         ----------
@@ -497,7 +664,7 @@ class AsyncTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> RoutersTestsTestResponse:
         """
-        Update a test's name, config, and/or evaluator links.
+        Update an agent test case
 
         Parameters
         ----------
@@ -508,13 +675,66 @@ class AsyncTestsClient:
             New test name. Omit to leave unchanged
 
         type : typing.Optional[TestUpdateType]
-            Test type. Immutable — may only echo the existing value; a different value is rejected (400). Omit to leave unchanged
+            What the test judges:
+
+            - `response`: judges the generated reply
+            - `tool_call`: diffs the generated tool calls
+            - `conversation`: judges the full conversation
+
+            Immutable. Omit, or send the existing value. A different value is rejected (400).
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement calibrate config. Omit to leave unchanged
+            The calibrate test config. Three top-level keys.
+
+            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
+            - `settings` (object, optional): e.g. `{"language": "en"}`.
+
+            `evaluation` by test type:
+            - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
+            - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
+            - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+
+            For `tool_call`, each expected argument value is one of:
+            - `{"match_type": "exact", "value": <any>}`: must equal `value`
+            - `{"match_type": "llm_judge", "criteria": "..."}`: judged against the criteria
+            - `{"match_type": "any"}`: any value, only checks the argument was passed
+
+            `response` / `conversation` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "What is your return policy?"}],
+              "evaluation": {"type": "response"},
+              "settings": {"language": "en"}
+            }
+            ```
+
+            `tool_call` example:
+            ```json
+            {
+              "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
+              "evaluation": {
+                "type": "tool_call",
+                "tool_calls": [
+                  {
+                    "tool": "book_room",
+                    "arguments": {
+                      "room": {"match_type": "exact", "value": "101"},
+                      "date": {"match_type": "llm_judge", "criteria": "tomorrow's date"}
+                    },
+                    "accept_any_arguments": false
+                  }
+                ]
+              }
+            }
+            ```
+
+            Evaluators are linked via the separate `evaluators` field, not inside `config`.
+
+            Replaces the stored config. Omit to leave unchanged.
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
-            Replacement evaluator links (replaces the existing set). Omit to leave links unchanged; an empty list clears them (**rejected for `conversation` tests**)
+            New evaluator links for the test. Omit to leave unchanged. An empty list clears them, except on `conversation` tests, which must keep at least one
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

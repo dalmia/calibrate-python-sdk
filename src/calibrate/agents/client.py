@@ -33,7 +33,7 @@ class AgentsClient:
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
     ) -> ResolveAgentNamesResponse:
         """
-        Resolve agent names to their IDs.
+        Get the IDs for your agents by their names
 
         Parameters
         ----------
@@ -67,7 +67,7 @@ class AgentsClient:
         self, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.List[RoutersAgentsAgentResponse]:
         """
-        List all agents in your workspace.
+        Get the list of all your agents
 
         Parameters
         ----------
@@ -101,18 +101,53 @@ class AgentsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentCreateResponse:
         """
-        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+        Create an agent to test inside Calibrate or connect your existing agent to Calibrate
 
         Parameters
         ----------
         name : str
-            Human-readable agent name, unique within the workspace
+            Agent name, unique within the workspace
 
         type : typing.Optional[AgentCreateType]
-            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+            - `agent`: built inside Calibrate
+            - `connection`: your existing agent connected to Calibrate
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+            Agent behavioral config. The keys depend on `type`.
+
+            **`type=agent`** (built inside Calibrate):
+            - `system_prompt` (string): the agent's instructions
+            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
+            - `system_tools.end_call` (bool, optional): let the agent end the call
+            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+
+            ```json
+            {
+              "system_prompt": "You are a helpful support agent.",
+              "llm": {"model": "openai/gpt-4.1"},
+              "stt": {"provider": "deepgram"},
+              "tts": {"provider": "elevenlabs"},
+              "settings": {"agent_speaks_first": true, "max_assistant_turns": 50}
+            }
+            ```
+
+            **`type=connection`** (your own HTTP endpoint):
+            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
+            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
+            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+
+            ```json
+            {
+              "agent_url": "https://api.example.com/agent",
+              "agent_headers": {"Authorization": "Bearer <token>"},
+              "benchmark_provider": "openrouter"
+            }
+            ```
+
+            For `type=agent`, omitted keys inherit managed defaults (omit `config` entirely to use all defaults). For `type=connection`, `config` is stored as-is and must contain `agent_url`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -141,12 +176,12 @@ class AgentsClient:
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> RoutersAgentsAgentResponse:
         """
-        Get an agent in your workspace.
+        Get one agent by its ID
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to retrieve. Must be in your workspace.
+            The agent to retrieve.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -177,29 +212,57 @@ class AgentsClient:
         *,
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
-        connection_verified: typing.Optional[bool] = OMIT,
-        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> RoutersAgentsAgentResponse:
         """
-        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+        Update an agent's configuration
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to update. Must be in your workspace.
+            The agent to update.
 
         name : typing.Optional[str]
             New agent name. Omit to leave the name unchanged
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+            Agent behavioral config. The keys depend on `type`.
 
-        connection_verified : typing.Optional[bool]
-            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
+            **`type=agent`** (built inside Calibrate):
+            - `system_prompt` (string): the agent's instructions
+            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
+            - `system_tools.end_call` (bool, optional): let the agent end the call
+            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
 
-        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
-            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+            ```json
+            {
+              "system_prompt": "You are a helpful support agent.",
+              "llm": {"model": "openai/gpt-4.1"},
+              "stt": {"provider": "deepgram"},
+              "tts": {"provider": "elevenlabs"},
+              "settings": {"agent_speaks_first": true, "max_assistant_turns": 50}
+            }
+            ```
+
+            **`type=connection`** (your own HTTP endpoint):
+            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
+            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
+            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+
+            ```json
+            {
+              "agent_url": "https://api.example.com/agent",
+              "agent_headers": {"Authorization": "Bearer <token>"},
+              "benchmark_provider": "openrouter"
+            }
+            ```
+
+            Replaces the stored config. Omit to leave unchanged.
+
+            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -221,14 +284,7 @@ class AgentsClient:
             agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
         )
         """
-        _response = self._raw_client.update(
-            agent_uuid,
-            name=name,
-            config=config,
-            connection_verified=connection_verified,
-            benchmark_models_verified=benchmark_models_verified,
-            request_options=request_options,
-        )
+        _response = self._raw_client.update(agent_uuid, name=name, config=config, request_options=request_options)
         return _response.data
 
 
@@ -251,7 +307,7 @@ class AsyncAgentsClient:
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
     ) -> ResolveAgentNamesResponse:
         """
-        Resolve agent names to their IDs.
+        Get the IDs for your agents by their names
 
         Parameters
         ----------
@@ -293,7 +349,7 @@ class AsyncAgentsClient:
         self, *, request_options: typing.Optional[RequestOptions] = None
     ) -> typing.List[RoutersAgentsAgentResponse]:
         """
-        List all agents in your workspace.
+        Get the list of all your agents
 
         Parameters
         ----------
@@ -335,18 +391,53 @@ class AsyncAgentsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentCreateResponse:
         """
-        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+        Create an agent to test inside Calibrate or connect your existing agent to Calibrate
 
         Parameters
         ----------
         name : str
-            Human-readable agent name, unique within the workspace
+            Agent name, unique within the workspace
 
         type : typing.Optional[AgentCreateType]
-            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+            - `agent`: built inside Calibrate
+            - `connection`: your existing agent connected to Calibrate
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+            Agent behavioral config. The keys depend on `type`.
+
+            **`type=agent`** (built inside Calibrate):
+            - `system_prompt` (string): the agent's instructions
+            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
+            - `system_tools.end_call` (bool, optional): let the agent end the call
+            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+
+            ```json
+            {
+              "system_prompt": "You are a helpful support agent.",
+              "llm": {"model": "openai/gpt-4.1"},
+              "stt": {"provider": "deepgram"},
+              "tts": {"provider": "elevenlabs"},
+              "settings": {"agent_speaks_first": true, "max_assistant_turns": 50}
+            }
+            ```
+
+            **`type=connection`** (your own HTTP endpoint):
+            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
+            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
+            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+
+            ```json
+            {
+              "agent_url": "https://api.example.com/agent",
+              "agent_headers": {"Authorization": "Bearer <token>"},
+              "benchmark_provider": "openrouter"
+            }
+            ```
+
+            For `type=agent`, omitted keys inherit managed defaults (omit `config` entirely to use all defaults). For `type=connection`, `config` is stored as-is and must contain `agent_url`.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -383,12 +474,12 @@ class AsyncAgentsClient:
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> RoutersAgentsAgentResponse:
         """
-        Get an agent in your workspace.
+        Get one agent by its ID
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to retrieve. Must be in your workspace.
+            The agent to retrieve.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -427,29 +518,57 @@ class AsyncAgentsClient:
         *,
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
-        connection_verified: typing.Optional[bool] = OMIT,
-        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> RoutersAgentsAgentResponse:
         """
-        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+        Update an agent's configuration
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to update. Must be in your workspace.
+            The agent to update.
 
         name : typing.Optional[str]
             New agent name. Omit to leave the name unchanged
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+            Agent behavioral config. The keys depend on `type`.
 
-        connection_verified : typing.Optional[bool]
-            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
+            **`type=agent`** (built inside Calibrate):
+            - `system_prompt` (string): the agent's instructions
+            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
+            - `system_tools.end_call` (bool, optional): let the agent end the call
+            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
 
-        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
-            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+            ```json
+            {
+              "system_prompt": "You are a helpful support agent.",
+              "llm": {"model": "openai/gpt-4.1"},
+              "stt": {"provider": "deepgram"},
+              "tts": {"provider": "elevenlabs"},
+              "settings": {"agent_speaks_first": true, "max_assistant_turns": 50}
+            }
+            ```
+
+            **`type=connection`** (your own HTTP endpoint):
+            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
+            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
+            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+
+            ```json
+            {
+              "agent_url": "https://api.example.com/agent",
+              "agent_headers": {"Authorization": "Bearer <token>"},
+              "benchmark_provider": "openrouter"
+            }
+            ```
+
+            Replaces the stored config. Omit to leave unchanged.
+
+            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -479,12 +598,5 @@ class AsyncAgentsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.update(
-            agent_uuid,
-            name=name,
-            config=config,
-            connection_verified=connection_verified,
-            benchmark_models_verified=benchmark_models_verified,
-            request_options=request_options,
-        )
+        _response = await self._raw_client.update(agent_uuid, name=name, config=config, request_options=request_options)
         return _response.data

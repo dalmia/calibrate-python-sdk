@@ -11,31 +11,35 @@ from .routers_tests_test_response_type import RoutersTestsTestResponseType
 
 class RoutersTestsTestResponse(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
-        str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Test ID")
+        str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Unique ID for the test")
     ]
     name: str = pydantic.Field()
     """
-    Human-readable test name
+    Name of the test
     """
 
     type: RoutersTestsTestResponseType = pydantic.Field()
     """
-    Test kind
+    What the test judges:
+    
+    - `response`: judges the generated reply
+    - `tool_call`: diffs the generated tool calls
+    - `conversation`: judges the full conversation
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Calibrate test config (`history`, `evaluation`, optional `settings`)
+    Config for the test (`history`, `evaluation`, optional `settings`)
     """
 
     created_at: str = pydantic.Field()
     """
-    Creation timestamp (ISO 8601 UTC)
+    Timestamp when the test was created (ISO 8601 UTC)
     """
 
     updated_at: str = pydantic.Field()
     """
-    Last-update timestamp (ISO 8601 UTC)
+    Timestamp when the test was last updated (ISO 8601 UTC)
     """
 
     evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)

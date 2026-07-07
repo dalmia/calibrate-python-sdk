@@ -15,12 +15,13 @@ class RoutersAgentsAgentResponse(UniversalBaseModel):
     ]
     name: str = pydantic.Field()
     """
-    Human-readable name of the agent
+    Name of the agent
     """
 
     type: RoutersAgentsAgentResponseType = pydantic.Field()
     """
-    `agent` (managed defaults) or `connection` (your own endpoint)
+    - `agent`: built inside Calibrate
+    - `connection`: your existing agent connected to Calibrate
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
