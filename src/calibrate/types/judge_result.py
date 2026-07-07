@@ -7,39 +7,35 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class JudgeResult(UniversalBaseModel):
+    evaluator_uuid: typing.Optional[str] = pydantic.Field(default=None)
     """
-    One evaluator's verdict for a response-type test case.
-
-    Per-row data only — anything constant across rows for the same evaluator
-    (name, description, output_type, output_config, scale_min/max) lives on
-    the response-level `evaluators[]` block; look it up by `evaluator_uuid`.
-
-    `evaluator_uuid` is None for legacy runs that pre-date the evaluator-
-    snapshot capture or when the evaluator can't be resolved from the
-    snapshot.
-
-    Exactly one of `match` (binary) / `score` (rating) is set per entry;
-    both are None for tool-call tests, but tool-call tests don't carry
-    `judge_results`.
-
-    `variable_values` are the {{var}} substitutions used for this evaluator
-    on this test case, frozen from `test_evaluators.variable_values` at
-    submission time — stays on the row because it varies per test case.
-
-    `value_name` is the human-readable label for `match`/`score` resolved
-    against the rubric the run actually used (snapshot's
-    `output_config.scale.name`). Falls back to `Correct`/`Wrong` for binary
-    or the stringified score for rating when the snapshot lacks named
-    scale entries (e.g. legacy runs captured before the rubric was
-    snapshotted).
+    ID of the evaluator that produced this verdict; null for legacy runs or when the evaluator can't be resolved from the snapshot
     """
 
-    evaluator_uuid: typing.Optional[str] = None
-    reasoning: typing.Optional[str] = None
-    match: typing.Optional[bool] = None
-    score: typing.Optional[float] = None
-    value_name: typing.Optional[str] = None
-    variable_values: typing.Optional[typing.Dict[str, typing.Any]] = None
+    reasoning: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Judge's rationale for this verdict
+    """
+
+    match: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Binary evaluator pass/fail. **Set only for binary evaluators** (else null; `score` is set instead)
+    """
+
+    score: typing.Optional[float] = pydantic.Field(default=None)
+    """
+    Rating evaluator numeric score. **Set only for rating evaluators** (else null; `match` is set instead)
+    """
+
+    value_name: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Human-readable label for `match`/`score` resolved against the run's rubric. Falls back to `Correct`/`Wrong` (binary) or the stringified score (rating) when the snapshot lacks named scale entries
+    """
+
+    variable_values: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    `{{var}}` substitutions used for this evaluator on this test case, frozen at submission time; null when none
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

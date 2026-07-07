@@ -6,10 +6,10 @@
     "package_name": "calibrate",
     "client_class_name": "Calibrate"
   },
-  "originGitCommit": "5e153484d23b1e4533cfec2fbc5aed0d7e6799d0",
+  "originGitCommit": "855e3d6d1f8460a8c8f02018246ef86f0aa5b4e9",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
-  "requestedVersion": "0.0.9",
+  "requestedVersion": "0.0.10",
   "ciProvider": "github",
-  "sdkVersion": "0.0.9"
+  "sdkVersion": "0.0.10"
 }

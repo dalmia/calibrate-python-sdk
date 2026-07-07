@@ -6,8 +6,14 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import AgentCreateType
-_dynamic_imports: typing.Dict[str, str] = {"AgentCreateType": ".types"}
+    from .bulk_test_upload_type import BulkTestUploadType
+    from .test_create_type import TestCreateType
+    from .test_update_type import TestUpdateType
+_dynamic_imports: typing.Dict[str, str] = {
+    "BulkTestUploadType": ".bulk_test_upload_type",
+    "TestCreateType": ".test_create_type",
+    "TestUpdateType": ".test_update_type",
+}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -31,4 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["AgentCreateType"]
+__all__ = ["BulkTestUploadType", "TestCreateType", "TestUpdateType"]

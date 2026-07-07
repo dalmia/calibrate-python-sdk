@@ -6,8 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import AgentCreateType
-_dynamic_imports: typing.Dict[str, str] = {"AgentCreateType": ".types"}
+    from .agent_create_type import AgentCreateType
+_dynamic_imports: typing.Dict[str, str] = {"AgentCreateType": ".agent_create_type"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:

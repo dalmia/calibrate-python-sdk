@@ -7,9 +7,20 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class BatchTestSkip(UniversalBaseModel):
-    agent_name: str
-    agent_uuid: str
-    reason: str
+    agent_name: str = pydantic.Field()
+    """
+    Name of the skipped agent
+    """
+
+    agent_uuid: str = pydantic.Field()
+    """
+    ID of the skipped agent
+    """
+
+    reason: str = pydantic.Field()
+    """
+    Why this agent was not run
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

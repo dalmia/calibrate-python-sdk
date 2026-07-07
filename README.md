@@ -72,7 +72,8 @@ client = Calibrate(
 
 client.agents.resolve(
     names=[
-        "names"
+        "my-agent",
+        "support-bot"
     ],
 )
 ```
@@ -107,7 +108,8 @@ client = AsyncCalibrate(
 async def main() -> None:
     await client.agents.resolve(
         names=[
-            "names"
+            "my-agent",
+            "support-bot"
         ],
     )
 

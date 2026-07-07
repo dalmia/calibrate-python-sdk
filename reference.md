@@ -12,13 +12,7 @@
 <dl>
 <dd>
 
-Resolve a list of agent names to their UUIDs within the caller's org.
-
-Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-clients) via `get_org_jwt_or_api_key`, so CI tooling can map human-friendly
-agent names to the UUIDs the run/poll endpoints expect. Agent names are
-unique per org, so each name resolves to at most one agent. Names with no
-matching (non-deleted) agent in the org are returned under `not_found`.
+Resolve agent names to their IDs.
 </dd>
 </dl>
 </dd>
@@ -43,7 +37,8 @@ client = Calibrate(
 
 client.agents.resolve(
     names=[
-        "names"
+        "my-agent",
+        "support-bot"
     ],
 )
 
@@ -61,7 +56,7 @@ client.agents.resolve(
 <dl>
 <dd>
 
-**names:** `typing.List[str]` 
+**names:** `typing.List[str]` — Agent names to resolve to IDs
     
 </dd>
 </dl>
@@ -81,7 +76,7 @@ client.agents.resolve(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentTestsAgentResponse]</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentsAgentResponse]</code></summary>
 <dl>
 <dd>
 
@@ -93,12 +88,7 @@ client.agents.resolve(
 <dl>
 <dd>
 
-List all agents for the caller's current org.
-
-Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-clients) via `get_org_jwt_or_api_key`, so CI tooling can enumerate every
-agent UUID in the org without knowing names up front (the run/poll and
-`/resolve` endpoints accept the same key).
+List all agents in your workspace.
 </dd>
 </dl>
 </dd>
@@ -149,8 +139,7 @@ client.agents.list()
 </dl>
 </details>
 
-## AgentTests
-<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">run</a>(...) -> TaskCreateResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">create</a>(...) -> AgentCreateResponse</code></summary>
 <dl>
 <dd>
 
@@ -162,15 +151,722 @@ client.agents.list()
 <dl>
 <dd>
 
-Run one or more tests for an agent.
+Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+</dd>
+</dl>
+</dd>
+</dl>
 
-This starts a background task that runs the calibrate LLM tests command
-with the agent's config and the combined test cases from all specified tests.
+#### 🔌 Usage
 
-Returns a task ID that can be used to poll for status and results.
+<dl>
+<dd>
 
-Auth: requires either a JWT (frontend) or an `sk_` API key. The agent
-must belong to the caller's org or this 404s.
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.create(
+    name="name",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**name:** `str` — Human-readable agent name, unique within the workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[AgentCreateType]` — `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**config:** `typing.Optional[typing.Dict[str, typing.Any]]` — Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">get</a>(...) -> RoutersAgentsAgentResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get an agent in your workspace.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.get(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — The agent to retrieve. Must be in your workspace.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">update</a>(...) -> RoutersAgentsAgentResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.update(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — The agent to update. Must be in your workspace.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `typing.Optional[str]` — New agent name. Omit to leave the name unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**config:** `typing.Optional[typing.Dict[str, typing.Any]]` — Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**connection_verified:** `typing.Optional[bool]` — Directly set the `connection_verified` flag inside config. Omit to leave it untouched
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**benchmark_models_verified:** `typing.Optional[typing.Dict[str, typing.Any]]` — Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tests
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">bulk_create</a>(...) -> BulkTestUploadResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create many tests of one type in a single call, optionally linking them to agents.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate, BulkTestItem, ChatMessage
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.tests.bulk_create(
+    type="response",
+    tests=[
+        BulkTestItem(
+            name="name",
+            conversation_history=[
+                ChatMessage(
+                    role="system",
+                )
+            ],
+        )
+    ],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**type:** `BulkTestUploadType` — Test kind applied to every item in the batch
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**tests:** `typing.List[BulkTestItem]` — Test items to create (non-empty, max 500 per request, names unique within the batch)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**agent_uuids:** `typing.Optional[typing.List[str]]` — Agents (IDs) to link every created test to. Omit to link none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**language:** `typing.Optional[str]` — Language written to each test's `config.settings.language`. Omit to leave unset
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">list</a>() -> typing.List[RoutersTestsTestResponse]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List all tests for your workspace, each with its linked evaluators.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.tests.list()
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">create</a>(...) -> TestCreateResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a test in your workspace.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.tests.create(
+    name="name",
+    type="response",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**name:** `str` — Human-readable test name, unique within the workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `TestCreateType` — Test kind (immutable after creation): `response` judges the generated reply, `tool_call` diffs generated tool calls, `conversation` judges the full conversation
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**config:** `typing.Optional[typing.Dict[str, typing.Any]]` — Calibrate test config (`history`, `evaluation`, optional `settings`). Omit to create an empty shell to fill in later
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluators:** `typing.Optional[typing.List[RoutersTestsEvaluatorRef]]` — Evaluators to link. **Required (>=1) for `type=conversation`** (no fallback judge). Omit for `response`/`tool_call` to link none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">get</a>(...) -> RoutersTestsTestResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a test by ID, including its linked evaluators.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.tests.get(
+    test_uuid="b1c2d3e4-f5a6-7890-bcde-f12345678901",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**test_uuid:** `str` — Test to retrieve
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">update</a>(...) -> RoutersTestsTestResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update a test's name, config, and/or evaluator links.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.tests.update(
+    test_uuid="b1c2d3e4-f5a6-7890-bcde-f12345678901",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**test_uuid:** `str` — Test to update
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `typing.Optional[str]` — New test name. Omit to leave unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[TestUpdateType]` — Test type. Immutable — may only echo the existing value; a different value is rejected (400). Omit to leave unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**config:** `typing.Optional[typing.Dict[str, typing.Any]]` — Replacement calibrate config. Omit to leave unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluators:** `typing.Optional[typing.List[RoutersTestsEvaluatorRef]]` — Replacement evaluator links (replaces the existing set). Omit to leave links unchanged; an empty list clears them (**rejected for `conversation` tests**)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## AgentTests
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">run</a>(...) -> AgentTestRunCreateResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Run tests for an agent as a background job.
 </dd>
 </dl>
 </dd>
@@ -194,7 +890,7 @@ client = Calibrate(
 )
 
 client.agent_tests.run(
-    agent_uuid="agent_uuid",
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
 )
 
 ```
@@ -211,7 +907,7 @@ client.agent_tests.run(
 <dl>
 <dd>
 
-**agent_uuid:** `str` 
+**agent_uuid:** `str` — The agent to test. Must be in your workspace.
     
 </dd>
 </dl>
@@ -219,7 +915,7 @@ client.agent_tests.run(
 <dl>
 <dd>
 
-**test_uuids:** `typing.Optional[typing.List[str]]` 
+**test_uuids:** `typing.Optional[typing.List[str]]` — Tests to run. Omit to run all tests linked to the agent
     
 </dd>
 </dl>
@@ -251,24 +947,7 @@ client.agent_tests.run(
 <dl>
 <dd>
 
-Run every linked test for a set of agents, one ``llm-unit-test`` job per agent.
-
-Scope is driven by the optional ``agent_names`` payload:
-
-- **Provided (non-empty)** — run only those agents. Names are unique per org
-  and **all are validated up front**: if any doesn't resolve to a
-  (non-deleted) agent in the caller's org, the call 404s with the offending
-  names and NO jobs are created.
-- **Omitted / null / empty** — run every agent in the caller's org.
-
-For each selected agent, its linked tests are launched as one job. Agents
-with no linked tests or an unverified connection are reported under
-``skipped`` instead of failing the batch. Subject to the normal per-org
-concurrency queue, so over-limit jobs come back ``queued``.
-
-Auth accepts a JWT (frontend) or an `sk_` API key (programmatic clients).
-Returns one ``runs`` entry per launched agent with ``agent_name``,
-``agent_uuid``, ``task_id``, and ``status``.
+Run agent tests for every agent in your workspace, or for a selected set.
 </dd>
 </dl>
 </dd>
@@ -341,14 +1020,7 @@ client.agent_tests.run_batch(
 <dl>
 <dd>
 
-Get the status of an agent test run.
-
-Requires either a JWT (frontend) or an `sk_` API key, plus org
-ownership of the run. Unauthenticated access to a completed run is only
-possible once it is made public, via the share-token endpoint in the public
-router.
-
-Returns the current status and, if done, the test results.
+Get the status and results of a test run.
 </dd>
 </dl>
 </dd>
@@ -372,7 +1044,7 @@ client = Calibrate(
 )
 
 client.agent_tests.get_run(
-    task_id="task_id",
+    task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
 )
 
 ```
@@ -389,7 +1061,7 @@ client.agent_tests.get_run(
 <dl>
 <dd>
 
-**task_id:** `str` 
+**task_id:** `str` — Test run to poll for status and results
     
 </dd>
 </dl>

@@ -4,9 +4,11 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
+from ..types.agent_create_response import AgentCreateResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agent_tests_agent_response import RoutersAgentTestsAgentResponse
+from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
+from .types.agent_create_type import AgentCreateType
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -31,17 +33,12 @@ class AgentsClient:
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
     ) -> ResolveAgentNamesResponse:
         """
-        Resolve a list of agent names to their UUIDs within the caller's org.
-
-        Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-        clients) via `get_org_jwt_or_api_key`, so CI tooling can map human-friendly
-        agent names to the UUIDs the run/poll endpoints expect. Agent names are
-        unique per org, so each name resolves to at most one agent. Names with no
-        matching (non-deleted) agent in the org are returned under `not_found`.
+        Resolve agent names to their IDs.
 
         Parameters
         ----------
         names : typing.Sequence[str]
+            Agent names to resolve to IDs
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -60,7 +57,7 @@ class AgentsClient:
             api_key="YOUR_API_KEY",
         )
         client.agents.resolve(
-            names=["names"],
+            names=["my-agent", "support-bot"],
         )
         """
         _response = self._raw_client.resolve(names=names, request_options=request_options)
@@ -68,14 +65,9 @@ class AgentsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsAgentResponse]:
+    ) -> typing.List[RoutersAgentsAgentResponse]:
         """
-        List all agents for the caller's current org.
-
-        Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-        clients) via `get_org_jwt_or_api_key`, so CI tooling can enumerate every
-        agent UUID in the org without knowing names up front (the run/poll and
-        `/resolve` endpoints accept the same key).
+        List all agents in your workspace.
 
         Parameters
         ----------
@@ -84,7 +76,7 @@ class AgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsAgentResponse]
+        typing.List[RoutersAgentsAgentResponse]
             Successful Response
 
         Examples
@@ -98,6 +90,145 @@ class AgentsClient:
         client.agents.list()
         """
         _response = self._raw_client.list(request_options=request_options)
+        return _response.data
+
+    def create(
+        self,
+        *,
+        name: str,
+        type: typing.Optional[AgentCreateType] = OMIT,
+        config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentCreateResponse:
+        """
+        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+
+        Parameters
+        ----------
+        name : str
+            Human-readable agent name, unique within the workspace
+
+        type : typing.Optional[AgentCreateType]
+            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+
+        config : typing.Optional[typing.Dict[str, typing.Any]]
+            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.create(
+            name="name",
+        )
+        """
+        _response = self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
+        return _response.data
+
+    def get(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> RoutersAgentsAgentResponse:
+        """
+        Get an agent in your workspace.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to retrieve. Must be in your workspace.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsAgentResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.get(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.get(agent_uuid, request_options=request_options)
+        return _response.data
+
+    def update(
+        self,
+        agent_uuid: str,
+        *,
+        name: typing.Optional[str] = OMIT,
+        config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        connection_verified: typing.Optional[bool] = OMIT,
+        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> RoutersAgentsAgentResponse:
+        """
+        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to update. Must be in your workspace.
+
+        name : typing.Optional[str]
+            New agent name. Omit to leave the name unchanged
+
+        config : typing.Optional[typing.Dict[str, typing.Any]]
+            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+
+        connection_verified : typing.Optional[bool]
+            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
+
+        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
+            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsAgentResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.update(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.update(
+            agent_uuid,
+            name=name,
+            config=config,
+            connection_verified=connection_verified,
+            benchmark_models_verified=benchmark_models_verified,
+            request_options=request_options,
+        )
         return _response.data
 
 
@@ -120,17 +251,12 @@ class AsyncAgentsClient:
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
     ) -> ResolveAgentNamesResponse:
         """
-        Resolve a list of agent names to their UUIDs within the caller's org.
-
-        Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-        clients) via `get_org_jwt_or_api_key`, so CI tooling can map human-friendly
-        agent names to the UUIDs the run/poll endpoints expect. Agent names are
-        unique per org, so each name resolves to at most one agent. Names with no
-        matching (non-deleted) agent in the org are returned under `not_found`.
+        Resolve agent names to their IDs.
 
         Parameters
         ----------
         names : typing.Sequence[str]
+            Agent names to resolve to IDs
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -154,7 +280,7 @@ class AsyncAgentsClient:
 
         async def main() -> None:
             await client.agents.resolve(
-                names=["names"],
+                names=["my-agent", "support-bot"],
             )
 
 
@@ -165,14 +291,9 @@ class AsyncAgentsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsAgentResponse]:
+    ) -> typing.List[RoutersAgentsAgentResponse]:
         """
-        List all agents for the caller's current org.
-
-        Auth accepts either a JWT (frontend) or an `sk_` API key (programmatic
-        clients) via `get_org_jwt_or_api_key`, so CI tooling can enumerate every
-        agent UUID in the org without knowing names up front (the run/poll and
-        `/resolve` endpoints accept the same key).
+        List all agents in your workspace.
 
         Parameters
         ----------
@@ -181,7 +302,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsAgentResponse]
+        typing.List[RoutersAgentsAgentResponse]
             Successful Response
 
         Examples
@@ -203,4 +324,167 @@ class AsyncAgentsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.list(request_options=request_options)
+        return _response.data
+
+    async def create(
+        self,
+        *,
+        name: str,
+        type: typing.Optional[AgentCreateType] = OMIT,
+        config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentCreateResponse:
+        """
+        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+
+        Parameters
+        ----------
+        name : str
+            Human-readable agent name, unique within the workspace
+
+        type : typing.Optional[AgentCreateType]
+            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+
+        config : typing.Optional[typing.Dict[str, typing.Any]]
+            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.create(
+                name="name",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
+        return _response.data
+
+    async def get(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> RoutersAgentsAgentResponse:
+        """
+        Get an agent in your workspace.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to retrieve. Must be in your workspace.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsAgentResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.get(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get(agent_uuid, request_options=request_options)
+        return _response.data
+
+    async def update(
+        self,
+        agent_uuid: str,
+        *,
+        name: typing.Optional[str] = OMIT,
+        config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        connection_verified: typing.Optional[bool] = OMIT,
+        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> RoutersAgentsAgentResponse:
+        """
+        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to update. Must be in your workspace.
+
+        name : typing.Optional[str]
+            New agent name. Omit to leave the name unchanged
+
+        config : typing.Optional[typing.Dict[str, typing.Any]]
+            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+
+        connection_verified : typing.Optional[bool]
+            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
+
+        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
+            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsAgentResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            org_uuid="YOUR_ORG_UUID",
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.update(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.update(
+            agent_uuid,
+            name=name,
+            config=config,
+            connection_verified=connection_verified,
+            benchmark_models_verified=benchmark_models_verified,
+            request_options=request_options,
+        )
         return _response.data

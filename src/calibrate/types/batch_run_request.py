@@ -7,7 +7,10 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
 class BatchRunRequest(UniversalBaseModel):
-    agent_names: typing.Optional[typing.List[str]] = None
+    agent_names: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    Agents to run. Omit to run every agent in your workspace
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

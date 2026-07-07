@@ -12,10 +12,10 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
+from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
 from ..types.http_validation_error import HttpValidationError
-from ..types.task_create_response import TaskCreateResponse
 from ..types.test_run_status_response import TestRunStatusResponse
 from pydantic import ValidationError
 
@@ -33,30 +33,24 @@ class RawAgentTestsClient:
         *,
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[TaskCreateResponse]:
+    ) -> HttpResponse[AgentTestRunCreateResponse]:
         """
-        Run one or more tests for an agent.
-
-        This starts a background task that runs the calibrate LLM tests command
-        with the agent's config and the combined test cases from all specified tests.
-
-        Returns a task ID that can be used to poll for status and results.
-
-        Auth: requires either a JWT (frontend) or an `sk_` API key. The agent
-        must belong to the caller's org or this 404s.
+        Run tests for an agent as a background job.
 
         Parameters
         ----------
         agent_uuid : str
+            The agent to test. Must be in your workspace.
 
         test_uuids : typing.Optional[typing.Sequence[str]]
+            Tests to run. Omit to run all tests linked to the agent
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[TaskCreateResponse]
+        HttpResponse[AgentTestRunCreateResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -74,9 +68,9 @@ class RawAgentTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    TaskCreateResponse,
+                    AgentTestRunCreateResponse,
                     parse_obj_as(
-                        type_=TaskCreateResponse,  # type: ignore
+                        type_=AgentTestRunCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -108,24 +102,7 @@ class RawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[BatchTestRunResponse]:
         """
-        Run every linked test for a set of agents, one ``llm-unit-test`` job per agent.
-
-        Scope is driven by the optional ``agent_names`` payload:
-
-        - **Provided (non-empty)** — run only those agents. Names are unique per org
-          and **all are validated up front**: if any doesn't resolve to a
-          (non-deleted) agent in the caller's org, the call 404s with the offending
-          names and NO jobs are created.
-        - **Omitted / null / empty** — run every agent in the caller's org.
-
-        For each selected agent, its linked tests are launched as one job. Agents
-        with no linked tests or an unverified connection are reported under
-        ``skipped`` instead of failing the batch. Subject to the normal per-org
-        concurrency queue, so over-limit jobs come back ``queued``.
-
-        Auth accepts a JWT (frontend) or an `sk_` API key (programmatic clients).
-        Returns one ``runs`` entry per launched agent with ``agent_name``,
-        ``agent_uuid``, ``task_id``, and ``status``.
+        Run agent tests for every agent in your workspace, or for a selected set.
 
         Parameters
         ----------
@@ -182,18 +159,12 @@ class RawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[TestRunStatusResponse]:
         """
-        Get the status of an agent test run.
-
-        Requires either a JWT (frontend) or an `sk_` API key, plus org
-        ownership of the run. Unauthenticated access to a completed run is only
-        possible once it is made public, via the share-token endpoint in the public
-        router.
-
-        Returns the current status and, if done, the test results.
+        Get the status and results of a test run.
 
         Parameters
         ----------
         task_id : str
+            Test run to poll for status and results
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -249,30 +220,24 @@ class AsyncRawAgentTestsClient:
         *,
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[TaskCreateResponse]:
+    ) -> AsyncHttpResponse[AgentTestRunCreateResponse]:
         """
-        Run one or more tests for an agent.
-
-        This starts a background task that runs the calibrate LLM tests command
-        with the agent's config and the combined test cases from all specified tests.
-
-        Returns a task ID that can be used to poll for status and results.
-
-        Auth: requires either a JWT (frontend) or an `sk_` API key. The agent
-        must belong to the caller's org or this 404s.
+        Run tests for an agent as a background job.
 
         Parameters
         ----------
         agent_uuid : str
+            The agent to test. Must be in your workspace.
 
         test_uuids : typing.Optional[typing.Sequence[str]]
+            Tests to run. Omit to run all tests linked to the agent
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[TaskCreateResponse]
+        AsyncHttpResponse[AgentTestRunCreateResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -290,9 +255,9 @@ class AsyncRawAgentTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    TaskCreateResponse,
+                    AgentTestRunCreateResponse,
                     parse_obj_as(
-                        type_=TaskCreateResponse,  # type: ignore
+                        type_=AgentTestRunCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -324,24 +289,7 @@ class AsyncRawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[BatchTestRunResponse]:
         """
-        Run every linked test for a set of agents, one ``llm-unit-test`` job per agent.
-
-        Scope is driven by the optional ``agent_names`` payload:
-
-        - **Provided (non-empty)** — run only those agents. Names are unique per org
-          and **all are validated up front**: if any doesn't resolve to a
-          (non-deleted) agent in the caller's org, the call 404s with the offending
-          names and NO jobs are created.
-        - **Omitted / null / empty** — run every agent in the caller's org.
-
-        For each selected agent, its linked tests are launched as one job. Agents
-        with no linked tests or an unverified connection are reported under
-        ``skipped`` instead of failing the batch. Subject to the normal per-org
-        concurrency queue, so over-limit jobs come back ``queued``.
-
-        Auth accepts a JWT (frontend) or an `sk_` API key (programmatic clients).
-        Returns one ``runs`` entry per launched agent with ``agent_name``,
-        ``agent_uuid``, ``task_id``, and ``status``.
+        Run agent tests for every agent in your workspace, or for a selected set.
 
         Parameters
         ----------
@@ -398,18 +346,12 @@ class AsyncRawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[TestRunStatusResponse]:
         """
-        Get the status of an agent test run.
-
-        Requires either a JWT (frontend) or an `sk_` API key, plus org
-        ownership of the run. Unauthenticated access to a completed run is only
-        possible once it is made public, via the share-token endpoint in the public
-        router.
-
-        Returns the current status and, if done, the test results.
+        Get the status and results of a test run.
 
         Parameters
         ----------
         task_id : str
+            Test run to poll for status and results
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

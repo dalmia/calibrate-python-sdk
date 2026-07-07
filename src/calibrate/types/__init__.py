@@ -6,34 +6,56 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .agent_create_response import AgentCreateResponse
+    from .agent_test_run_create_response import AgentTestRunCreateResponse
     from .batch_run_request import BatchRunRequest
     from .batch_test_run import BatchTestRun
     from .batch_test_run_response import BatchTestRunResponse
     from .batch_test_skip import BatchTestSkip
+    from .bulk_test_item import BulkTestItem
+    from .bulk_test_upload_response import BulkTestUploadResponse
+    from .chat_message import ChatMessage
+    from .chat_message_role import ChatMessageRole
+    from .expected_tool_call import ExpectedToolCall
     from .http_validation_error import HttpValidationError
     from .judge_result import JudgeResult
     from .resolve_agent_names_response import ResolveAgentNamesResponse
-    from .routers_agent_tests_agent_response import RoutersAgentTestsAgentResponse
-    from .routers_agent_tests_agent_response_type import RoutersAgentTestsAgentResponseType
-    from .task_create_response import TaskCreateResponse
+    from .routers_agents_agent_response import RoutersAgentsAgentResponse
+    from .routers_agents_agent_response_type import RoutersAgentsAgentResponseType
+    from .routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
+    from .routers_tests_test_response import RoutersTestsTestResponse
+    from .routers_tests_test_response_type import RoutersTestsTestResponseType
+    from .task_status import TaskStatus
     from .test_case_result import TestCaseResult
+    from .test_create_response import TestCreateResponse
     from .test_output import TestOutput
     from .test_run_status_response import TestRunStatusResponse
     from .tool_call_output import ToolCallOutput
     from .validation_error import ValidationError
     from .validation_error_loc_item import ValidationErrorLocItem
 _dynamic_imports: typing.Dict[str, str] = {
+    "AgentCreateResponse": ".agent_create_response",
+    "AgentTestRunCreateResponse": ".agent_test_run_create_response",
     "BatchRunRequest": ".batch_run_request",
     "BatchTestRun": ".batch_test_run",
     "BatchTestRunResponse": ".batch_test_run_response",
     "BatchTestSkip": ".batch_test_skip",
+    "BulkTestItem": ".bulk_test_item",
+    "BulkTestUploadResponse": ".bulk_test_upload_response",
+    "ChatMessage": ".chat_message",
+    "ChatMessageRole": ".chat_message_role",
+    "ExpectedToolCall": ".expected_tool_call",
     "HttpValidationError": ".http_validation_error",
     "JudgeResult": ".judge_result",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
-    "RoutersAgentTestsAgentResponse": ".routers_agent_tests_agent_response",
-    "RoutersAgentTestsAgentResponseType": ".routers_agent_tests_agent_response_type",
-    "TaskCreateResponse": ".task_create_response",
+    "RoutersAgentsAgentResponse": ".routers_agents_agent_response",
+    "RoutersAgentsAgentResponseType": ".routers_agents_agent_response_type",
+    "RoutersTestsEvaluatorRef": ".routers_tests_evaluator_ref",
+    "RoutersTestsTestResponse": ".routers_tests_test_response",
+    "RoutersTestsTestResponseType": ".routers_tests_test_response_type",
+    "TaskStatus": ".task_status",
     "TestCaseResult": ".test_case_result",
+    "TestCreateResponse": ".test_create_response",
     "TestOutput": ".test_output",
     "TestRunStatusResponse": ".test_run_status_response",
     "ToolCallOutput": ".tool_call_output",
@@ -64,17 +86,28 @@ def __dir__():
 
 
 __all__ = [
+    "AgentCreateResponse",
+    "AgentTestRunCreateResponse",
     "BatchRunRequest",
     "BatchTestRun",
     "BatchTestRunResponse",
     "BatchTestSkip",
+    "BulkTestItem",
+    "BulkTestUploadResponse",
+    "ChatMessage",
+    "ChatMessageRole",
+    "ExpectedToolCall",
     "HttpValidationError",
     "JudgeResult",
     "ResolveAgentNamesResponse",
-    "RoutersAgentTestsAgentResponse",
-    "RoutersAgentTestsAgentResponseType",
-    "TaskCreateResponse",
+    "RoutersAgentsAgentResponse",
+    "RoutersAgentsAgentResponseType",
+    "RoutersTestsEvaluatorRef",
+    "RoutersTestsTestResponse",
+    "RoutersTestsTestResponseType",
+    "TaskStatus",
     "TestCaseResult",
+    "TestCreateResponse",
     "TestOutput",
     "TestRunStatusResponse",
     "ToolCallOutput",

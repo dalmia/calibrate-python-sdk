@@ -6,20 +6,20 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class ToolCallOutput(UniversalBaseModel):
+class ExpectedToolCall(UniversalBaseModel):
     tool: str = pydantic.Field()
     """
-    Name of the tool the agent called
+    Name of the tool the agent is expected to call
     """
 
     arguments: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Arguments the agent passed to the tool; null if none
+    Expected argument values, diffed against the generated call. Omit to expect no arguments
     """
 
-    output: typing.Optional[typing.Any] = pydantic.Field(default=None)
+    accept_any_arguments: typing.Optional[bool] = pydantic.Field(default=None)
     """
-    Tool execution result (any JSON value). Present only for agent-connection tests where the external agent runs the tool and echoes its return value; null for calibrate-agent mode (tools are declared, never executed) or agents that don't echo it
+    When `true`, only the tool name must match and `arguments` is ignored
     """
 
     if IS_PYDANTIC_V2:

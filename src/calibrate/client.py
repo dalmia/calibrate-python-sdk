@@ -12,6 +12,7 @@ from .environment import CalibrateEnvironment
 if typing.TYPE_CHECKING:
     from .agent_tests.client import AgentTestsClient, AsyncAgentTestsClient
     from .agents.client import AgentsClient, AsyncAgentsClient
+    from .tests.client import AsyncTestsClient, TestsClient
 
 
 class Calibrate:
@@ -103,6 +104,7 @@ class Calibrate:
             logging=logging,
         )
         self._agents: typing.Optional[AgentsClient] = None
+        self._tests: typing.Optional[TestsClient] = None
         self._agent_tests: typing.Optional[AgentTestsClient] = None
 
     @property
@@ -112,6 +114,14 @@ class Calibrate:
 
             self._agents = AgentsClient(client_wrapper=self._client_wrapper)
         return self._agents
+
+    @property
+    def tests(self):
+        if self._tests is None:
+            from .tests.client import TestsClient  # noqa: E402
+
+            self._tests = TestsClient(client_wrapper=self._client_wrapper)
+        return self._tests
 
     @property
     def agent_tests(self):
@@ -227,6 +237,7 @@ class AsyncCalibrate:
             logging=logging,
         )
         self._agents: typing.Optional[AsyncAgentsClient] = None
+        self._tests: typing.Optional[AsyncTestsClient] = None
         self._agent_tests: typing.Optional[AsyncAgentTestsClient] = None
 
     @property
@@ -236,6 +247,14 @@ class AsyncCalibrate:
 
             self._agents = AsyncAgentsClient(client_wrapper=self._client_wrapper)
         return self._agents
+
+    @property
+    def tests(self):
+        if self._tests is None:
+            from .tests.client import AsyncTestsClient  # noqa: E402
+
+            self._tests = AsyncTestsClient(client_wrapper=self._client_wrapper)
+        return self._tests
 
     @property
     def agent_tests(self):

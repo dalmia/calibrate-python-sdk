@@ -8,8 +8,15 @@ from .tool_call_output import ToolCallOutput
 
 
 class TestOutput(UniversalBaseModel):
-    response: typing.Optional[str] = None
-    tool_calls: typing.Optional[typing.List[ToolCallOutput]] = None
+    response: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    The agent's generated reply; null for tool-call-only cases
+    """
+
+    tool_calls: typing.Optional[typing.List[ToolCallOutput]] = pydantic.Field(default=None)
+    """
+    Tool calls the agent generated; null when it made none
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

@@ -6,26 +6,82 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .task_status import TaskStatus
 from .test_case_result import TestCaseResult
 
 
 class TestRunStatusResponse(UniversalBaseModel):
-    task_id: str
-    status: str
-    total_tests: typing.Optional[int] = None
-    passed: typing.Optional[int] = None
-    failed: typing.Optional[int] = None
-    latency_ms: typing.Optional[typing.Dict[str, typing.Any]] = None
-    cost: typing.Optional[typing.Dict[str, typing.Any]] = None
-    total_tokens: typing.Optional[typing.Dict[str, typing.Any]] = None
-    evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = None
-    results: typing.Optional[typing.List[TestCaseResult]] = None
+    task_id: str = pydantic.Field()
+    """
+    Test run job ID
+    """
+
+    status: TaskStatus = pydantic.Field()
+    """
+    Current status: `queued`, `in_progress`, `done`, or `failed`
+    """
+
+    total_tests: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Total number of test cases; null until known
+    """
+
+    passed: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Number of test cases that passed; null until done
+    """
+
+    failed: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Number of test cases that failed; null until done
+    """
+
+    latency_ms: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Aggregated response latency `{p50, p95, p99, count}` (ms; `p50` ≈ the old mean). Null for eval-only runs
+    """
+
+    cost: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Aggregated cost `{mean, min, max, count}` (USD). Null when no case reported a cost (e.g. openai provider)
+    """
+
+    total_tokens: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Aggregated token usage `{mean, min, max, count}` (values are `Any` — `mean` may be fractional). Null when no case reported usage
+    """
+
+    evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
+    """
+    Top-level evaluator block (name/description/output_type/rubric) shared across every `judge_results` row, which references back via `evaluator_uuid` so the rubric isn't duplicated per case
+    """
+
+    results: typing.Optional[typing.List[TestCaseResult]] = pydantic.Field(default=None)
+    """
+    Per-test-case results; null until available
+    """
+
     results_s3prefix: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="results_s3_prefix"), pydantic.Field(alias="results_s3_prefix")
+        typing.Optional[str],
+        FieldMetadata(alias="results_s3_prefix"),
+        pydantic.Field(
+            alias="results_s3_prefix", description="S3 key prefix for the raw result artifacts; null until uploaded"
+        ),
     ] = None
-    error: typing.Optional[bool] = None
-    is_public: typing.Optional[bool] = None
-    share_token: typing.Optional[str] = None
+    error: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    True if the run failed
+    """
+
+    is_public: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether the run is shared publicly
+    """
+
+    share_token: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Public share token; null unless the run is public
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

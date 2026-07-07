@@ -6,15 +6,25 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class ResolveAgentNamesResponse(UniversalBaseModel):
-    resolved: typing.Dict[str, str] = pydantic.Field()
+class BulkTestUploadResponse(UniversalBaseModel):
+    uuids: typing.List[str] = pydantic.Field()
     """
-    Map of name to agent ID for each name that matched
+    IDs of the created tests, in request order
     """
 
-    not_found: typing.List[str] = pydantic.Field()
+    count: int = pydantic.Field()
     """
-    Names with no matching agent in your workspace
+    Number of tests created
+    """
+
+    message: str = pydantic.Field()
+    """
+    Human-readable confirmation message
+    """
+
+    warnings: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    Non-fatal issues (e.g. agents some tests couldn't link to). Null when there were none
     """
 
     if IS_PYDANTIC_V2:

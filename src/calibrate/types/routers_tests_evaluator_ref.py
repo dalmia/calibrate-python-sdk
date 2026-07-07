@@ -6,15 +6,15 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class ResolveAgentNamesResponse(UniversalBaseModel):
-    resolved: typing.Dict[str, str] = pydantic.Field()
+class RoutersTestsEvaluatorRef(UniversalBaseModel):
+    evaluator_uuid: str = pydantic.Field()
     """
-    Map of name to agent ID for each name that matched
+    Evaluator to attach to the test
     """
 
-    not_found: typing.List[str] = pydantic.Field()
+    variable_values: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Names with no matching agent in your workspace
+    Values for the evaluator's `{{placeholder}}` variables, pinned per-test on the pivot. Omit to inherit the evaluator version's defaults
     """
 
     if IS_PYDANTIC_V2:

@@ -9,19 +9,50 @@ from .test_output import TestOutput
 
 
 class TestCaseResult(UniversalBaseModel):
+    test_case_id: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Result for a single test case matching calibrate results.json structure
+    Identifier of the test case within the run
     """
 
-    test_case_id: typing.Optional[str] = None
-    name: typing.Optional[str] = None
-    passed: typing.Optional[bool] = None
-    reasoning: typing.Optional[str] = None
-    output: typing.Optional[TestOutput] = None
-    test_case: typing.Optional[typing.Dict[str, typing.Any]] = None
-    judge_results: typing.Optional[typing.List[JudgeResult]] = None
-    latency_ms: typing.Optional[float] = None
-    cost: typing.Optional[float] = None
+    name: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Test name; present during in-progress and done states
+    """
+
+    passed: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether the case passed. Present only when done
+    """
+
+    reasoning: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    LLM judge reasoning or deterministic tool-call diff; null for passing tool-call tests
+    """
+
+    output: typing.Optional[TestOutput] = pydantic.Field(default=None)
+    """
+    The agent's output for this case. Present only when done
+    """
+
+    test_case: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    The input test case definition. Present only when done
+    """
+
+    judge_results: typing.Optional[typing.List[JudgeResult]] = pydantic.Field(default=None)
+    """
+    Per-evaluator verdicts for response/conversation tests; null for tool-call tests or in-progress rows
+    """
+
+    latency_ms: typing.Optional[float] = pydantic.Field(default=None)
+    """
+    Response-generation latency in ms for the agent under test (not the judge). Present only for live runs; null for in-progress and eval-only runs. Float, since external agents may self-report a fractional value
+    """
+
+    cost: typing.Optional[float] = pydantic.Field(default=None)
+    """
+    Per-case cost in USD, lifted from calibrate's nested `output.cost`. Null when the provider/agent reports none (e.g. `--provider openai`)
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

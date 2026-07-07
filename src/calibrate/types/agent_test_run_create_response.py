@@ -4,17 +4,18 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .task_status import TaskStatus
 
 
-class ResolveAgentNamesResponse(UniversalBaseModel):
-    resolved: typing.Dict[str, str] = pydantic.Field()
+class AgentTestRunCreateResponse(UniversalBaseModel):
+    task_id: str = pydantic.Field()
     """
-    Map of name to agent ID for each name that matched
+    Test run job ID. Poll for status and results
     """
 
-    not_found: typing.List[str] = pydantic.Field()
+    status: TaskStatus = pydantic.Field()
     """
-    Names with no matching agent in your workspace
+    Current status of the test run: `queued` or `in_progress`
     """
 
     if IS_PYDANTIC_V2:

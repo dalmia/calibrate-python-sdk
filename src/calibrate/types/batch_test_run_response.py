@@ -9,8 +9,15 @@ from .batch_test_skip import BatchTestSkip
 
 
 class BatchTestRunResponse(UniversalBaseModel):
-    runs: typing.List[BatchTestRun]
-    skipped: typing.Optional[typing.List[BatchTestSkip]] = None
+    runs: typing.List[BatchTestRun] = pydantic.Field()
+    """
+    Test runs that were launched
+    """
+
+    skipped: typing.Optional[typing.List[BatchTestSkip]] = pydantic.Field(default=None)
+    """
+    Agents that were skipped instead of failing the batch
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

@@ -10,46 +10,71 @@ from ..core.jsonable_encoder import encode_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
+from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
-from ..types.agent_create_response import AgentCreateResponse
+from ..types.bulk_test_item import BulkTestItem
+from ..types.bulk_test_upload_response import BulkTestUploadResponse
 from ..types.http_validation_error import HttpValidationError
-from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
-from .types.agent_create_type import AgentCreateType
+from ..types.routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
+from ..types.routers_tests_test_response import RoutersTestsTestResponse
+from ..types.test_create_response import TestCreateResponse
+from .types.bulk_test_upload_type import BulkTestUploadType
+from .types.test_create_type import TestCreateType
+from .types.test_update_type import TestUpdateType
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
 
-class RawAgentsClient:
+class RawTestsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def resolve(
-        self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[ResolveAgentNamesResponse]:
+    def bulk_create(
+        self,
+        *,
+        type: BulkTestUploadType,
+        tests: typing.Sequence[BulkTestItem],
+        agent_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        language: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[BulkTestUploadResponse]:
         """
-        Resolve agent names to their IDs.
+        Create many tests of one type in a single call, optionally linking them to agents.
 
         Parameters
         ----------
-        names : typing.Sequence[str]
-            Agent names to resolve to IDs
+        type : BulkTestUploadType
+            Test kind applied to every item in the batch
+
+        tests : typing.Sequence[BulkTestItem]
+            Test items to create (non-empty, max 500 per request, names unique within the batch)
+
+        agent_uuids : typing.Optional[typing.Sequence[str]]
+            Agents (IDs) to link every created test to. Omit to link none
+
+        language : typing.Optional[str]
+            Language written to each test's `config.settings.language`. Omit to leave unset
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[ResolveAgentNamesResponse]
+        HttpResponse[BulkTestUploadResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
-            "agents/resolve",
+            "tests/bulk",
             method="POST",
             json={
-                "names": names,
+                "type": type,
+                "tests": convert_and_respect_annotation_metadata(
+                    object_=tests, annotation=typing.Sequence[BulkTestItem], direction="write"
+                ),
+                "agent_uuids": agent_uuids,
+                "language": language,
             },
             headers={
                 "content-type": "application/json",
@@ -60,9 +85,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ResolveAgentNamesResponse,
+                    BulkTestUploadResponse,
                     parse_obj_as(
-                        type_=ResolveAgentNamesResponse,  # type: ignore
+                        type_=BulkTestUploadResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -89,9 +114,9 @@ class RawAgentsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RoutersAgentsAgentResponse]]:
+    ) -> HttpResponse[typing.List[RoutersTestsTestResponse]]:
         """
-        List all agents in your workspace.
+        List all tests for your workspace, each with its linked evaluators.
 
         Parameters
         ----------
@@ -100,20 +125,20 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersAgentsAgentResponse]]
+        HttpResponse[typing.List[RoutersTestsTestResponse]]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
-            "agents",
+            "tests",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentsAgentResponse],
+                    typing.List[RoutersTestsTestResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentsAgentResponse],  # type: ignore
+                        type_=typing.List[RoutersTestsTestResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -142,39 +167,48 @@ class RawAgentsClient:
         self,
         *,
         name: str,
-        type: typing.Optional[AgentCreateType] = OMIT,
+        type: TestCreateType,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[AgentCreateResponse]:
+    ) -> HttpResponse[TestCreateResponse]:
         """
-        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+        Create a test in your workspace.
 
         Parameters
         ----------
         name : str
-            Human-readable agent name, unique within the workspace
+            Human-readable test name, unique within the workspace
 
-        type : typing.Optional[AgentCreateType]
-            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+        type : TestCreateType
+            Test kind (immutable after creation): `response` judges the generated reply, `tool_call` diffs generated tool calls, `conversation` judges the full conversation
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+            Calibrate test config (`history`, `evaluation`, optional `settings`). Omit to create an empty shell to fill in later
+
+        evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
+            Evaluators to link. **Required (>=1) for `type=conversation`** (no fallback judge). Omit for `response`/`tool_call` to link none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[AgentCreateResponse]
+        HttpResponse[TestCreateResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
-            "agents",
+            "tests",
             method="POST",
             json={
                 "name": name,
                 "type": type,
                 "config": config,
+                "evaluators": convert_and_respect_annotation_metadata(
+                    object_=evaluators,
+                    annotation=typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]],
+                    direction="write",
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -185,9 +219,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    AgentCreateResponse,
+                    TestCreateResponse,
                     parse_obj_as(
-                        type_=AgentCreateResponse,  # type: ignore
+                        type_=TestCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -213,35 +247,35 @@ class RawAgentsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def get(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[RoutersAgentsAgentResponse]:
+        self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[RoutersTestsTestResponse]:
         """
-        Get an agent in your workspace.
+        Get a test by ID, including its linked evaluators.
 
         Parameters
         ----------
-        agent_uuid : str
-            The agent to retrieve. Must be in your workspace.
+        test_uuid : str
+            Test to retrieve
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[RoutersAgentsAgentResponse]
+        HttpResponse[RoutersTestsTestResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"agents/{encode_path_param(agent_uuid)}",
+            f"tests/{encode_path_param(test_uuid)}",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    RoutersTestsTestResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=RoutersTestsTestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -268,50 +302,54 @@ class RawAgentsClient:
 
     def update(
         self,
-        agent_uuid: str,
+        test_uuid: str,
         *,
         name: typing.Optional[str] = OMIT,
+        type: typing.Optional[TestUpdateType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
-        connection_verified: typing.Optional[bool] = OMIT,
-        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[RoutersAgentsAgentResponse]:
+    ) -> HttpResponse[RoutersTestsTestResponse]:
         """
-        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+        Update a test's name, config, and/or evaluator links.
 
         Parameters
         ----------
-        agent_uuid : str
-            The agent to update. Must be in your workspace.
+        test_uuid : str
+            Test to update
 
         name : typing.Optional[str]
-            New agent name. Omit to leave the name unchanged
+            New test name. Omit to leave unchanged
+
+        type : typing.Optional[TestUpdateType]
+            Test type. Immutable — may only echo the existing value; a different value is rejected (400). Omit to leave unchanged
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+            Replacement calibrate config. Omit to leave unchanged
 
-        connection_verified : typing.Optional[bool]
-            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
-
-        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
-            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+        evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
+            Replacement evaluator links (replaces the existing set). Omit to leave links unchanged; an empty list clears them (**rejected for `conversation` tests**)
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[RoutersAgentsAgentResponse]
+        HttpResponse[RoutersTestsTestResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"agents/{encode_path_param(agent_uuid)}",
+            f"tests/{encode_path_param(test_uuid)}",
             method="PUT",
             json={
                 "name": name,
+                "type": type,
                 "config": config,
-                "connection_verified": connection_verified,
-                "benchmark_models_verified": benchmark_models_verified,
+                "evaluators": convert_and_respect_annotation_metadata(
+                    object_=evaluators,
+                    annotation=typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]],
+                    direction="write",
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -322,9 +360,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    RoutersTestsTestResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=RoutersTestsTestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -350,34 +388,54 @@ class RawAgentsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
 
-class AsyncRawAgentsClient:
+class AsyncRawTestsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def resolve(
-        self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[ResolveAgentNamesResponse]:
+    async def bulk_create(
+        self,
+        *,
+        type: BulkTestUploadType,
+        tests: typing.Sequence[BulkTestItem],
+        agent_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        language: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[BulkTestUploadResponse]:
         """
-        Resolve agent names to their IDs.
+        Create many tests of one type in a single call, optionally linking them to agents.
 
         Parameters
         ----------
-        names : typing.Sequence[str]
-            Agent names to resolve to IDs
+        type : BulkTestUploadType
+            Test kind applied to every item in the batch
+
+        tests : typing.Sequence[BulkTestItem]
+            Test items to create (non-empty, max 500 per request, names unique within the batch)
+
+        agent_uuids : typing.Optional[typing.Sequence[str]]
+            Agents (IDs) to link every created test to. Omit to link none
+
+        language : typing.Optional[str]
+            Language written to each test's `config.settings.language`. Omit to leave unset
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[ResolveAgentNamesResponse]
+        AsyncHttpResponse[BulkTestUploadResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "agents/resolve",
+            "tests/bulk",
             method="POST",
             json={
-                "names": names,
+                "type": type,
+                "tests": convert_and_respect_annotation_metadata(
+                    object_=tests, annotation=typing.Sequence[BulkTestItem], direction="write"
+                ),
+                "agent_uuids": agent_uuids,
+                "language": language,
             },
             headers={
                 "content-type": "application/json",
@@ -388,9 +446,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ResolveAgentNamesResponse,
+                    BulkTestUploadResponse,
                     parse_obj_as(
-                        type_=ResolveAgentNamesResponse,  # type: ignore
+                        type_=BulkTestUploadResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -417,9 +475,9 @@ class AsyncRawAgentsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RoutersAgentsAgentResponse]]:
+    ) -> AsyncHttpResponse[typing.List[RoutersTestsTestResponse]]:
         """
-        List all agents in your workspace.
+        List all tests for your workspace, each with its linked evaluators.
 
         Parameters
         ----------
@@ -428,20 +486,20 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersAgentsAgentResponse]]
+        AsyncHttpResponse[typing.List[RoutersTestsTestResponse]]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "agents",
+            "tests",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentsAgentResponse],
+                    typing.List[RoutersTestsTestResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentsAgentResponse],  # type: ignore
+                        type_=typing.List[RoutersTestsTestResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -470,39 +528,48 @@ class AsyncRawAgentsClient:
         self,
         *,
         name: str,
-        type: typing.Optional[AgentCreateType] = OMIT,
+        type: TestCreateType,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[AgentCreateResponse]:
+    ) -> AsyncHttpResponse[TestCreateResponse]:
         """
-        Create a new agent in your workspace. For `type=agent`, defaults are deep-merged with any config you supply.
+        Create a test in your workspace.
 
         Parameters
         ----------
         name : str
-            Human-readable agent name, unique within the workspace
+            Human-readable test name, unique within the workspace
 
-        type : typing.Optional[AgentCreateType]
-            `agent` applies managed defaults deep-merged under any supplied `config`; `connection` stores the config you supply as-is (must eventually contain `agent_url`)
+        type : TestCreateType
+            Test kind (immutable after creation): `response` judges the generated reply, `tool_call` diffs generated tool calls, `conversation` judges the full conversation
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Behavioral config (system_prompt, llm, stt, tts, settings, …). Deep-merged over defaults for `type=agent`; stored as-is for `type=connection`. Omit for `type=agent` to use defaults
+            Calibrate test config (`history`, `evaluation`, optional `settings`). Omit to create an empty shell to fill in later
+
+        evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
+            Evaluators to link. **Required (>=1) for `type=conversation`** (no fallback judge). Omit for `response`/`tool_call` to link none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[AgentCreateResponse]
+        AsyncHttpResponse[TestCreateResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "agents",
+            "tests",
             method="POST",
             json={
                 "name": name,
                 "type": type,
                 "config": config,
+                "evaluators": convert_and_respect_annotation_metadata(
+                    object_=evaluators,
+                    annotation=typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]],
+                    direction="write",
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -513,9 +580,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    AgentCreateResponse,
+                    TestCreateResponse,
                     parse_obj_as(
-                        type_=AgentCreateResponse,  # type: ignore
+                        type_=TestCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -541,35 +608,35 @@ class AsyncRawAgentsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[RoutersAgentsAgentResponse]:
+        self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[RoutersTestsTestResponse]:
         """
-        Get an agent in your workspace.
+        Get a test by ID, including its linked evaluators.
 
         Parameters
         ----------
-        agent_uuid : str
-            The agent to retrieve. Must be in your workspace.
+        test_uuid : str
+            Test to retrieve
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[RoutersAgentsAgentResponse]
+        AsyncHttpResponse[RoutersTestsTestResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"agents/{encode_path_param(agent_uuid)}",
+            f"tests/{encode_path_param(test_uuid)}",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    RoutersTestsTestResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=RoutersTestsTestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -596,50 +663,54 @@ class AsyncRawAgentsClient:
 
     async def update(
         self,
-        agent_uuid: str,
+        test_uuid: str,
         *,
         name: typing.Optional[str] = OMIT,
+        type: typing.Optional[TestUpdateType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
-        connection_verified: typing.Optional[bool] = OMIT,
-        benchmark_models_verified: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
+        evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[RoutersAgentsAgentResponse]:
+    ) -> AsyncHttpResponse[RoutersTestsTestResponse]:
         """
-        Update an agent's name and/or config. Changing `agent_url` or `agent_headers` resets connection and benchmark verification flags.
+        Update a test's name, config, and/or evaluator links.
 
         Parameters
         ----------
-        agent_uuid : str
-            The agent to update. Must be in your workspace.
+        test_uuid : str
+            Test to update
 
         name : typing.Optional[str]
-            New agent name. Omit to leave the name unchanged
+            New test name. Omit to leave unchanged
+
+        type : typing.Optional[TestUpdateType]
+            Test type. Immutable — may only echo the existing value; a different value is rejected (400). Omit to leave unchanged
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
-            Replacement config, stored as-is (no deep-merge on update). Changing `agent_url` or `agent_headers` resets all connection/benchmark verification flags. Omit to leave config unchanged
+            Replacement calibrate config. Omit to leave unchanged
 
-        connection_verified : typing.Optional[bool]
-            Directly set the `connection_verified` flag inside config. Omit to leave it untouched
-
-        benchmark_models_verified : typing.Optional[typing.Dict[str, typing.Any]]
-            Directly set the per-model benchmark verification map inside config. Omit to leave it untouched
+        evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
+            Replacement evaluator links (replaces the existing set). Omit to leave links unchanged; an empty list clears them (**rejected for `conversation` tests**)
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[RoutersAgentsAgentResponse]
+        AsyncHttpResponse[RoutersTestsTestResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"agents/{encode_path_param(agent_uuid)}",
+            f"tests/{encode_path_param(test_uuid)}",
             method="PUT",
             json={
                 "name": name,
+                "type": type,
                 "config": config,
-                "connection_verified": connection_verified,
-                "benchmark_models_verified": benchmark_models_verified,
+                "evaluators": convert_and_respect_annotation_metadata(
+                    object_=evaluators,
+                    annotation=typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]],
+                    direction="write",
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -650,9 +721,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    RoutersTestsTestResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=RoutersTestsTestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

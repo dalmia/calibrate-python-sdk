@@ -3,14 +3,19 @@
 import typing
 
 import pydantic
+import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from ..core.serialization import FieldMetadata
 
 
-class TaskCreateResponse(UniversalBaseModel):
-    task_id: str
-    status: str
-    dataset_id: typing.Optional[str] = None
-    dataset_name: typing.Optional[str] = None
+class TestCreateResponse(UniversalBaseModel):
+    uuid_: typing_extensions.Annotated[
+        str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="ID of the newly created test")
+    ]
+    message: str = pydantic.Field()
+    """
+    Human-readable confirmation message
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
