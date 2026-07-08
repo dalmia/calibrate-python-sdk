@@ -109,7 +109,6 @@ class RawAnnotationTasksClient:
         type : AnnotationTaskCreateType
             Task type. Determines the shape of each item's payload.
             - `stt`: judge a transcript on its own
-            - `tts`: judge synthesized speech output
             - `llm`: judge one response with its conversation history
             - `llm-general`: judge a standalone `input -> output` pair
             - `conversation`: judge a full conversation
@@ -817,7 +816,6 @@ class AsyncRawAnnotationTasksClient:
         type : AnnotationTaskCreateType
             Task type. Determines the shape of each item's payload.
             - `stt`: judge a transcript on its own
-            - `tts`: judge synthesized speech output
             - `llm`: judge one response with its conversation history
             - `llm-general`: judge a standalone `input -> output` pair
             - `conversation`: judge a full conversation
