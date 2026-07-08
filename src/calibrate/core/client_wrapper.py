@@ -35,12 +35,12 @@ class BaseClientWrapper:
         import platform
 
         headers: typing.Dict[str, str] = {
-            "User-Agent": "calibrate-sdk/0.0.13",
+            "User-Agent": "calibrate-sdk/0.0.14",
             "X-Fern-Language": "Python",
             "X-Fern-Runtime": f"python/{platform.python_version()}",
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             "X-Fern-SDK-Name": "calibrate-sdk",
-            "X-Fern-SDK-Version": "0.0.13",
+            "X-Fern-SDK-Version": "0.0.14",
             **(self.get_custom_headers() or {}),
         }
         if self._org_uuid is not None:
