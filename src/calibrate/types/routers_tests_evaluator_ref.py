@@ -14,7 +14,7 @@ class RoutersTestsEvaluatorRef(UniversalBaseModel):
 
     variable_values: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Values for the evaluator's `{{placeholder}}` variables, pinned per test. Omit to inherit the evaluator version's defaults
+    Values for the evaluator's `{{placeholder}}` variables, pinned on this test. Omit to inherit the evaluator version's defaults
     """
 
     if IS_PYDANTIC_V2:

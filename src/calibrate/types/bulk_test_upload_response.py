@@ -24,7 +24,7 @@ class BulkTestUploadResponse(UniversalBaseModel):
 
     warnings: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
     """
-    Non-fatal issues (e.g. agents some tests couldn't link to). Null when there were none
+    Non-fatal issues, such as agents some tests could not be linked to
     """
 
     if IS_PYDANTIC_V2:

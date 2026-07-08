@@ -11,7 +11,6 @@ class BaseClientWrapper:
     def __init__(
         self,
         *,
-        org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
@@ -21,7 +20,6 @@ class BaseClientWrapper:
         max_stream_reconnection_attempts: typing.Optional[int] = None,
         logging: typing.Optional[typing.Union[LogConfig, Logger]] = None,
     ):
-        self._org_uuid = org_uuid
         self.api_key = api_key
         self._headers = headers
         self._base_url = base_url
@@ -35,16 +33,14 @@ class BaseClientWrapper:
         import platform
 
         headers: typing.Dict[str, str] = {
-            "User-Agent": "calibrate-sdk/0.0.14",
+            "User-Agent": "calibrate-sdk/0.0.15",
             "X-Fern-Language": "Python",
             "X-Fern-Runtime": f"python/{platform.python_version()}",
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             "X-Fern-SDK-Name": "calibrate-sdk",
-            "X-Fern-SDK-Version": "0.0.14",
+            "X-Fern-SDK-Version": "0.0.15",
             **(self.get_custom_headers() or {}),
         }
-        if self._org_uuid is not None:
-            headers["X-Org-UUID"] = self._org_uuid
         headers["X-API-Key"] = self.api_key
         return headers
 
@@ -71,7 +67,6 @@ class SyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
@@ -83,7 +78,6 @@ class SyncClientWrapper(BaseClientWrapper):
         httpx_client: httpx.Client,
     ):
         super().__init__(
-            org_uuid=org_uuid,
             api_key=api_key,
             headers=headers,
             base_url=base_url,
@@ -107,7 +101,6 @@ class AsyncClientWrapper(BaseClientWrapper):
     def __init__(
         self,
         *,
-        org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         base_url: str,
@@ -120,7 +113,6 @@ class AsyncClientWrapper(BaseClientWrapper):
         httpx_client: httpx.AsyncClient,
     ):
         super().__init__(
-            org_uuid=org_uuid,
             api_key=api_key,
             headers=headers,
             base_url=base_url,

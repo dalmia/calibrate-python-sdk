@@ -15,6 +15,7 @@ from ..types.agent_create_response import AgentCreateResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
+from ..types.verify_connection_response import VerifyConnectionResponse
 from .types.agent_create_type import AgentCreateType
 from pydantic import ValidationError
 
@@ -25,6 +26,79 @@ OMIT = typing.cast(typing.Any, ...)
 class RawAgentsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
+
+    def verify_connection(
+        self,
+        agent_uuid: str,
+        *,
+        model: typing.Optional[str] = OMIT,
+        messages: typing.Optional[typing.Sequence[typing.Dict[str, str]]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[VerifyConnectionResponse]:
+        """
+        Verify an agent's connection and persist the result when successful
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose connection to verify
+
+        model : typing.Optional[str]
+            Model to verify. Omit for a basic connection check. Provide it for a model-specific check before benchmarking that model
+
+        messages : typing.Optional[typing.Sequence[typing.Dict[str, str]]]
+            Sample chat messages to send during verification. Omit to use the default probe
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[VerifyConnectionResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/verify-connection",
+            method="POST",
+            json={
+                "model": model,
+                "messages": messages,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    VerifyConnectionResponse,
+                    parse_obj_as(
+                        type_=VerifyConnectionResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def resolve(
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
@@ -161,14 +235,14 @@ class RawAgentsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
 
-            **`type=agent`** (built inside Calibrate):
-            - `system_prompt` (string): the agent's instructions
-            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
-            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
-            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
-            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
-            - `system_tools.end_call` (bool, optional): let the agent end the call
-            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+            **`type=agent`**, built inside Calibrate:
+            - `system_prompt`: the agent's instructions
+            - `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first`, `settings.max_assistant_turns`
+            - `system_tools.end_call`: let the agent end the call
+            - `data_extraction_fields`: `[{name, type, description, required}]`
 
             ```json
             {
@@ -180,10 +254,10 @@ class RawAgentsClient:
             }
             ```
 
-            **`type=connection`** (your own HTTP endpoint):
-            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
-            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
-            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+            **`type=connection`**, your own HTTP endpoint:
+            - `agent_url`: public HTTP(S) endpoint your agent is called at
+            - `agent_headers`: headers sent on each request, e.g. auth
+            - `benchmark_provider`: `openrouter` by default. Other values: `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
 
             ```json
             {
@@ -193,7 +267,7 @@ class RawAgentsClient:
             }
             ```
 
-            For `type=agent`, omitted keys inherit managed defaults (omit `config` entirely to use all defaults). For `type=connection`, `config` is stored as-is and must contain `agent_url`.
+            For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely to use all defaults. For `type=connection`, `config` is stored as-is and must contain `agent_url`
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -256,7 +330,7 @@ class RawAgentsClient:
         Parameters
         ----------
         agent_uuid : str
-            The agent to retrieve.
+            The agent to retrieve
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -315,7 +389,7 @@ class RawAgentsClient:
         Parameters
         ----------
         agent_uuid : str
-            The agent to update.
+            The agent to update
 
         name : typing.Optional[str]
             New agent name. Omit to leave the name unchanged
@@ -323,14 +397,14 @@ class RawAgentsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
 
-            **`type=agent`** (built inside Calibrate):
-            - `system_prompt` (string): the agent's instructions
-            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
-            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
-            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
-            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
-            - `system_tools.end_call` (bool, optional): let the agent end the call
-            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+            **`type=agent`**, built inside Calibrate:
+            - `system_prompt`: the agent's instructions
+            - `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first`, `settings.max_assistant_turns`
+            - `system_tools.end_call`: let the agent end the call
+            - `data_extraction_fields`: `[{name, type, description, required}]`
 
             ```json
             {
@@ -342,10 +416,10 @@ class RawAgentsClient:
             }
             ```
 
-            **`type=connection`** (your own HTTP endpoint):
-            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
-            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
-            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+            **`type=connection`**, your own HTTP endpoint:
+            - `agent_url`: public HTTP(S) endpoint your agent is called at
+            - `agent_headers`: headers sent on each request, e.g. auth
+            - `benchmark_provider`: `openrouter` by default. Other values: `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
 
             ```json
             {
@@ -355,9 +429,9 @@ class RawAgentsClient:
             }
             ```
 
-            Replaces the stored config. Omit to leave unchanged.
+            Replaces the stored config. Omit to leave unchanged
 
-            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags.
+            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -414,6 +488,79 @@ class RawAgentsClient:
 class AsyncRawAgentsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
+
+    async def verify_connection(
+        self,
+        agent_uuid: str,
+        *,
+        model: typing.Optional[str] = OMIT,
+        messages: typing.Optional[typing.Sequence[typing.Dict[str, str]]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[VerifyConnectionResponse]:
+        """
+        Verify an agent's connection and persist the result when successful
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose connection to verify
+
+        model : typing.Optional[str]
+            Model to verify. Omit for a basic connection check. Provide it for a model-specific check before benchmarking that model
+
+        messages : typing.Optional[typing.Sequence[typing.Dict[str, str]]]
+            Sample chat messages to send during verification. Omit to use the default probe
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[VerifyConnectionResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/verify-connection",
+            method="POST",
+            json={
+                "model": model,
+                "messages": messages,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    VerifyConnectionResponse,
+                    parse_obj_as(
+                        type_=VerifyConnectionResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def resolve(
         self, *, names: typing.Sequence[str], request_options: typing.Optional[RequestOptions] = None
@@ -550,14 +697,14 @@ class AsyncRawAgentsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
 
-            **`type=agent`** (built inside Calibrate):
-            - `system_prompt` (string): the agent's instructions
-            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
-            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
-            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
-            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
-            - `system_tools.end_call` (bool, optional): let the agent end the call
-            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+            **`type=agent`**, built inside Calibrate:
+            - `system_prompt`: the agent's instructions
+            - `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first`, `settings.max_assistant_turns`
+            - `system_tools.end_call`: let the agent end the call
+            - `data_extraction_fields`: `[{name, type, description, required}]`
 
             ```json
             {
@@ -569,10 +716,10 @@ class AsyncRawAgentsClient:
             }
             ```
 
-            **`type=connection`** (your own HTTP endpoint):
-            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
-            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
-            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+            **`type=connection`**, your own HTTP endpoint:
+            - `agent_url`: public HTTP(S) endpoint your agent is called at
+            - `agent_headers`: headers sent on each request, e.g. auth
+            - `benchmark_provider`: `openrouter` by default. Other values: `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
 
             ```json
             {
@@ -582,7 +729,7 @@ class AsyncRawAgentsClient:
             }
             ```
 
-            For `type=agent`, omitted keys inherit managed defaults (omit `config` entirely to use all defaults). For `type=connection`, `config` is stored as-is and must contain `agent_url`.
+            For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely to use all defaults. For `type=connection`, `config` is stored as-is and must contain `agent_url`
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -645,7 +792,7 @@ class AsyncRawAgentsClient:
         Parameters
         ----------
         agent_uuid : str
-            The agent to retrieve.
+            The agent to retrieve
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -704,7 +851,7 @@ class AsyncRawAgentsClient:
         Parameters
         ----------
         agent_uuid : str
-            The agent to update.
+            The agent to update
 
         name : typing.Optional[str]
             New agent name. Omit to leave the name unchanged
@@ -712,14 +859,14 @@ class AsyncRawAgentsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
 
-            **`type=agent`** (built inside Calibrate):
-            - `system_prompt` (string): the agent's instructions
-            - `llm.model` (string): `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
-            - `stt.provider` (string): `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
-            - `tts.provider` (string): `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
-            - `settings.agent_speaks_first` (bool), `settings.max_assistant_turns` (int)
-            - `system_tools.end_call` (bool, optional): let the agent end the call
-            - `data_extraction_fields` (array, optional): `[{name, type, description, required}]`
+            **`type=agent`**, built inside Calibrate:
+            - `system_prompt`: the agent's instructions
+            - `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+            - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
+            - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
+            - `settings.agent_speaks_first`, `settings.max_assistant_turns`
+            - `system_tools.end_call`: let the agent end the call
+            - `data_extraction_fields`: `[{name, type, description, required}]`
 
             ```json
             {
@@ -731,10 +878,10 @@ class AsyncRawAgentsClient:
             }
             ```
 
-            **`type=connection`** (your own HTTP endpoint):
-            - `agent_url` (string, required): public HTTPS endpoint the agent is called at
-            - `agent_headers` (object, optional): headers sent on each request, e.g. auth
-            - `benchmark_provider` (string, optional): `openrouter` (default), `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
+            **`type=connection`**, your own HTTP endpoint:
+            - `agent_url`: public HTTP(S) endpoint your agent is called at
+            - `agent_headers`: headers sent on each request, e.g. auth
+            - `benchmark_provider`: `openrouter` by default. Other values: `openai`, `google`, `anthropic`, `meta-llama`, `mistralai`, `deepseek`, `x-ai`, `cohere`, `qwen`, or `ai21`
 
             ```json
             {
@@ -744,9 +891,9 @@ class AsyncRawAgentsClient:
             }
             ```
 
-            Replaces the stored config. Omit to leave unchanged.
+            Replaces the stored config. Omit to leave unchanged
 
-            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags.
+            For `type=connection`, changing `agent_url` or `agent_headers` resets the connection and benchmark verification flags
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

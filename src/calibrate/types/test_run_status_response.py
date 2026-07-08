@@ -17,37 +17,37 @@ class TestRunStatusResponse(UniversalBaseModel):
 
     status: TaskStatus = pydantic.Field()
     """
-    Current status of the test run
+    Current status of the run
     """
 
     total_tests: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Total number of test cases. Null until known
+    Total number of test cases
     """
 
     passed: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Number of test cases that passed. Null until done
+    Number of test cases that passed
     """
 
     failed: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Number of test cases that failed. Null until done
+    Number of test cases that failed
     """
 
     latency_ms: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Aggregated response latency in milliseconds: `{p50, p95, p99, count}`
+    Aggregated response latency in milliseconds, as `{p50, p95, p99, count}`
     """
 
     cost: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Aggregated cost `{mean, min, max, count}` (USD)
+    Aggregated cost as `{mean, min, max, count}` (USD)
     """
 
     total_tokens: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Aggregated token usage `{mean, min, max, count}`
+    Aggregated token usage as `{mean, min, max, count}`
     """
 
     evaluators: typing.Optional[typing.List[TestRunEvaluator]] = pydantic.Field(default=None)
@@ -57,7 +57,7 @@ class TestRunStatusResponse(UniversalBaseModel):
 
     results: typing.Optional[typing.List[TestCaseResult]] = pydantic.Field(default=None)
     """
-    Results for each test case. Null until available
+    Results for each test case
     """
 
     error: typing.Optional[bool] = pydantic.Field(default=None)
@@ -72,7 +72,7 @@ class TestRunStatusResponse(UniversalBaseModel):
 
     share_token: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Public share token. Null unless the run is public
+    Token for building the public share URL
     """
 
     if IS_PYDANTIC_V2:

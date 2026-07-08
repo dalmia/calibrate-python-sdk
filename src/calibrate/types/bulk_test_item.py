@@ -17,7 +17,7 @@ class BulkTestItem(UniversalBaseModel):
 
     conversation_history: typing.List[ChatMessage] = pydantic.Field()
     """
-    Ordered messages ending at the user turn the agent should answer (must be non-empty)
+    Ordered messages ending at the user turn the agent should answer
     """
 
     evaluators: typing.Optional[typing.List[RoutersTestsEvaluatorRef]] = pydantic.Field(default=None)

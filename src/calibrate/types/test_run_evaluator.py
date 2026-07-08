@@ -27,27 +27,29 @@ class TestRunEvaluator(UniversalBaseModel):
 
     output_type: typing.Optional[TestRunEvaluatorOutputType] = pydantic.Field(default=None)
     """
-    Verdict shape: pass/fail or a numeric rating
+    The shape of the verdict:
+    - `binary`: a pass/fail verdict
+    - `rating`: a numeric score
     """
 
     output_config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Rubric: the scale values, labels, and colors a verdict maps to
+    The rubric: the scale values, labels, and colors a verdict maps to
     """
 
     scale_min: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Lowest rating value. Set for rating evaluators
+    Lowest value on a rating scale
     """
 
     scale_max: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Highest rating value. Set for rating evaluators
+    Highest value on a rating scale
     """
 
     version_number: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Evaluator version this run used
+    The evaluator version this run used
     """
 
     if IS_PYDANTIC_V2:

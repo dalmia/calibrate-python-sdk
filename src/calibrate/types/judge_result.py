@@ -14,27 +14,27 @@ class JudgeResult(UniversalBaseModel):
 
     reasoning: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Judge's rationale for this verdict
+    The judge's rationale for this verdict
     """
 
     match: typing.Optional[bool] = pydantic.Field(default=None)
     """
-    Pass/fail verdict, for binary evaluators
+    Pass/fail verdict, set for binary evaluators
     """
 
     score: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Numeric score, for rating evaluators
+    Numeric score, set for rating evaluators
     """
 
     value_name: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Readable label for the verdict, from the run's rubric
+    Readable label for the verdict, taken from the run's rubric
     """
 
     variable_values: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    `{{var}}` substitutions used for this evaluator on this test case
+    Values filled into the evaluator prompt's `{{variable}}` placeholders for this test case, keyed by variable name
     """
 
     if IS_PYDANTIC_V2:

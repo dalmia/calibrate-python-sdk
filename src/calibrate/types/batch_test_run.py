@@ -20,12 +20,12 @@ class BatchTestRun(UniversalBaseModel):
 
     task_id: str = pydantic.Field()
     """
-    Test run job ID. Poll for status and results
+    Test run job ID. Poll it for status and results
     """
 
     status: BatchTestRunStatus = pydantic.Field()
     """
-    Initial status of the test run
+    Current status of the run
     """
 
     if IS_PYDANTIC_V2:

@@ -14,12 +14,12 @@ class ToolCallOutput(UniversalBaseModel):
 
     arguments: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Arguments the agent passed to the tool. Null if none
+    Arguments the agent passed to the tool
     """
 
     output: typing.Optional[typing.Any] = pydantic.Field(default=None)
     """
-    Tool execution result (any JSON value). Present only when the agent runs the tool and returns its result
+    Tool execution result, when the agent ran the tool and returned its result
     """
 
     if IS_PYDANTIC_V2:

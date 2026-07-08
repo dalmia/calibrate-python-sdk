@@ -12,6 +12,8 @@ from .environment import CalibrateEnvironment
 if typing.TYPE_CHECKING:
     from .agent_tests.client import AgentTestsClient, AsyncAgentTestsClient
     from .agents.client import AgentsClient, AsyncAgentsClient
+    from .annotation_tasks.client import AnnotationTasksClient, AsyncAnnotationTasksClient
+    from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
     from .tests.client import AsyncTestsClient, TestsClient
 
 
@@ -33,7 +35,6 @@ class Calibrate:
 
 
 
-    org_uuid : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
@@ -64,7 +65,6 @@ class Calibrate:
     from calibrate import Calibrate
 
     client = Calibrate(
-        org_uuid="YOUR_ORG_UUID",
         api_key="YOUR_API_KEY",
     )
     """
@@ -74,7 +74,6 @@ class Calibrate:
         *,
         base_url: typing.Optional[str] = None,
         environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
-        org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         timeout: typing.Optional[float] = None,
@@ -89,7 +88,6 @@ class Calibrate:
         _defaulted_max_retries = max_retries if max_retries is not None else 2
         self._client_wrapper = SyncClientWrapper(
             base_url=_get_base_url(base_url=base_url, environment=environment),
-            org_uuid=org_uuid,
             api_key=api_key,
             headers=headers,
             httpx_client=httpx_client
@@ -106,6 +104,8 @@ class Calibrate:
         self._agents: typing.Optional[AgentsClient] = None
         self._tests: typing.Optional[TestsClient] = None
         self._agent_tests: typing.Optional[AgentTestsClient] = None
+        self._evaluators: typing.Optional[EvaluatorsClient] = None
+        self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
 
     @property
     def agents(self):
@@ -130,6 +130,22 @@ class Calibrate:
 
             self._agent_tests = AgentTestsClient(client_wrapper=self._client_wrapper)
         return self._agent_tests
+
+    @property
+    def evaluators(self):
+        if self._evaluators is None:
+            from .evaluators.client import EvaluatorsClient  # noqa: E402
+
+            self._evaluators = EvaluatorsClient(client_wrapper=self._client_wrapper)
+        return self._evaluators
+
+    @property
+    def annotation_tasks(self):
+        if self._annotation_tasks is None:
+            from .annotation_tasks.client import AnnotationTasksClient  # noqa: E402
+
+            self._annotation_tasks = AnnotationTasksClient(client_wrapper=self._client_wrapper)
+        return self._annotation_tasks
 
 
 def _make_default_async_client(
@@ -168,7 +184,6 @@ class AsyncCalibrate:
 
 
 
-    org_uuid : typing.Optional[str]
     api_key : str
     headers : typing.Optional[typing.Dict[str, str]]
         Additional headers to send with every request.
@@ -199,7 +214,6 @@ class AsyncCalibrate:
     from calibrate import AsyncCalibrate
 
     client = AsyncCalibrate(
-        org_uuid="YOUR_ORG_UUID",
         api_key="YOUR_API_KEY",
     )
     """
@@ -209,7 +223,6 @@ class AsyncCalibrate:
         *,
         base_url: typing.Optional[str] = None,
         environment: CalibrateEnvironment = CalibrateEnvironment.DEFAULT,
-        org_uuid: typing.Optional[str] = None,
         api_key: str,
         headers: typing.Optional[typing.Dict[str, str]] = None,
         timeout: typing.Optional[float] = None,
@@ -224,7 +237,6 @@ class AsyncCalibrate:
         _defaulted_max_retries = max_retries if max_retries is not None else 2
         self._client_wrapper = AsyncClientWrapper(
             base_url=_get_base_url(base_url=base_url, environment=environment),
-            org_uuid=org_uuid,
             api_key=api_key,
             headers=headers,
             httpx_client=httpx_client
@@ -239,6 +251,8 @@ class AsyncCalibrate:
         self._agents: typing.Optional[AsyncAgentsClient] = None
         self._tests: typing.Optional[AsyncTestsClient] = None
         self._agent_tests: typing.Optional[AsyncAgentTestsClient] = None
+        self._evaluators: typing.Optional[AsyncEvaluatorsClient] = None
+        self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
 
     @property
     def agents(self):
@@ -263,6 +277,22 @@ class AsyncCalibrate:
 
             self._agent_tests = AsyncAgentTestsClient(client_wrapper=self._client_wrapper)
         return self._agent_tests
+
+    @property
+    def evaluators(self):
+        if self._evaluators is None:
+            from .evaluators.client import AsyncEvaluatorsClient  # noqa: E402
+
+            self._evaluators = AsyncEvaluatorsClient(client_wrapper=self._client_wrapper)
+        return self._evaluators
+
+    @property
+    def annotation_tasks(self):
+        if self._annotation_tasks is None:
+            from .annotation_tasks.client import AsyncAnnotationTasksClient  # noqa: E402
+
+            self._annotation_tasks = AsyncAnnotationTasksClient(client_wrapper=self._client_wrapper)
+        return self._annotation_tasks
 
 
 def _get_base_url(*, base_url: typing.Optional[str] = None, environment: CalibrateEnvironment) -> str:

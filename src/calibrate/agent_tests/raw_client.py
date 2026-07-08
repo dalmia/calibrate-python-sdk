@@ -13,9 +13,13 @@ from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
+from ..types.agent_test_runs_response import AgentTestRunsResponse
+from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
+from ..types.benchmark_status_response import BenchmarkStatusResponse
 from ..types.http_validation_error import HttpValidationError
+from ..types.routers_agent_tests_test_response import RoutersAgentTestsTestResponse
 from ..types.test_run_status_response import TestRunStatusResponse
 from pydantic import ValidationError
 
@@ -27,6 +31,183 @@ class RawAgentTestsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
+    def link(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[AgentTestsCreateResponse]:
+        """
+        Link one or more tests to an agent. Tests that are already linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to link tests to
+
+        test_uuids : typing.Sequence[str]
+            Tests to link. Any that are already linked are skipped
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[AgentTestsCreateResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "agent-tests",
+            method="POST",
+            json={
+                "agent_uuid": agent_uuid,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestsCreateResponse,
+                    parse_obj_as(
+                        type_=AgentTestsCreateResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def list_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[typing.List[RoutersAgentTestsTestResponse]]:
+        """
+        List the tests linked to an agent.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose linked tests to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[typing.List[RoutersAgentTestsTestResponse]]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[RoutersAgentTestsTestResponse],
+                    parse_obj_as(
+                        type_=typing.List[RoutersAgentTestsTestResponse],  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def list_runs_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[AgentTestRunsResponse]:
+        """
+        List an agent's test runs with their results
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose test runs to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[AgentTestRunsResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/runs",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestRunsResponse,
+                    parse_obj_as(
+                        type_=AgentTestRunsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
     def run(
         self,
         agent_uuid: str,
@@ -35,12 +216,12 @@ class RawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[AgentTestRunCreateResponse]:
         """
-        Run an agent's linked tests as a background job, returning a task ID to poll
+        Run an agent's linked tests as a background job, returning a task ID to poll.
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test.
+            Agent to test
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -102,7 +283,7 @@ class RawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[BatchTestRunResponse]:
         """
-        Run agent tests for every agent, or for a selected set
+        Run agent tests for every agent, or for a selected set.
 
         Parameters
         ----------
@@ -159,7 +340,7 @@ class RawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[TestRunStatusResponse]:
         """
-        Poll a test run for its status and evaluation results
+        Poll a test run for its status and evaluation results.
 
         Parameters
         ----------
@@ -209,10 +390,314 @@ class RawAgentTestsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
+    def benchmark(
+        self,
+        agent_uuid: str,
+        *,
+        models: typing.Sequence[str],
+        test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[AgentTestRunCreateResponse]:
+        """
+        Run a multi-model benchmark on an agent's linked tests as a background job.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to benchmark
+
+        models : typing.Sequence[str]
+            Model names to benchmark
+
+        test_uuids : typing.Optional[typing.Sequence[str]]
+            A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[AgentTestRunCreateResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/benchmark",
+            method="POST",
+            json={
+                "models": models,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestRunCreateResponse,
+                    parse_obj_as(
+                        type_=AgentTestRunCreateResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def get_benchmark(
+        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[BenchmarkStatusResponse]:
+        """
+        Get the results of a benchmark run
+
+        Parameters
+        ----------
+        task_id : str
+            Benchmark run to poll for status and results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[BenchmarkStatusResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agent-tests/benchmark/{encode_path_param(task_id)}",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    BenchmarkStatusResponse,
+                    parse_obj_as(
+                        type_=BenchmarkStatusResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
 
 class AsyncRawAgentTestsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
+
+    async def link(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[AgentTestsCreateResponse]:
+        """
+        Link one or more tests to an agent. Tests that are already linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to link tests to
+
+        test_uuids : typing.Sequence[str]
+            Tests to link. Any that are already linked are skipped
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[AgentTestsCreateResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "agent-tests",
+            method="POST",
+            json={
+                "agent_uuid": agent_uuid,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestsCreateResponse,
+                    parse_obj_as(
+                        type_=AgentTestsCreateResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def list_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[typing.List[RoutersAgentTestsTestResponse]]:
+        """
+        List the tests linked to an agent.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose linked tests to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[typing.List[RoutersAgentTestsTestResponse]]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    typing.List[RoutersAgentTestsTestResponse],
+                    parse_obj_as(
+                        type_=typing.List[RoutersAgentTestsTestResponse],  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def list_runs_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[AgentTestRunsResponse]:
+        """
+        List an agent's test runs with their results
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose test runs to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[AgentTestRunsResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/runs",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestRunsResponse,
+                    parse_obj_as(
+                        type_=AgentTestRunsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def run(
         self,
@@ -222,12 +707,12 @@ class AsyncRawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[AgentTestRunCreateResponse]:
         """
-        Run an agent's linked tests as a background job, returning a task ID to poll
+        Run an agent's linked tests as a background job, returning a task ID to poll.
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test.
+            Agent to test
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -289,7 +774,7 @@ class AsyncRawAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[BatchTestRunResponse]:
         """
-        Run agent tests for every agent, or for a selected set
+        Run agent tests for every agent, or for a selected set.
 
         Parameters
         ----------
@@ -346,7 +831,7 @@ class AsyncRawAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[TestRunStatusResponse]:
         """
-        Poll a test run for its status and evaluation results
+        Poll a test run for its status and evaluation results.
 
         Parameters
         ----------
@@ -372,6 +857,133 @@ class AsyncRawAgentTestsClient:
                     TestRunStatusResponse,
                     parse_obj_as(
                         type_=TestRunStatusResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def benchmark(
+        self,
+        agent_uuid: str,
+        *,
+        models: typing.Sequence[str],
+        test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[AgentTestRunCreateResponse]:
+        """
+        Run a multi-model benchmark on an agent's linked tests as a background job.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to benchmark
+
+        models : typing.Sequence[str]
+            Model names to benchmark
+
+        test_uuids : typing.Optional[typing.Sequence[str]]
+            A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[AgentTestRunCreateResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agent-tests/agent/{encode_path_param(agent_uuid)}/benchmark",
+            method="POST",
+            json={
+                "models": models,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestRunCreateResponse,
+                    parse_obj_as(
+                        type_=AgentTestRunCreateResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def get_benchmark(
+        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[BenchmarkStatusResponse]:
+        """
+        Get the results of a benchmark run
+
+        Parameters
+        ----------
+        task_id : str
+            Benchmark run to poll for status and results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[BenchmarkStatusResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agent-tests/benchmark/{encode_path_param(task_id)}",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    BenchmarkStatusResponse,
+                    parse_obj_as(
+                        type_=BenchmarkStatusResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

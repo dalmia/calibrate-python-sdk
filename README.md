@@ -70,11 +70,8 @@ client = Calibrate(
     api_key="<value>",
 )
 
-client.agents.resolve(
-    names=[
-        "my-agent",
-        "support-bot"
-    ],
+client.agents.verify_connection(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
 )
 ```
 
@@ -106,11 +103,8 @@ client = AsyncCalibrate(
 
 
 async def main() -> None:
-    await client.agents.resolve(
-        names=[
-            "my-agent",
-            "support-bot"
-        ],
+    await client.agents.verify_connection(
+        agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
     )
 
 
@@ -126,7 +120,7 @@ will be thrown.
 from calibrate.core.api_error import ApiError
 
 try:
-    client.agents.resolve(...)
+    client.agents.verify_connection(...)
 except ApiError as e:
     print(e.status_code)
     print(e.body)
@@ -143,7 +137,7 @@ The `.with_raw_response` property returns a "raw" client that can be used to acc
 from calibrate import Calibrate
 
 client = Calibrate(...)
-response = client.agents.with_raw_response.resolve(...)
+response = client.agents.with_raw_response.verify_connection(...)
 print(response.headers)  # access the response headers
 print(response.status_code)  # access the response status code
 print(response.data)  # access the underlying object
@@ -174,7 +168,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `max_retries` request option to configure this behavior.
 
 ```python
-client.agents.resolve(..., request_options={
+client.agents.verify_connection(..., request_options={
     "max_retries": 1
 })
 ```
@@ -189,7 +183,7 @@ from calibrate import Calibrate
 client = Calibrate(..., timeout=20.0)
 
 # Override timeout for a specific method
-client.agents.resolve(..., request_options={
+client.agents.verify_connection(..., request_options={
     "timeout_in_seconds": 1
 })
 ```

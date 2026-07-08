@@ -21,37 +21,37 @@ class TestCaseResult(UniversalBaseModel):
 
     passed: typing.Optional[bool] = pydantic.Field(default=None)
     """
-    Whether the case passed. Present only when done
+    Whether the case passed
     """
 
     reasoning: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Judge reasoning, or the tool-call diff for tool-call tests
+    The judge's reasoning, or the tool-call diff for a tool-call test
     """
 
     output: typing.Optional[TestOutput] = pydantic.Field(default=None)
     """
-    The agent's output for this case. Present only when done
+    The agent's output for this case
     """
 
     test_case: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    The input test case definition. Present only when done
+    The test case definition that was run
     """
 
     judge_results: typing.Optional[typing.List[JudgeResult]] = pydantic.Field(default=None)
     """
-    One verdict per evaluator, for response and conversation tests. Null for tool-call tests or rows still running
+    One verdict for each evaluator
     """
 
     latency_ms: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Response latency in milliseconds for the agent under test
+    How long the agent took to respond, in milliseconds
     """
 
     cost: typing.Optional[float] = pydantic.Field(default=None)
     """
-    Cost of this case in USD
+    Cost of this case (USD)
     """
 
     if IS_PYDANTIC_V2:

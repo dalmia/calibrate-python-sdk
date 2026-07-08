@@ -10,12 +10,12 @@ from .agent_test_run_create_response_status import AgentTestRunCreateResponseSta
 class AgentTestRunCreateResponse(UniversalBaseModel):
     task_id: str = pydantic.Field()
     """
-    Test run job ID. Poll for status and results
+    Test run job ID. Poll it for status and results
     """
 
     status: AgentTestRunCreateResponseStatus = pydantic.Field()
     """
-    Current status of the test run
+    Current status of the run
     """
 
     if IS_PYDANTIC_V2:

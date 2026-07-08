@@ -52,13 +52,14 @@ class RawTestsClient:
             - `tool_call`: diffs the generated tool calls
             - `conversation`: judges the full conversation
 
-            Applied to every test in the batch.
+
+            Applied to every test in the batch
 
         tests : typing.Sequence[BulkTestItem]
-            Test items to create (non-empty, max 500 per request, names unique within the batch)
+            Test items to create, at most 500 per request, with names unique within the batch
 
         agent_uuids : typing.Optional[typing.Sequence[str]]
-            Agents (IDs) to link every created test to. Omit to link none
+            IDs of agents to link every created test to. Omit to link none
 
         language : typing.Optional[str]
             Language written to each test's `config.settings.language`. Omit to leave unset
@@ -196,9 +197,9 @@ class RawTestsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             The calibrate test config. Three top-level keys.
 
-            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
-            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
-            - `settings` (object, optional): e.g. `{"language": "en"}`.
+            - `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
+            - `settings`: an optional object, e.g. `{"language": "en"}`.
 
             `evaluation` by test type:
             - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
@@ -241,7 +242,7 @@ class RawTestsClient:
 
             Evaluators are linked via the separate `evaluators` field, not inside `config`.
 
-            Omit to create the test with no config and fill it in later via update.
+            Omit to create the test with no config and fill it in later via update
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
             Evaluators to link. Used by `response` and `conversation` tests
@@ -385,14 +386,15 @@ class RawTestsClient:
             - `tool_call`: diffs the generated tool calls
             - `conversation`: judges the full conversation
 
-            Immutable. Omit, or send the existing value. A different value is rejected (400).
+
+            Immutable. Omit it, or send the current value
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             The calibrate test config. Three top-level keys.
 
-            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
-            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
-            - `settings` (object, optional): e.g. `{"language": "en"}`.
+            - `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
+            - `settings`: an optional object, e.g. `{"language": "en"}`.
 
             `evaluation` by test type:
             - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
@@ -435,7 +437,7 @@ class RawTestsClient:
 
             Evaluators are linked via the separate `evaluators` field, not inside `config`.
 
-            Replaces the stored config. Omit to leave unchanged.
+            Replaces the stored config. Omit to leave unchanged
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
             New evaluator links for the test. Omit to leave unchanged. An empty list clears them, except on `conversation` tests, which must keep at least one
@@ -523,13 +525,14 @@ class AsyncRawTestsClient:
             - `tool_call`: diffs the generated tool calls
             - `conversation`: judges the full conversation
 
-            Applied to every test in the batch.
+
+            Applied to every test in the batch
 
         tests : typing.Sequence[BulkTestItem]
-            Test items to create (non-empty, max 500 per request, names unique within the batch)
+            Test items to create, at most 500 per request, with names unique within the batch
 
         agent_uuids : typing.Optional[typing.Sequence[str]]
-            Agents (IDs) to link every created test to. Omit to link none
+            IDs of agents to link every created test to. Omit to link none
 
         language : typing.Optional[str]
             Language written to each test's `config.settings.language`. Omit to leave unset
@@ -667,9 +670,9 @@ class AsyncRawTestsClient:
         config : typing.Optional[typing.Dict[str, typing.Any]]
             The calibrate test config. Three top-level keys.
 
-            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
-            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
-            - `settings` (object, optional): e.g. `{"language": "en"}`.
+            - `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
+            - `settings`: an optional object, e.g. `{"language": "en"}`.
 
             `evaluation` by test type:
             - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
@@ -712,7 +715,7 @@ class AsyncRawTestsClient:
 
             Evaluators are linked via the separate `evaluators` field, not inside `config`.
 
-            Omit to create the test with no config and fill it in later via update.
+            Omit to create the test with no config and fill it in later via update
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
             Evaluators to link. Used by `response` and `conversation` tests
@@ -856,14 +859,15 @@ class AsyncRawTestsClient:
             - `tool_call`: diffs the generated tool calls
             - `conversation`: judges the full conversation
 
-            Immutable. Omit, or send the existing value. A different value is rejected (400).
+
+            Immutable. Omit it, or send the current value
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             The calibrate test config. Three top-level keys.
 
-            - `history` (array, required): the conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
-            - `evaluation` (object, required): `{type, ...}`, where `type` matches the test's `type` (below).
-            - `settings` (object, optional): e.g. `{"language": "en"}`.
+            - `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+            - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
+            - `settings`: an optional object, e.g. `{"language": "en"}`.
 
             `evaluation` by test type:
             - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
@@ -906,7 +910,7 @@ class AsyncRawTestsClient:
 
             Evaluators are linked via the separate `evaluators` field, not inside `config`.
 
-            Replaces the stored config. Omit to leave unchanged.
+            Replaces the stored config. Omit to leave unchanged
 
         evaluators : typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]]
             New evaluator links for the test. Omit to leave unchanged. An empty list clears them, except on `conversation` tests, which must keep at least one

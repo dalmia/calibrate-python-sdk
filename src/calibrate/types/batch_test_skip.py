@@ -4,6 +4,7 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .batch_test_skip_reason import BatchTestSkipReason
 
 
 class BatchTestSkip(UniversalBaseModel):
@@ -17,9 +18,11 @@ class BatchTestSkip(UniversalBaseModel):
     ID of the skipped agent
     """
 
-    reason: str = pydantic.Field()
+    reason: BatchTestSkipReason = pydantic.Field()
     """
-    Why this agent was not run
+    Why this agent was not run:
+    - `no_linked_tests`: the agent has no tests linked
+    - `connection_not_verified`: the agent's connection is not verified
     """
 
     if IS_PYDANTIC_V2:

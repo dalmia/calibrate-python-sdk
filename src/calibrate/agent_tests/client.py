@@ -5,8 +5,12 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
+from ..types.agent_test_runs_response import AgentTestRunsResponse
+from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
+from ..types.benchmark_status_response import BenchmarkStatusResponse
+from ..types.routers_agent_tests_test_response import RoutersAgentTestsTestResponse
 from ..types.test_run_status_response import TestRunStatusResponse
 from .raw_client import AsyncRawAgentTestsClient, RawAgentTestsClient
 
@@ -29,6 +33,113 @@ class AgentTestsClient:
         """
         return self._raw_client
 
+    def link(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestsCreateResponse:
+        """
+        Link one or more tests to an agent. Tests that are already linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to link tests to
+
+        test_uuids : typing.Sequence[str]
+            Tests to link. Any that are already linked are skipped
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestsCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.link(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            test_uuids=["b1c2d3e4-f5a6-7890-bcde-f12345678901"],
+        )
+        """
+        _response = self._raw_client.link(agent_uuid=agent_uuid, test_uuids=test_uuids, request_options=request_options)
+        return _response.data
+
+    def list_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> typing.List[RoutersAgentTestsTestResponse]:
+        """
+        List the tests linked to an agent.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose linked tests to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        typing.List[RoutersAgentTestsTestResponse]
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.list_for_agent(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.list_for_agent(agent_uuid, request_options=request_options)
+        return _response.data
+
+    def list_runs_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AgentTestRunsResponse:
+        """
+        List an agent's test runs with their results
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose test runs to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestRunsResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.list_runs_for_agent(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.list_runs_for_agent(agent_uuid, request_options=request_options)
+        return _response.data
+
     def run(
         self,
         agent_uuid: str,
@@ -37,12 +148,12 @@ class AgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentTestRunCreateResponse:
         """
-        Run an agent's linked tests as a background job, returning a task ID to poll
+        Run an agent's linked tests as a background job, returning a task ID to poll.
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test.
+            Agent to test
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -60,7 +171,6 @@ class AgentTestsClient:
         from calibrate import Calibrate
 
         client = Calibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
         client.agent_tests.run(
@@ -77,7 +187,7 @@ class AgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BatchTestRunResponse:
         """
-        Run agent tests for every agent, or for a selected set
+        Run agent tests for every agent, or for a selected set.
 
         Parameters
         ----------
@@ -96,7 +206,6 @@ class AgentTestsClient:
         from calibrate import BatchRunRequest, Calibrate
 
         client = Calibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
         client.agent_tests.run_batch(
@@ -110,7 +219,7 @@ class AgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> TestRunStatusResponse:
         """
-        Poll a test run for its status and evaluation results
+        Poll a test run for its status and evaluation results.
 
         Parameters
         ----------
@@ -130,7 +239,6 @@ class AgentTestsClient:
         from calibrate import Calibrate
 
         client = Calibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
         client.agent_tests.get_run(
@@ -138,6 +246,86 @@ class AgentTestsClient:
         )
         """
         _response = self._raw_client.get_run(task_id, request_options=request_options)
+        return _response.data
+
+    def benchmark(
+        self,
+        agent_uuid: str,
+        *,
+        models: typing.Sequence[str],
+        test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestRunCreateResponse:
+        """
+        Run a multi-model benchmark on an agent's linked tests as a background job.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to benchmark
+
+        models : typing.Sequence[str]
+            Model names to benchmark
+
+        test_uuids : typing.Optional[typing.Sequence[str]]
+            A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestRunCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.benchmark(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            models=["openai/gpt-4.1", "anthropic/claude-sonnet-4"],
+        )
+        """
+        _response = self._raw_client.benchmark(
+            agent_uuid, models=models, test_uuids=test_uuids, request_options=request_options
+        )
+        return _response.data
+
+    def get_benchmark(
+        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> BenchmarkStatusResponse:
+        """
+        Get the results of a benchmark run
+
+        Parameters
+        ----------
+        task_id : str
+            Benchmark run to poll for status and results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        BenchmarkStatusResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.get_benchmark(
+            task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
+        )
+        """
+        _response = self._raw_client.get_benchmark(task_id, request_options=request_options)
         return _response.data
 
 
@@ -156,6 +344,139 @@ class AsyncAgentTestsClient:
         """
         return self._raw_client
 
+    async def link(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestsCreateResponse:
+        """
+        Link one or more tests to an agent. Tests that are already linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to link tests to
+
+        test_uuids : typing.Sequence[str]
+            Tests to link. Any that are already linked are skipped
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestsCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.link(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                test_uuids=["b1c2d3e4-f5a6-7890-bcde-f12345678901"],
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.link(
+            agent_uuid=agent_uuid, test_uuids=test_uuids, request_options=request_options
+        )
+        return _response.data
+
+    async def list_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> typing.List[RoutersAgentTestsTestResponse]:
+        """
+        List the tests linked to an agent.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose linked tests to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        typing.List[RoutersAgentTestsTestResponse]
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.list_for_agent(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_for_agent(agent_uuid, request_options=request_options)
+        return _response.data
+
+    async def list_runs_for_agent(
+        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AgentTestRunsResponse:
+        """
+        List an agent's test runs with their results
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent whose test runs to list
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestRunsResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.list_runs_for_agent(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_runs_for_agent(agent_uuid, request_options=request_options)
+        return _response.data
+
     async def run(
         self,
         agent_uuid: str,
@@ -164,12 +485,12 @@ class AsyncAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentTestRunCreateResponse:
         """
-        Run an agent's linked tests as a background job, returning a task ID to poll
+        Run an agent's linked tests as a background job, returning a task ID to poll.
 
         Parameters
         ----------
         agent_uuid : str
-            The agent to test.
+            Agent to test
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             Tests to run. Omit to run all tests linked to the agent
@@ -189,7 +510,6 @@ class AsyncAgentTestsClient:
         from calibrate import AsyncCalibrate
 
         client = AsyncCalibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
 
@@ -212,7 +532,7 @@ class AsyncAgentTestsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> BatchTestRunResponse:
         """
-        Run agent tests for every agent, or for a selected set
+        Run agent tests for every agent, or for a selected set.
 
         Parameters
         ----------
@@ -233,7 +553,6 @@ class AsyncAgentTestsClient:
         from calibrate import AsyncCalibrate, BatchRunRequest
 
         client = AsyncCalibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
 
@@ -253,7 +572,7 @@ class AsyncAgentTestsClient:
         self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> TestRunStatusResponse:
         """
-        Poll a test run for its status and evaluation results
+        Poll a test run for its status and evaluation results.
 
         Parameters
         ----------
@@ -275,7 +594,6 @@ class AsyncAgentTestsClient:
         from calibrate import AsyncCalibrate
 
         client = AsyncCalibrate(
-            org_uuid="YOUR_ORG_UUID",
             api_key="YOUR_API_KEY",
         )
 
@@ -289,4 +607,100 @@ class AsyncAgentTestsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.get_run(task_id, request_options=request_options)
+        return _response.data
+
+    async def benchmark(
+        self,
+        agent_uuid: str,
+        *,
+        models: typing.Sequence[str],
+        test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestRunCreateResponse:
+        """
+        Run a multi-model benchmark on an agent's linked tests as a background job.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to benchmark
+
+        models : typing.Sequence[str]
+            Model names to benchmark
+
+        test_uuids : typing.Optional[typing.Sequence[str]]
+            A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestRunCreateResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.benchmark(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                models=["openai/gpt-4.1", "anthropic/claude-sonnet-4"],
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.benchmark(
+            agent_uuid, models=models, test_uuids=test_uuids, request_options=request_options
+        )
+        return _response.data
+
+    async def get_benchmark(
+        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> BenchmarkStatusResponse:
+        """
+        Get the results of a benchmark run
+
+        Parameters
+        ----------
+        task_id : str
+            Benchmark run to poll for status and results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        BenchmarkStatusResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.get_benchmark(
+                task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.get_benchmark(task_id, request_options=request_options)
         return _response.data

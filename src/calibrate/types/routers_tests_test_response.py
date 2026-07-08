@@ -29,17 +29,17 @@ class RoutersTestsTestResponse(UniversalBaseModel):
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Config for the test (`history`, `evaluation`, optional `settings`)
+    The stored config: `history`, `evaluation`, and an optional `settings`
     """
 
     created_at: str = pydantic.Field()
     """
-    Timestamp when the test was created (ISO 8601 UTC)
+    When the test was created (ISO 8601 UTC)
     """
 
     updated_at: str = pydantic.Field()
     """
-    Timestamp when the test was last updated (ISO 8601 UTC)
+    When the test was last updated (ISO 8601 UTC)
     """
 
     evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)

@@ -9,25 +9,65 @@ if typing.TYPE_CHECKING:
     from .agent_create_response import AgentCreateResponse
     from .agent_test_run_create_response import AgentTestRunCreateResponse
     from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
+    from .agent_test_run_list_item import AgentTestRunListItem
+    from .agent_test_run_list_item_type import AgentTestRunListItemType
+    from .agent_test_runs_response import AgentTestRunsResponse
+    from .agent_tests_create_response import AgentTestsCreateResponse
+    from .annotation_item_payload import AnnotationItemPayload
+    from .annotation_task_create_response import AnnotationTaskCreateResponse
+    from .annotation_task_response import AnnotationTaskResponse
+    from .annotation_task_response_type import AnnotationTaskResponseType
     from .batch_run_request import BatchRunRequest
     from .batch_test_run import BatchTestRun
     from .batch_test_run_response import BatchTestRunResponse
     from .batch_test_run_status import BatchTestRunStatus
     from .batch_test_skip import BatchTestSkip
+    from .batch_test_skip_reason import BatchTestSkipReason
+    from .benchmark_status_response import BenchmarkStatusResponse
+    from .bulk_create_items_response import BulkCreateItemsResponse
     from .bulk_test_item import BulkTestItem
     from .bulk_test_upload_response import BulkTestUploadResponse
+    from .bulk_update_items_response import BulkUpdateItemsResponse
     from .chat_message import ChatMessage
     from .chat_message_role import ChatMessageRole
+    from .evaluator_create_response import EvaluatorCreateResponse
+    from .evaluator_detail_response import EvaluatorDetailResponse
+    from .evaluator_detail_response_data_type import EvaluatorDetailResponseDataType
+    from .evaluator_detail_response_evaluator_type import EvaluatorDetailResponseEvaluatorType
+    from .evaluator_detail_response_output_type import EvaluatorDetailResponseOutputType
+    from .evaluator_link_response import EvaluatorLinkResponse
+    from .evaluator_run_launch_response import EvaluatorRunLaunchResponse
+    from .evaluator_run_launch_response_status import EvaluatorRunLaunchResponseStatus
+    from .evaluator_run_request_entry import EvaluatorRunRequestEntry
+    from .evaluator_run_response import EvaluatorRunResponse
+    from .evaluator_run_response_status import EvaluatorRunResponseStatus
+    from .evaluator_version_create import EvaluatorVersionCreate
+    from .evaluator_version_response import EvaluatorVersionResponse
     from .expected_tool_call import ExpectedToolCall
     from .http_validation_error import HttpValidationError
+    from .human_agreement_block import HumanAgreementBlock
+    from .item_update_payload import ItemUpdatePayload
     from .judge_result import JudgeResult
+    from .model_result import ModelResult
+    from .output_config import OutputConfig
+    from .output_scale_entry import OutputScaleEntry
+    from .pagination_meta import PaginationMeta
     from .resolve_agent_names_response import ResolveAgentNamesResponse
+    from .routers_agent_tests_test_response import RoutersAgentTestsTestResponse
+    from .routers_agent_tests_test_response_type import RoutersAgentTestsTestResponseType
     from .routers_agents_agent_response import RoutersAgentsAgentResponse
     from .routers_agents_agent_response_type import RoutersAgentsAgentResponseType
+    from .routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
+    from .routers_evaluators_evaluator_response_data_type import RoutersEvaluatorsEvaluatorResponseDataType
+    from .routers_evaluators_evaluator_response_evaluator_type import RoutersEvaluatorsEvaluatorResponseEvaluatorType
+    from .routers_evaluators_evaluator_response_output_type import RoutersEvaluatorsEvaluatorResponseOutputType
     from .routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
     from .routers_tests_test_response import RoutersTestsTestResponse
     from .routers_tests_test_response_type import RoutersTestsTestResponseType
+    from .task_agreement_response import TaskAgreementResponse
     from .task_status import TaskStatus
+    from .task_summary_response import TaskSummaryResponse
+    from .task_summary_response_task_type import TaskSummaryResponseTaskType
     from .test_case_result import TestCaseResult
     from .test_create_response import TestCreateResponse
     from .test_output import TestOutput
@@ -37,29 +77,72 @@ if typing.TYPE_CHECKING:
     from .tool_call_output import ToolCallOutput
     from .validation_error import ValidationError
     from .validation_error_loc_item import ValidationErrorLocItem
+    from .variable_spec import VariableSpec
+    from .verify_connection_response import VerifyConnectionResponse
+    from .version_create_response import VersionCreateResponse
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".agent_create_response",
     "AgentTestRunCreateResponse": ".agent_test_run_create_response",
     "AgentTestRunCreateResponseStatus": ".agent_test_run_create_response_status",
+    "AgentTestRunListItem": ".agent_test_run_list_item",
+    "AgentTestRunListItemType": ".agent_test_run_list_item_type",
+    "AgentTestRunsResponse": ".agent_test_runs_response",
+    "AgentTestsCreateResponse": ".agent_tests_create_response",
+    "AnnotationItemPayload": ".annotation_item_payload",
+    "AnnotationTaskCreateResponse": ".annotation_task_create_response",
+    "AnnotationTaskResponse": ".annotation_task_response",
+    "AnnotationTaskResponseType": ".annotation_task_response_type",
     "BatchRunRequest": ".batch_run_request",
     "BatchTestRun": ".batch_test_run",
     "BatchTestRunResponse": ".batch_test_run_response",
     "BatchTestRunStatus": ".batch_test_run_status",
     "BatchTestSkip": ".batch_test_skip",
+    "BatchTestSkipReason": ".batch_test_skip_reason",
+    "BenchmarkStatusResponse": ".benchmark_status_response",
+    "BulkCreateItemsResponse": ".bulk_create_items_response",
     "BulkTestItem": ".bulk_test_item",
     "BulkTestUploadResponse": ".bulk_test_upload_response",
+    "BulkUpdateItemsResponse": ".bulk_update_items_response",
     "ChatMessage": ".chat_message",
     "ChatMessageRole": ".chat_message_role",
+    "EvaluatorCreateResponse": ".evaluator_create_response",
+    "EvaluatorDetailResponse": ".evaluator_detail_response",
+    "EvaluatorDetailResponseDataType": ".evaluator_detail_response_data_type",
+    "EvaluatorDetailResponseEvaluatorType": ".evaluator_detail_response_evaluator_type",
+    "EvaluatorDetailResponseOutputType": ".evaluator_detail_response_output_type",
+    "EvaluatorLinkResponse": ".evaluator_link_response",
+    "EvaluatorRunLaunchResponse": ".evaluator_run_launch_response",
+    "EvaluatorRunLaunchResponseStatus": ".evaluator_run_launch_response_status",
+    "EvaluatorRunRequestEntry": ".evaluator_run_request_entry",
+    "EvaluatorRunResponse": ".evaluator_run_response",
+    "EvaluatorRunResponseStatus": ".evaluator_run_response_status",
+    "EvaluatorVersionCreate": ".evaluator_version_create",
+    "EvaluatorVersionResponse": ".evaluator_version_response",
     "ExpectedToolCall": ".expected_tool_call",
     "HttpValidationError": ".http_validation_error",
+    "HumanAgreementBlock": ".human_agreement_block",
+    "ItemUpdatePayload": ".item_update_payload",
     "JudgeResult": ".judge_result",
+    "ModelResult": ".model_result",
+    "OutputConfig": ".output_config",
+    "OutputScaleEntry": ".output_scale_entry",
+    "PaginationMeta": ".pagination_meta",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
+    "RoutersAgentTestsTestResponse": ".routers_agent_tests_test_response",
+    "RoutersAgentTestsTestResponseType": ".routers_agent_tests_test_response_type",
     "RoutersAgentsAgentResponse": ".routers_agents_agent_response",
     "RoutersAgentsAgentResponseType": ".routers_agents_agent_response_type",
+    "RoutersEvaluatorsEvaluatorResponse": ".routers_evaluators_evaluator_response",
+    "RoutersEvaluatorsEvaluatorResponseDataType": ".routers_evaluators_evaluator_response_data_type",
+    "RoutersEvaluatorsEvaluatorResponseEvaluatorType": ".routers_evaluators_evaluator_response_evaluator_type",
+    "RoutersEvaluatorsEvaluatorResponseOutputType": ".routers_evaluators_evaluator_response_output_type",
     "RoutersTestsEvaluatorRef": ".routers_tests_evaluator_ref",
     "RoutersTestsTestResponse": ".routers_tests_test_response",
     "RoutersTestsTestResponseType": ".routers_tests_test_response_type",
+    "TaskAgreementResponse": ".task_agreement_response",
     "TaskStatus": ".task_status",
+    "TaskSummaryResponse": ".task_summary_response",
+    "TaskSummaryResponseTaskType": ".task_summary_response_task_type",
     "TestCaseResult": ".test_case_result",
     "TestCreateResponse": ".test_create_response",
     "TestOutput": ".test_output",
@@ -69,6 +152,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolCallOutput": ".tool_call_output",
     "ValidationError": ".validation_error",
     "ValidationErrorLocItem": ".validation_error_loc_item",
+    "VariableSpec": ".variable_spec",
+    "VerifyConnectionResponse": ".verify_connection_response",
+    "VersionCreateResponse": ".version_create_response",
 }
 
 
@@ -97,25 +183,65 @@ __all__ = [
     "AgentCreateResponse",
     "AgentTestRunCreateResponse",
     "AgentTestRunCreateResponseStatus",
+    "AgentTestRunListItem",
+    "AgentTestRunListItemType",
+    "AgentTestRunsResponse",
+    "AgentTestsCreateResponse",
+    "AnnotationItemPayload",
+    "AnnotationTaskCreateResponse",
+    "AnnotationTaskResponse",
+    "AnnotationTaskResponseType",
     "BatchRunRequest",
     "BatchTestRun",
     "BatchTestRunResponse",
     "BatchTestRunStatus",
     "BatchTestSkip",
+    "BatchTestSkipReason",
+    "BenchmarkStatusResponse",
+    "BulkCreateItemsResponse",
     "BulkTestItem",
     "BulkTestUploadResponse",
+    "BulkUpdateItemsResponse",
     "ChatMessage",
     "ChatMessageRole",
+    "EvaluatorCreateResponse",
+    "EvaluatorDetailResponse",
+    "EvaluatorDetailResponseDataType",
+    "EvaluatorDetailResponseEvaluatorType",
+    "EvaluatorDetailResponseOutputType",
+    "EvaluatorLinkResponse",
+    "EvaluatorRunLaunchResponse",
+    "EvaluatorRunLaunchResponseStatus",
+    "EvaluatorRunRequestEntry",
+    "EvaluatorRunResponse",
+    "EvaluatorRunResponseStatus",
+    "EvaluatorVersionCreate",
+    "EvaluatorVersionResponse",
     "ExpectedToolCall",
     "HttpValidationError",
+    "HumanAgreementBlock",
+    "ItemUpdatePayload",
     "JudgeResult",
+    "ModelResult",
+    "OutputConfig",
+    "OutputScaleEntry",
+    "PaginationMeta",
     "ResolveAgentNamesResponse",
+    "RoutersAgentTestsTestResponse",
+    "RoutersAgentTestsTestResponseType",
     "RoutersAgentsAgentResponse",
     "RoutersAgentsAgentResponseType",
+    "RoutersEvaluatorsEvaluatorResponse",
+    "RoutersEvaluatorsEvaluatorResponseDataType",
+    "RoutersEvaluatorsEvaluatorResponseEvaluatorType",
+    "RoutersEvaluatorsEvaluatorResponseOutputType",
     "RoutersTestsEvaluatorRef",
     "RoutersTestsTestResponse",
     "RoutersTestsTestResponseType",
+    "TaskAgreementResponse",
     "TaskStatus",
+    "TaskSummaryResponse",
+    "TaskSummaryResponseTaskType",
     "TestCaseResult",
     "TestCreateResponse",
     "TestOutput",
@@ -125,4 +251,7 @@ __all__ = [
     "ToolCallOutput",
     "ValidationError",
     "ValidationErrorLocItem",
+    "VariableSpec",
+    "VerifyConnectionResponse",
+    "VersionCreateResponse",
 ]
