@@ -7,10 +7,9 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .agent_test_run_list_item_type import AgentTestRunListItemType
-from .model_result import ModelResult
+from .model_run_summary import ModelRunSummary
 from .task_status import TaskStatus
-from .test_case_result import TestCaseResult
-from .test_run_evaluator import TestRunEvaluator
+from .test_run_case_summary import TestRunCaseSummary
 
 
 class AgentTestRunListItem(UniversalBaseModel):
@@ -39,11 +38,6 @@ class AgentTestRunListItem(UniversalBaseModel):
     When the run was last updated (ISO 8601 UTC)
     """
 
-    evaluators: typing.Optional[typing.List[TestRunEvaluator]] = pydantic.Field(default=None)
-    """
-    The evaluators used in this run. Each verdict in `judge_results` links to one of these by `evaluator_uuid`
-    """
-
     total_tests: typing.Optional[int] = pydantic.Field(default=None)
     """
     Total number of test cases
@@ -59,9 +53,9 @@ class AgentTestRunListItem(UniversalBaseModel):
     Number of test cases that failed
     """
 
-    results: typing.Optional[typing.List[TestCaseResult]] = pydantic.Field(default=None)
+    results: typing.Optional[typing.List[TestRunCaseSummary]] = pydantic.Field(default=None)
     """
-    Results for each test case
+    Flat pass/fail summary for each test case (fetch the run detail for full results)
     """
 
     latency_ms: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
@@ -79,14 +73,9 @@ class AgentTestRunListItem(UniversalBaseModel):
     Aggregated token usage as `{mean, min, max, count}`
     """
 
-    model_results: typing.Optional[typing.List[ModelResult]] = pydantic.Field(default=None)
+    model_results: typing.Optional[typing.List[ModelRunSummary]] = pydantic.Field(default=None)
     """
-    Results for each model in a benchmark run
-    """
-
-    leaderboard_summary: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
-    """
-    Leaderboard comparing the models, one row per model. Columns vary by benchmark: a `model` column plus pass/fail counts, latency, cost, and one score column per evaluator, keyed by evaluator name
+    Flat summary for each model in a benchmark run (fetch the benchmark detail for full results)
     """
 
     error: typing.Optional[bool] = pydantic.Field(default=None)

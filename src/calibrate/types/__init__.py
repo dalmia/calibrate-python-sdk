@@ -49,6 +49,7 @@ if typing.TYPE_CHECKING:
     from .item_update_payload import ItemUpdatePayload
     from .judge_result import JudgeResult
     from .model_result import ModelResult
+    from .model_run_summary import ModelRunSummary
     from .output_config import OutputConfig
     from .output_scale_entry import OutputScaleEntry
     from .pagination_meta import PaginationMeta
@@ -71,6 +72,7 @@ if typing.TYPE_CHECKING:
     from .test_case_result import TestCaseResult
     from .test_create_response import TestCreateResponse
     from .test_output import TestOutput
+    from .test_run_case_summary import TestRunCaseSummary
     from .test_run_evaluator import TestRunEvaluator
     from .test_run_evaluator_output_type import TestRunEvaluatorOutputType
     from .test_run_status_response import TestRunStatusResponse
@@ -124,6 +126,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ItemUpdatePayload": ".item_update_payload",
     "JudgeResult": ".judge_result",
     "ModelResult": ".model_result",
+    "ModelRunSummary": ".model_run_summary",
     "OutputConfig": ".output_config",
     "OutputScaleEntry": ".output_scale_entry",
     "PaginationMeta": ".pagination_meta",
@@ -146,6 +149,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestCaseResult": ".test_case_result",
     "TestCreateResponse": ".test_create_response",
     "TestOutput": ".test_output",
+    "TestRunCaseSummary": ".test_run_case_summary",
     "TestRunEvaluator": ".test_run_evaluator",
     "TestRunEvaluatorOutputType": ".test_run_evaluator_output_type",
     "TestRunStatusResponse": ".test_run_status_response",
@@ -223,6 +227,7 @@ __all__ = [
     "ItemUpdatePayload",
     "JudgeResult",
     "ModelResult",
+    "ModelRunSummary",
     "OutputConfig",
     "OutputScaleEntry",
     "PaginationMeta",
@@ -245,6 +250,7 @@ __all__ = [
     "TestCaseResult",
     "TestCreateResponse",
     "TestOutput",
+    "TestRunCaseSummary",
     "TestRunEvaluator",
     "TestRunEvaluatorOutputType",
     "TestRunStatusResponse",
