@@ -12,6 +12,7 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_create_response import AgentCreateResponse
+from ..types.agent_summary import AgentSummary
 from ..types.http_validation_error import HttpValidationError
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
@@ -163,7 +164,7 @@ class RawAgentsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RoutersAgentsAgentResponse]]:
+    ) -> HttpResponse[typing.List[AgentSummary]]:
         """
         Get the list of all your agents
 
@@ -174,7 +175,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersAgentsAgentResponse]]
+        HttpResponse[typing.List[AgentSummary]]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -185,9 +186,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentsAgentResponse],
+                    typing.List[AgentSummary],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentsAgentResponse],  # type: ignore
+                        type_=typing.List[AgentSummary],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -625,7 +626,7 @@ class AsyncRawAgentsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RoutersAgentsAgentResponse]]:
+    ) -> AsyncHttpResponse[typing.List[AgentSummary]]:
         """
         Get the list of all your agents
 
@@ -636,7 +637,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersAgentsAgentResponse]]
+        AsyncHttpResponse[typing.List[AgentSummary]]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -647,9 +648,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentsAgentResponse],
+                    typing.List[AgentSummary],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentsAgentResponse],  # type: ignore
+                        type_=typing.List[AgentSummary],  # type: ignore
                         object_=_response.json(),
                     ),
                 )

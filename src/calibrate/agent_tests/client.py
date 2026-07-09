@@ -10,7 +10,7 @@ from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
 from ..types.benchmark_status_response import BenchmarkStatusResponse
-from ..types.routers_agent_tests_test_response import RoutersAgentTestsTestResponse
+from ..types.test_list_response import TestListResponse
 from ..types.test_run_status_response import TestRunStatusResponse
 from .raw_client import AsyncRawAgentTestsClient, RawAgentTestsClient
 
@@ -76,7 +76,7 @@ class AgentTestsClient:
 
     def list_for_agent(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsTestResponse]:
+    ) -> typing.List[TestListResponse]:
         """
         List the tests linked to an agent.
 
@@ -90,7 +90,7 @@ class AgentTestsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsTestResponse]
+        typing.List[TestListResponse]
             Successful Response
 
         Examples
@@ -397,7 +397,7 @@ class AsyncAgentTestsClient:
 
     async def list_for_agent(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentTestsTestResponse]:
+    ) -> typing.List[TestListResponse]:
         """
         List the tests linked to an agent.
 
@@ -411,7 +411,7 @@ class AsyncAgentTestsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentTestsTestResponse]
+        typing.List[TestListResponse]
             Successful Response
 
         Examples

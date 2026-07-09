@@ -6,10 +6,17 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .routers_tests_test_response_type import RoutersTestsTestResponseType
+from .test_list_config import TestListConfig
+from .test_list_response_type import TestListResponseType
 
 
-class RoutersTestsTestResponse(UniversalBaseModel):
+class TestListResponse(UniversalBaseModel):
+    """
+    Trimmed test shape for list/index endpoints. The full config and hydrated
+    evaluators live on the detail endpoint (`GET /tests/{uuid}`); the list keeps
+    only what list and attach-dropdown views render.
+    """
+
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Unique ID for the test")
     ]
@@ -18,7 +25,7 @@ class RoutersTestsTestResponse(UniversalBaseModel):
     Name of the test
     """
 
-    type: RoutersTestsTestResponseType = pydantic.Field()
+    type: TestListResponseType = pydantic.Field()
     """
     What the test judges:
     
@@ -27,9 +34,9 @@ class RoutersTestsTestResponse(UniversalBaseModel):
     - `conversation`: judges the full conversation
     """
 
-    config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    config: typing.Optional[TestListConfig] = pydantic.Field(default=None)
     """
-    The stored config: `history`, `evaluation`, and an optional `settings`
+    Trimmed config carrying only the test's description. Fetch the test by ID for the full config and evaluators
     """
 
     created_at: str = pydantic.Field()
@@ -40,11 +47,6 @@ class RoutersTestsTestResponse(UniversalBaseModel):
     updated_at: str = pydantic.Field()
     """
     When the test was last updated (ISO 8601 UTC)
-    """
-
-    evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
-    """
-    Linked evaluators, resolved to their current live version at read time
     """
 
     if IS_PYDANTIC_V2:

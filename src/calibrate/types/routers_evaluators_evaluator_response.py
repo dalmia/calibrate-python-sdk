@@ -6,7 +6,7 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .evaluator_version_response import EvaluatorVersionResponse
+from .evaluator_live_version_summary import EvaluatorLiveVersionSummary
 from .routers_evaluators_evaluator_response_data_type import RoutersEvaluatorsEvaluatorResponseDataType
 from .routers_evaluators_evaluator_response_evaluator_type import RoutersEvaluatorsEvaluatorResponseEvaluatorType
 from .routers_evaluators_evaluator_response_output_type import RoutersEvaluatorsEvaluatorResponseOutputType
@@ -78,7 +78,7 @@ class RoutersEvaluatorsEvaluatorResponse(UniversalBaseModel):
     When the evaluator was last updated (ISO 8601 UTC)
     """
 
-    live_version: typing.Optional[EvaluatorVersionResponse] = pydantic.Field(default=None)
+    live_version: typing.Optional[EvaluatorLiveVersionSummary] = pydantic.Field(default=None)
     """
     The version that is currently live
     """

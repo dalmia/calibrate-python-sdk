@@ -6,29 +6,30 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .routers_agent_tests_test_response_type import RoutersAgentTestsTestResponseType
+from .test_response_type import TestResponseType
 
 
-class RoutersAgentTestsTestResponse(UniversalBaseModel):
+class TestResponse(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
-        str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Test ID")
+        str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Unique ID for the test")
     ]
     name: str = pydantic.Field()
     """
     Name of the test
     """
 
-    type: RoutersAgentTestsTestResponseType = pydantic.Field()
+    type: TestResponseType = pydantic.Field()
     """
-    What the test checks:
-    - `response`: judges the reply the agent generates
-    - `tool_call`: checks the tool calls the agent makes
-    - `conversation`: judges the full conversation after the agent replies
+    What the test judges:
+    
+    - `response`: judges the generated reply
+    - `tool_call`: diffs the generated tool calls
+    - `conversation`: judges the full conversation
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Test configuration
+    The stored config: `history`, `evaluation`, and an optional `settings`
     """
 
     created_at: str = pydantic.Field()
@@ -39,6 +40,11 @@ class RoutersAgentTestsTestResponse(UniversalBaseModel):
     updated_at: str = pydantic.Field()
     """
     When the test was last updated (ISO 8601 UTC)
+    """
+
+    evaluators: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
+    """
+    Linked evaluators, resolved to their current live version at read time
     """
 
     if IS_PYDANTIC_V2:

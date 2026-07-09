@@ -16,8 +16,9 @@ from ..types.bulk_test_item import BulkTestItem
 from ..types.bulk_test_upload_response import BulkTestUploadResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
-from ..types.routers_tests_test_response import RoutersTestsTestResponse
 from ..types.test_create_response import TestCreateResponse
+from ..types.test_list_response import TestListResponse
+from ..types.test_response import TestResponse
 from .types.bulk_test_upload_type import BulkTestUploadType
 from .types.test_create_type import TestCreateType
 from .types.test_update_type import TestUpdateType
@@ -121,7 +122,7 @@ class RawTestsClient:
 
     def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RoutersTestsTestResponse]]:
+    ) -> HttpResponse[typing.List[TestListResponse]]:
         """
         List all the test cases for your agents
 
@@ -132,7 +133,7 @@ class RawTestsClient:
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersTestsTestResponse]]
+        HttpResponse[typing.List[TestListResponse]]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -143,9 +144,9 @@ class RawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersTestsTestResponse],
+                    typing.List[TestListResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersTestsTestResponse],  # type: ignore
+                        type_=typing.List[TestListResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -306,7 +307,7 @@ class RawTestsClient:
 
     def get(
         self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[RoutersTestsTestResponse]:
+    ) -> HttpResponse[TestResponse]:
         """
         Get an agent test case by its ID
 
@@ -320,7 +321,7 @@ class RawTestsClient:
 
         Returns
         -------
-        HttpResponse[RoutersTestsTestResponse]
+        HttpResponse[TestResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -331,9 +332,9 @@ class RawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersTestsTestResponse,
+                    TestResponse,
                     parse_obj_as(
-                        type_=RoutersTestsTestResponse,  # type: ignore
+                        type_=TestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -367,7 +368,7 @@ class RawTestsClient:
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[RoutersTestsTestResponse]:
+    ) -> HttpResponse[TestResponse]:
         """
         Update an agent test case
 
@@ -447,7 +448,7 @@ class RawTestsClient:
 
         Returns
         -------
-        HttpResponse[RoutersTestsTestResponse]
+        HttpResponse[TestResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -472,9 +473,9 @@ class RawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersTestsTestResponse,
+                    TestResponse,
                     parse_obj_as(
-                        type_=RoutersTestsTestResponse,  # type: ignore
+                        type_=TestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -594,7 +595,7 @@ class AsyncRawTestsClient:
 
     async def list(
         self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RoutersTestsTestResponse]]:
+    ) -> AsyncHttpResponse[typing.List[TestListResponse]]:
         """
         List all the test cases for your agents
 
@@ -605,7 +606,7 @@ class AsyncRawTestsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersTestsTestResponse]]
+        AsyncHttpResponse[typing.List[TestListResponse]]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -616,9 +617,9 @@ class AsyncRawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersTestsTestResponse],
+                    typing.List[TestListResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersTestsTestResponse],  # type: ignore
+                        type_=typing.List[TestListResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -779,7 +780,7 @@ class AsyncRawTestsClient:
 
     async def get(
         self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[RoutersTestsTestResponse]:
+    ) -> AsyncHttpResponse[TestResponse]:
         """
         Get an agent test case by its ID
 
@@ -793,7 +794,7 @@ class AsyncRawTestsClient:
 
         Returns
         -------
-        AsyncHttpResponse[RoutersTestsTestResponse]
+        AsyncHttpResponse[TestResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -804,9 +805,9 @@ class AsyncRawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersTestsTestResponse,
+                    TestResponse,
                     parse_obj_as(
-                        type_=RoutersTestsTestResponse,  # type: ignore
+                        type_=TestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -840,7 +841,7 @@ class AsyncRawTestsClient:
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[RoutersTestsTestResponse]:
+    ) -> AsyncHttpResponse[TestResponse]:
         """
         Update an agent test case
 
@@ -920,7 +921,7 @@ class AsyncRawTestsClient:
 
         Returns
         -------
-        AsyncHttpResponse[RoutersTestsTestResponse]
+        AsyncHttpResponse[TestResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -945,9 +946,9 @@ class AsyncRawTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersTestsTestResponse,
+                    TestResponse,
                     parse_obj_as(
-                        type_=RoutersTestsTestResponse,  # type: ignore
+                        type_=TestResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

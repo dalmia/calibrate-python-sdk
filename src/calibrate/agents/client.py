@@ -5,6 +5,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
+from ..types.agent_summary import AgentSummary
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
@@ -109,9 +110,7 @@ class AgentsClient:
         _response = self._raw_client.resolve(names=names, request_options=request_options)
         return _response.data
 
-    def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentsAgentResponse]:
+    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[AgentSummary]:
         """
         Get the list of all your agents
 
@@ -122,7 +121,7 @@ class AgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentsAgentResponse]
+        typing.List[AgentSummary]
             Successful Response
 
         Examples
@@ -440,9 +439,7 @@ class AsyncAgentsClient:
         _response = await self._raw_client.resolve(names=names, request_options=request_options)
         return _response.data
 
-    async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersAgentsAgentResponse]:
+    async def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[AgentSummary]:
         """
         Get the list of all your agents
 
@@ -453,7 +450,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        typing.List[RoutersAgentsAgentResponse]
+        typing.List[AgentSummary]
             Successful Response
 
         Examples

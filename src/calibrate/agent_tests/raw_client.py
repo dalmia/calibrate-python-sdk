@@ -19,7 +19,7 @@ from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
 from ..types.benchmark_status_response import BenchmarkStatusResponse
 from ..types.http_validation_error import HttpValidationError
-from ..types.routers_agent_tests_test_response import RoutersAgentTestsTestResponse
+from ..types.test_list_response import TestListResponse
 from ..types.test_run_status_response import TestRunStatusResponse
 from pydantic import ValidationError
 
@@ -102,7 +102,7 @@ class RawAgentTestsClient:
 
     def list_for_agent(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[RoutersAgentTestsTestResponse]]:
+    ) -> HttpResponse[typing.List[TestListResponse]]:
         """
         List the tests linked to an agent.
 
@@ -116,7 +116,7 @@ class RawAgentTestsClient:
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersAgentTestsTestResponse]]
+        HttpResponse[typing.List[TestListResponse]]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -127,9 +127,9 @@ class RawAgentTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentTestsTestResponse],
+                    typing.List[TestListResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentTestsTestResponse],  # type: ignore
+                        type_=typing.List[TestListResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -593,7 +593,7 @@ class AsyncRawAgentTestsClient:
 
     async def list_for_agent(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[RoutersAgentTestsTestResponse]]:
+    ) -> AsyncHttpResponse[typing.List[TestListResponse]]:
         """
         List the tests linked to an agent.
 
@@ -607,7 +607,7 @@ class AsyncRawAgentTestsClient:
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersAgentTestsTestResponse]]
+        AsyncHttpResponse[typing.List[TestListResponse]]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -618,9 +618,9 @@ class AsyncRawAgentTestsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersAgentTestsTestResponse],
+                    typing.List[TestListResponse],
                     parse_obj_as(
-                        type_=typing.List[RoutersAgentTestsTestResponse],  # type: ignore
+                        type_=typing.List[TestListResponse],  # type: ignore
                         object_=_response.json(),
                     ),
                 )

@@ -7,8 +7,9 @@ from ..core.request_options import RequestOptions
 from ..types.bulk_test_item import BulkTestItem
 from ..types.bulk_test_upload_response import BulkTestUploadResponse
 from ..types.routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
-from ..types.routers_tests_test_response import RoutersTestsTestResponse
 from ..types.test_create_response import TestCreateResponse
+from ..types.test_list_response import TestListResponse
+from ..types.test_response import TestResponse
 from .raw_client import AsyncRawTestsClient, RawTestsClient
 from .types.bulk_test_upload_type import BulkTestUploadType
 from .types.test_create_type import TestCreateType
@@ -100,7 +101,7 @@ class TestsClient:
         )
         return _response.data
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[RoutersTestsTestResponse]:
+    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[TestListResponse]:
         """
         List all the test cases for your agents
 
@@ -111,7 +112,7 @@ class TestsClient:
 
         Returns
         -------
-        typing.List[RoutersTestsTestResponse]
+        typing.List[TestListResponse]
             Successful Response
 
         Examples
@@ -228,9 +229,7 @@ class TestsClient:
         )
         return _response.data
 
-    def get(
-        self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> RoutersTestsTestResponse:
+    def get(self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> TestResponse:
         """
         Get an agent test case by its ID
 
@@ -244,7 +243,7 @@ class TestsClient:
 
         Returns
         -------
-        RoutersTestsTestResponse
+        TestResponse
             Successful Response
 
         Examples
@@ -270,7 +269,7 @@ class TestsClient:
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersTestsTestResponse:
+    ) -> TestResponse:
         """
         Update an agent test case
 
@@ -350,7 +349,7 @@ class TestsClient:
 
         Returns
         -------
-        RoutersTestsTestResponse
+        TestResponse
             Successful Response
 
         Examples
@@ -460,9 +459,7 @@ class AsyncTestsClient:
         )
         return _response.data
 
-    async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[RoutersTestsTestResponse]:
+    async def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[TestListResponse]:
         """
         List all the test cases for your agents
 
@@ -473,7 +470,7 @@ class AsyncTestsClient:
 
         Returns
         -------
-        typing.List[RoutersTestsTestResponse]
+        typing.List[TestListResponse]
             Successful Response
 
         Examples
@@ -606,9 +603,7 @@ class AsyncTestsClient:
         )
         return _response.data
 
-    async def get(
-        self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> RoutersTestsTestResponse:
+    async def get(self, test_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> TestResponse:
         """
         Get an agent test case by its ID
 
@@ -622,7 +617,7 @@ class AsyncTestsClient:
 
         Returns
         -------
-        RoutersTestsTestResponse
+        TestResponse
             Successful Response
 
         Examples
@@ -656,7 +651,7 @@ class AsyncTestsClient:
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         evaluators: typing.Optional[typing.Sequence[RoutersTestsEvaluatorRef]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersTestsTestResponse:
+    ) -> TestResponse:
         """
         Update an agent test case
 
@@ -736,7 +731,7 @@ class AsyncTestsClient:
 
         Returns
         -------
-        RoutersTestsTestResponse
+        TestResponse
             Successful Response
 
         Examples

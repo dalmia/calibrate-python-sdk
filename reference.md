@@ -165,7 +165,7 @@ client.agents.resolve(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[RoutersAgentsAgentResponse]</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[AgentSummary]</code></summary>
 <dl>
 <dd>
 
@@ -673,7 +673,7 @@ Applied to every test in the batch
 </dl>
 </details>
 
-<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">list</a>() -> typing.List[RoutersTestsTestResponse]</code></summary>
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">list</a>() -> typing.List[TestListResponse]</code></summary>
 <dl>
 <dd>
 
@@ -889,7 +889,7 @@ Omit to create the test with no config and fill it in later via update
 </dl>
 </details>
 
-<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">get</a>(...) -> RoutersTestsTestResponse</code></summary>
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">get</a>(...) -> TestResponse</code></summary>
 <dl>
 <dd>
 
@@ -962,7 +962,7 @@ client.tests.get(
 </dl>
 </details>
 
-<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">update</a>(...) -> RoutersTestsTestResponse</code></summary>
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">update</a>(...) -> TestResponse</code></summary>
 <dl>
 <dd>
 
@@ -1210,7 +1210,7 @@ client.agent_tests.link(
 </dl>
 </details>
 
-<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_for_agent</a>(...) -> typing.List[RoutersAgentTestsTestResponse]</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_for_agent</a>(...) -> typing.List[TestListResponse]</code></summary>
 <dl>
 <dd>
 
