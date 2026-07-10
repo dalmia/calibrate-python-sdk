@@ -6,9 +6,9 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.bulk_test_item import BulkTestItem
 from ..types.bulk_test_upload_response import BulkTestUploadResponse
+from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
 from ..types.routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
 from ..types.test_create_response import TestCreateResponse
-from ..types.test_list_response import TestListResponse
 from ..types.test_response import TestResponse
 from .raw_client import AsyncRawTestsClient, RawTestsClient
 from .types.bulk_test_upload_type import BulkTestUploadType
@@ -101,18 +101,34 @@ class TestsClient:
         )
         return _response.data
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[TestListResponse]:
+    def list(
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseTestListResponse:
         """
         List all the test cases for your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[TestListResponse]
+        PaginatedResponseTestListResponse
             Successful Response
 
         Examples
@@ -124,7 +140,7 @@ class TestsClient:
         )
         client.tests.list()
         """
-        _response = self._raw_client.list(request_options=request_options)
+        _response = self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     def create(
@@ -459,18 +475,34 @@ class AsyncTestsClient:
         )
         return _response.data
 
-    async def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[TestListResponse]:
+    async def list(
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseTestListResponse:
         """
         List all the test cases for your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[TestListResponse]
+        PaginatedResponseTestListResponse
             Successful Response
 
         Examples
@@ -490,7 +522,7 @@ class AsyncTestsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list(request_options=request_options)
+        _response = await self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     async def create(

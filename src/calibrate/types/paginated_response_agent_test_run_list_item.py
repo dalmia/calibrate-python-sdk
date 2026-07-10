@@ -7,10 +7,25 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .agent_test_run_list_item import AgentTestRunListItem
 
 
-class AgentTestRunsResponse(UniversalBaseModel):
-    runs: typing.List[AgentTestRunListItem] = pydantic.Field()
+class PaginatedResponseAgentTestRunListItem(UniversalBaseModel):
+    items: typing.List[AgentTestRunListItem] = pydantic.Field()
     """
-    Test runs for the agent, most recently created first
+    The page of results
+    """
+
+    total: int = pydantic.Field()
+    """
+    Total number of items matching the query, before pagination
+    """
+
+    limit: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    The applied `limit` (null when unbounded)
+    """
+
+    offset: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    The applied `offset`
     """
 
     if IS_PYDANTIC_V2:

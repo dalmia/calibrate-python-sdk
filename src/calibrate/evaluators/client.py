@@ -8,7 +8,7 @@ from ..types.evaluator_create_response import EvaluatorCreateResponse
 from ..types.evaluator_detail_response import EvaluatorDetailResponse
 from ..types.evaluator_version_create import EvaluatorVersionCreate
 from ..types.output_config import OutputConfig
-from ..types.routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
+from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.variable_spec import VariableSpec
 from ..types.version_create_response import VersionCreateResponse
 from .raw_client import AsyncRawEvaluatorsClient, RawEvaluatorsClient
@@ -43,8 +43,11 @@ class EvaluatorsClient:
         evaluator_type: typing.Optional[ListEvaluatorsRequestEvaluatorType] = None,
         data_type: typing.Optional[ListEvaluatorsRequestDataType] = None,
         include_defaults: typing.Optional[bool] = None,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[RoutersEvaluatorsEvaluatorResponse]:
+    ) -> PaginatedResponseEvaluatorResponse:
         """
         List your evaluators
 
@@ -59,12 +62,21 @@ class EvaluatorsClient:
         include_defaults : typing.Optional[bool]
             When `true`, include the built-in default evaluators alongside the ones you created
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[RoutersEvaluatorsEvaluatorResponse]
+        PaginatedResponseEvaluatorResponse
             Successful Response
 
         Examples
@@ -80,6 +92,9 @@ class EvaluatorsClient:
             evaluator_type=evaluator_type,
             data_type=data_type,
             include_defaults=include_defaults,
+            q=q,
+            limit=limit,
+            offset=offset,
             request_options=request_options,
         )
         return _response.data
@@ -285,8 +300,11 @@ class AsyncEvaluatorsClient:
         evaluator_type: typing.Optional[ListEvaluatorsRequestEvaluatorType] = None,
         data_type: typing.Optional[ListEvaluatorsRequestDataType] = None,
         include_defaults: typing.Optional[bool] = None,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.List[RoutersEvaluatorsEvaluatorResponse]:
+    ) -> PaginatedResponseEvaluatorResponse:
         """
         List your evaluators
 
@@ -301,12 +319,21 @@ class AsyncEvaluatorsClient:
         include_defaults : typing.Optional[bool]
             When `true`, include the built-in default evaluators alongside the ones you created
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[RoutersEvaluatorsEvaluatorResponse]
+        PaginatedResponseEvaluatorResponse
             Successful Response
 
         Examples
@@ -330,6 +357,9 @@ class AsyncEvaluatorsClient:
             evaluator_type=evaluator_type,
             data_type=data_type,
             include_defaults=include_defaults,
+            q=q,
+            limit=limit,
+            offset=offset,
             request_options=request_options,
         )
         return _response.data

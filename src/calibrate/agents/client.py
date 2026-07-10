@@ -5,7 +5,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
-from ..types.agent_summary import AgentSummary
+from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
@@ -110,18 +110,34 @@ class AgentsClient:
         _response = self._raw_client.resolve(names=names, request_options=request_options)
         return _response.data
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[AgentSummary]:
+    def list(
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAgentSummary:
         """
         Get the list of all your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[AgentSummary]
+        PaginatedResponseAgentSummary
             Successful Response
 
         Examples
@@ -133,7 +149,7 @@ class AgentsClient:
         )
         client.agents.list()
         """
-        _response = self._raw_client.list(request_options=request_options)
+        _response = self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     def create(
@@ -439,18 +455,34 @@ class AsyncAgentsClient:
         _response = await self._raw_client.resolve(names=names, request_options=request_options)
         return _response.data
 
-    async def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[AgentSummary]:
+    async def list(
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAgentSummary:
         """
         Get the list of all your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[AgentSummary]
+        PaginatedResponseAgentSummary
             Successful Response
 
         Examples
@@ -470,7 +502,7 @@ class AsyncAgentsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list(request_options=request_options)
+        _response = await self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     async def create(

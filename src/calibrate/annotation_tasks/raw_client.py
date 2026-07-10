@@ -23,6 +23,7 @@ from ..types.evaluator_run_request_entry import EvaluatorRunRequestEntry
 from ..types.evaluator_run_response import EvaluatorRunResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.item_update_payload import ItemUpdatePayload
+from ..types.paginated_response_annotation_task_response import PaginatedResponseAnnotationTaskResponse
 from ..types.task_agreement_response import TaskAgreementResponse
 from ..types.task_summary_response import TaskSummaryResponse
 from .types.annotation_task_create_type import AnnotationTaskCreateType
@@ -39,32 +40,51 @@ class RawAnnotationTasksClient:
         self._client_wrapper = client_wrapper
 
     def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[AnnotationTaskResponse]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseAnnotationTaskResponse]:
         """
         List annotation tasks with linked evaluators
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[typing.List[AnnotationTaskResponse]]
+        HttpResponse[PaginatedResponseAnnotationTaskResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             "annotation-tasks",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[AnnotationTaskResponse],
+                    PaginatedResponseAnnotationTaskResponse,
                     parse_obj_as(
-                        type_=typing.List[AnnotationTaskResponse],  # type: ignore
+                        type_=PaginatedResponseAnnotationTaskResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -746,32 +766,51 @@ class AsyncRawAnnotationTasksClient:
         self._client_wrapper = client_wrapper
 
     async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[AnnotationTaskResponse]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseAnnotationTaskResponse]:
         """
         List annotation tasks with linked evaluators
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[AnnotationTaskResponse]]
+        AsyncHttpResponse[PaginatedResponseAnnotationTaskResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             "annotation-tasks",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[AnnotationTaskResponse],
+                    PaginatedResponseAnnotationTaskResponse,
                     parse_obj_as(
-                        type_=typing.List[AnnotationTaskResponse],  # type: ignore
+                        type_=PaginatedResponseAnnotationTaskResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

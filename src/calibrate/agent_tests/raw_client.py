@@ -13,14 +13,16 @@ from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
-from ..types.agent_test_runs_response import AgentTestRunsResponse
 from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
 from ..types.benchmark_status_response import BenchmarkStatusResponse
 from ..types.http_validation_error import HttpValidationError
-from ..types.test_list_response import TestListResponse
+from ..types.paginated_response_agent_test_run_list_item import PaginatedResponseAgentTestRunListItem
+from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
+from ..types.task_status import TaskStatus
 from ..types.test_run_status_response import TestRunStatusResponse
+from .types.list_runs_for_agent_agent_tests_request_type import ListRunsForAgentAgentTestsRequestType
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -101,8 +103,14 @@ class RawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def list_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[TestListResponse]]:
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseTestListResponse]:
         """
         List the tests linked to an agent.
 
@@ -111,25 +119,39 @@ class RawAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[typing.List[TestListResponse]]
+        HttpResponse[PaginatedResponseTestListResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[TestListResponse],
+                    PaginatedResponseTestListResponse,
                     parse_obj_as(
-                        type_=typing.List[TestListResponse],  # type: ignore
+                        type_=PaginatedResponseTestListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -155,8 +177,16 @@ class RawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def list_runs_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[AgentTestRunsResponse]:
+        self,
+        agent_uuid: str,
+        *,
+        type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
+        status: typing.Optional[TaskStatus] = None,
+        has_failures: typing.Optional[bool] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseAgentTestRunListItem]:
         """
         List an agent's test runs with their results
 
@@ -165,25 +195,49 @@ class RawAgentTestsClient:
         agent_uuid : str
             Agent whose test runs to list
 
+        type : typing.Optional[ListRunsForAgentAgentTestsRequestType]
+            Filter by run type. Omit to return both:
+            - `llm-unit-test`: single runs of an agent's tests
+            - `llm-benchmark`: multi-model comparisons
+
+        status : typing.Optional[TaskStatus]
+            Filter by run status. Omit for all statuses
+
+        has_failures : typing.Optional[bool]
+            Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[AgentTestRunsResponse]
+        HttpResponse[PaginatedResponseAgentTestRunListItem]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/runs",
             method="GET",
+            params={
+                "type": type,
+                "status": status,
+                "has_failures": has_failures,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    AgentTestRunsResponse,
+                    PaginatedResponseAgentTestRunListItem,
                     parse_obj_as(
-                        type_=AgentTestRunsResponse,  # type: ignore
+                        type_=PaginatedResponseAgentTestRunListItem,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -592,8 +646,14 @@ class AsyncRawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def list_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[TestListResponse]]:
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseTestListResponse]:
         """
         List the tests linked to an agent.
 
@@ -602,25 +662,39 @@ class AsyncRawAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[TestListResponse]]
+        AsyncHttpResponse[PaginatedResponseTestListResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[TestListResponse],
+                    PaginatedResponseTestListResponse,
                     parse_obj_as(
-                        type_=typing.List[TestListResponse],  # type: ignore
+                        type_=PaginatedResponseTestListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -646,8 +720,16 @@ class AsyncRawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def list_runs_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[AgentTestRunsResponse]:
+        self,
+        agent_uuid: str,
+        *,
+        type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
+        status: typing.Optional[TaskStatus] = None,
+        has_failures: typing.Optional[bool] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseAgentTestRunListItem]:
         """
         List an agent's test runs with their results
 
@@ -656,25 +738,49 @@ class AsyncRawAgentTestsClient:
         agent_uuid : str
             Agent whose test runs to list
 
+        type : typing.Optional[ListRunsForAgentAgentTestsRequestType]
+            Filter by run type. Omit to return both:
+            - `llm-unit-test`: single runs of an agent's tests
+            - `llm-benchmark`: multi-model comparisons
+
+        status : typing.Optional[TaskStatus]
+            Filter by run status. Omit for all statuses
+
+        has_failures : typing.Optional[bool]
+            Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[AgentTestRunsResponse]
+        AsyncHttpResponse[PaginatedResponseAgentTestRunListItem]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/runs",
             method="GET",
+            params={
+                "type": type,
+                "status": status,
+                "has_failures": has_failures,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    AgentTestRunsResponse,
+                    PaginatedResponseAgentTestRunListItem,
                     parse_obj_as(
-                        type_=AgentTestRunsResponse,  # type: ignore
+                        type_=PaginatedResponseAgentTestRunListItem,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

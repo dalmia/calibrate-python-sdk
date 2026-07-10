@@ -165,7 +165,7 @@ client.agents.resolve(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>() -> typing.List[AgentSummary]</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list</a>(...) -> PaginatedResponseAgentSummary</code></summary>
 <dl>
 <dd>
 
@@ -212,6 +212,30 @@ client.agents.list()
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -673,7 +697,7 @@ Applied to every test in the batch
 </dl>
 </details>
 
-<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">list</a>() -> typing.List[TestListResponse]</code></summary>
+<details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">list</a>(...) -> PaginatedResponseTestListResponse</code></summary>
 <dl>
 <dd>
 
@@ -720,6 +744,30 @@ client.tests.list()
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -1210,7 +1258,7 @@ client.agent_tests.link(
 </dl>
 </details>
 
-<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_for_agent</a>(...) -> typing.List[TestListResponse]</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_for_agent</a>(...) -> PaginatedResponseTestListResponse</code></summary>
 <dl>
 <dd>
 
@@ -1271,6 +1319,30 @@ client.agent_tests.list_for_agent(
 <dl>
 <dd>
 
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -1283,7 +1355,7 @@ client.agent_tests.list_for_agent(
 </dl>
 </details>
 
-<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_runs_for_agent</a>(...) -> AgentTestRunsResponse</code></summary>
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">list_runs_for_agent</a>(...) -> PaginatedResponseAgentTestRunListItem</code></summary>
 <dl>
 <dd>
 
@@ -1337,6 +1409,50 @@ client.agent_tests.list_runs_for_agent(
 <dd>
 
 **agent_uuid:** `str` — Agent whose test runs to list
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[ListRunsForAgentAgentTestsRequestType]` 
+
+Filter by run type. Omit to return both:
+- `llm-unit-test`: single runs of an agent's tests
+- `llm-benchmark`: multi-model comparisons
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `typing.Optional[TaskStatus]` — Filter by run status. Omit for all statuses
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**has_failures:** `typing.Optional[bool]` — Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
     
 </dd>
 </dl>
@@ -1750,7 +1866,7 @@ client.agent_tests.get_benchmark(
 </details>
 
 ## Evaluators
-<details><summary><code>client.evaluators.<a href="src/calibrate/evaluators/client.py">list</a>(...) -> typing.List[RoutersEvaluatorsEvaluatorResponse]</code></summary>
+<details><summary><code>client.evaluators.<a href="src/calibrate/evaluators/client.py">list</a>(...) -> PaginatedResponseEvaluatorResponse</code></summary>
 <dl>
 <dd>
 
@@ -1818,6 +1934,30 @@ client.evaluators.list()
 <dd>
 
 **include_defaults:** `typing.Optional[bool]` — When `true`, include the built-in default evaluators alongside the ones you created
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
     
 </dd>
 </dl>
@@ -2161,7 +2301,7 @@ client.evaluators.create_version(
 </details>
 
 ## AnnotationTasks
-<details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">list</a>() -> typing.List[AnnotationTaskResponse]</code></summary>
+<details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">list</a>(...) -> PaginatedResponseAnnotationTaskResponse</code></summary>
 <dl>
 <dd>
 
@@ -2208,6 +2348,30 @@ client.annotation_tasks.list()
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
 
 <dl>
 <dd>

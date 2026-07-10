@@ -15,9 +15,9 @@ from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.bulk_test_item import BulkTestItem
 from ..types.bulk_test_upload_response import BulkTestUploadResponse
 from ..types.http_validation_error import HttpValidationError
+from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
 from ..types.routers_tests_evaluator_ref import RoutersTestsEvaluatorRef
 from ..types.test_create_response import TestCreateResponse
-from ..types.test_list_response import TestListResponse
 from ..types.test_response import TestResponse
 from .types.bulk_test_upload_type import BulkTestUploadType
 from .types.test_create_type import TestCreateType
@@ -121,32 +121,51 @@ class RawTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[TestListResponse]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseTestListResponse]:
         """
         List all the test cases for your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[typing.List[TestListResponse]]
+        HttpResponse[PaginatedResponseTestListResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             "tests",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[TestListResponse],
+                    PaginatedResponseTestListResponse,
                     parse_obj_as(
-                        type_=typing.List[TestListResponse],  # type: ignore
+                        type_=PaginatedResponseTestListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -594,32 +613,51 @@ class AsyncRawTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[TestListResponse]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseTestListResponse]:
         """
         List all the test cases for your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[TestListResponse]]
+        AsyncHttpResponse[PaginatedResponseTestListResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             "tests",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[TestListResponse],
+                    PaginatedResponseTestListResponse,
                     parse_obj_as(
-                        type_=typing.List[TestListResponse],  # type: ignore
+                        type_=PaginatedResponseTestListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

@@ -12,8 +12,8 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_create_response import AgentCreateResponse
-from ..types.agent_summary import AgentSummary
 from ..types.http_validation_error import HttpValidationError
+from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
@@ -163,32 +163,51 @@ class RawAgentsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[typing.List[AgentSummary]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseAgentSummary]:
         """
         Get the list of all your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[typing.List[AgentSummary]]
+        HttpResponse[PaginatedResponseAgentSummary]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             "agents",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[AgentSummary],
+                    PaginatedResponseAgentSummary,
                     parse_obj_as(
-                        type_=typing.List[AgentSummary],  # type: ignore
+                        type_=PaginatedResponseAgentSummary,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -625,32 +644,51 @@ class AsyncRawAgentsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[typing.List[AgentSummary]]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseAgentSummary]:
         """
         Get the list of all your agents
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[AgentSummary]]
+        AsyncHttpResponse[PaginatedResponseAgentSummary]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             "agents",
             method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[AgentSummary],
+                    PaginatedResponseAgentSummary,
                     parse_obj_as(
-                        type_=typing.List[AgentSummary],  # type: ignore
+                        type_=PaginatedResponseAgentSummary,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

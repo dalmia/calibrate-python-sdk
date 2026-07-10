@@ -5,14 +5,16 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
-from ..types.agent_test_runs_response import AgentTestRunsResponse
 from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
 from ..types.benchmark_status_response import BenchmarkStatusResponse
-from ..types.test_list_response import TestListResponse
+from ..types.paginated_response_agent_test_run_list_item import PaginatedResponseAgentTestRunListItem
+from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
+from ..types.task_status import TaskStatus
 from ..types.test_run_status_response import TestRunStatusResponse
 from .raw_client import AsyncRawAgentTestsClient, RawAgentTestsClient
+from .types.list_runs_for_agent_agent_tests_request_type import ListRunsForAgentAgentTestsRequestType
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -75,8 +77,14 @@ class AgentTestsClient:
         return _response.data
 
     def list_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[TestListResponse]:
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseTestListResponse:
         """
         List the tests linked to an agent.
 
@@ -85,12 +93,21 @@ class AgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[TestListResponse]
+        PaginatedResponseTestListResponse
             Successful Response
 
         Examples
@@ -104,12 +121,22 @@ class AgentTestsClient:
             agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
         )
         """
-        _response = self._raw_client.list_for_agent(agent_uuid, request_options=request_options)
+        _response = self._raw_client.list_for_agent(
+            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+        )
         return _response.data
 
     def list_runs_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AgentTestRunsResponse:
+        self,
+        agent_uuid: str,
+        *,
+        type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
+        status: typing.Optional[TaskStatus] = None,
+        has_failures: typing.Optional[bool] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAgentTestRunListItem:
         """
         List an agent's test runs with their results
 
@@ -118,12 +145,29 @@ class AgentTestsClient:
         agent_uuid : str
             Agent whose test runs to list
 
+        type : typing.Optional[ListRunsForAgentAgentTestsRequestType]
+            Filter by run type. Omit to return both:
+            - `llm-unit-test`: single runs of an agent's tests
+            - `llm-benchmark`: multi-model comparisons
+
+        status : typing.Optional[TaskStatus]
+            Filter by run status. Omit for all statuses
+
+        has_failures : typing.Optional[bool]
+            Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AgentTestRunsResponse
+        PaginatedResponseAgentTestRunListItem
             Successful Response
 
         Examples
@@ -137,7 +181,15 @@ class AgentTestsClient:
             agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
         )
         """
-        _response = self._raw_client.list_runs_for_agent(agent_uuid, request_options=request_options)
+        _response = self._raw_client.list_runs_for_agent(
+            agent_uuid,
+            type=type,
+            status=status,
+            has_failures=has_failures,
+            limit=limit,
+            offset=offset,
+            request_options=request_options,
+        )
         return _response.data
 
     def run(
@@ -396,8 +448,14 @@ class AsyncAgentTestsClient:
         return _response.data
 
     async def list_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[TestListResponse]:
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseTestListResponse:
         """
         List the tests linked to an agent.
 
@@ -406,12 +464,21 @@ class AsyncAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[TestListResponse]
+        PaginatedResponseTestListResponse
             Successful Response
 
         Examples
@@ -433,12 +500,22 @@ class AsyncAgentTestsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list_for_agent(agent_uuid, request_options=request_options)
+        _response = await self._raw_client.list_for_agent(
+            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+        )
         return _response.data
 
     async def list_runs_for_agent(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AgentTestRunsResponse:
+        self,
+        agent_uuid: str,
+        *,
+        type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
+        status: typing.Optional[TaskStatus] = None,
+        has_failures: typing.Optional[bool] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAgentTestRunListItem:
         """
         List an agent's test runs with their results
 
@@ -447,12 +524,29 @@ class AsyncAgentTestsClient:
         agent_uuid : str
             Agent whose test runs to list
 
+        type : typing.Optional[ListRunsForAgentAgentTestsRequestType]
+            Filter by run type. Omit to return both:
+            - `llm-unit-test`: single runs of an agent's tests
+            - `llm-benchmark`: multi-model comparisons
+
+        status : typing.Optional[TaskStatus]
+            Filter by run status. Omit for all statuses
+
+        has_failures : typing.Optional[bool]
+            Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AgentTestRunsResponse
+        PaginatedResponseAgentTestRunListItem
             Successful Response
 
         Examples
@@ -474,7 +568,15 @@ class AsyncAgentTestsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list_runs_for_agent(agent_uuid, request_options=request_options)
+        _response = await self._raw_client.list_runs_for_agent(
+            agent_uuid,
+            type=type,
+            status=status,
+            has_failures=has_failures,
+            limit=limit,
+            offset=offset,
+            request_options=request_options,
+        )
         return _response.data
 
     async def run(

@@ -14,6 +14,7 @@ from ..types.evaluator_run_launch_response import EvaluatorRunLaunchResponse
 from ..types.evaluator_run_request_entry import EvaluatorRunRequestEntry
 from ..types.evaluator_run_response import EvaluatorRunResponse
 from ..types.item_update_payload import ItemUpdatePayload
+from ..types.paginated_response_annotation_task_response import PaginatedResponseAnnotationTaskResponse
 from ..types.task_agreement_response import TaskAgreementResponse
 from ..types.task_summary_response import TaskSummaryResponse
 from .raw_client import AsyncRawAnnotationTasksClient, RawAnnotationTasksClient
@@ -40,18 +41,34 @@ class AnnotationTasksClient:
         """
         return self._raw_client
 
-    def list(self, *, request_options: typing.Optional[RequestOptions] = None) -> typing.List[AnnotationTaskResponse]:
+    def list(
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAnnotationTaskResponse:
         """
         List annotation tasks with linked evaluators
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[AnnotationTaskResponse]
+        PaginatedResponseAnnotationTaskResponse
             Successful Response
 
         Examples
@@ -63,7 +80,7 @@ class AnnotationTasksClient:
         )
         client.annotation_tasks.list()
         """
-        _response = self._raw_client.list(request_options=request_options)
+        _response = self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     def create(
@@ -515,19 +532,33 @@ class AsyncAnnotationTasksClient:
         return self._raw_client
 
     async def list(
-        self, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> typing.List[AnnotationTaskResponse]:
+        self,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseAnnotationTaskResponse:
         """
         List annotation tasks with linked evaluators
 
         Parameters
         ----------
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        typing.List[AnnotationTaskResponse]
+        PaginatedResponseAnnotationTaskResponse
             Successful Response
 
         Examples
@@ -547,7 +578,7 @@ class AsyncAnnotationTasksClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.list(request_options=request_options)
+        _response = await self._raw_client.list(q=q, limit=limit, offset=offset, request_options=request_options)
         return _response.data
 
     async def create(

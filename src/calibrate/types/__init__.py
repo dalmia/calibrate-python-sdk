@@ -13,7 +13,6 @@ if typing.TYPE_CHECKING:
     from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
     from .agent_test_run_list_item import AgentTestRunListItem
     from .agent_test_run_list_item_type import AgentTestRunListItemType
-    from .agent_test_runs_response import AgentTestRunsResponse
     from .agent_tests_create_response import AgentTestsCreateResponse
     from .annotation_item_payload import AnnotationItemPayload
     from .annotation_task_create_response import AnnotationTaskCreateResponse
@@ -55,6 +54,11 @@ if typing.TYPE_CHECKING:
     from .model_run_summary import ModelRunSummary
     from .output_config import OutputConfig
     from .output_scale_entry import OutputScaleEntry
+    from .paginated_response_agent_summary import PaginatedResponseAgentSummary
+    from .paginated_response_agent_test_run_list_item import PaginatedResponseAgentTestRunListItem
+    from .paginated_response_annotation_task_response import PaginatedResponseAnnotationTaskResponse
+    from .paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
+    from .paginated_response_test_list_response import PaginatedResponseTestListResponse
     from .pagination_meta import PaginationMeta
     from .resolve_agent_names_response import ResolveAgentNamesResponse
     from .routers_agents_agent_response import RoutersAgentsAgentResponse
@@ -94,7 +98,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AgentTestRunCreateResponseStatus": ".agent_test_run_create_response_status",
     "AgentTestRunListItem": ".agent_test_run_list_item",
     "AgentTestRunListItemType": ".agent_test_run_list_item_type",
-    "AgentTestRunsResponse": ".agent_test_runs_response",
     "AgentTestsCreateResponse": ".agent_tests_create_response",
     "AnnotationItemPayload": ".annotation_item_payload",
     "AnnotationTaskCreateResponse": ".annotation_task_create_response",
@@ -136,6 +139,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ModelRunSummary": ".model_run_summary",
     "OutputConfig": ".output_config",
     "OutputScaleEntry": ".output_scale_entry",
+    "PaginatedResponseAgentSummary": ".paginated_response_agent_summary",
+    "PaginatedResponseAgentTestRunListItem": ".paginated_response_agent_test_run_list_item",
+    "PaginatedResponseAnnotationTaskResponse": ".paginated_response_annotation_task_response",
+    "PaginatedResponseEvaluatorResponse": ".paginated_response_evaluator_response",
+    "PaginatedResponseTestListResponse": ".paginated_response_test_list_response",
     "PaginationMeta": ".pagination_meta",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
     "RoutersAgentsAgentResponse": ".routers_agents_agent_response",
@@ -199,7 +207,6 @@ __all__ = [
     "AgentTestRunCreateResponseStatus",
     "AgentTestRunListItem",
     "AgentTestRunListItemType",
-    "AgentTestRunsResponse",
     "AgentTestsCreateResponse",
     "AnnotationItemPayload",
     "AnnotationTaskCreateResponse",
@@ -241,6 +248,11 @@ __all__ = [
     "ModelRunSummary",
     "OutputConfig",
     "OutputScaleEntry",
+    "PaginatedResponseAgentSummary",
+    "PaginatedResponseAgentTestRunListItem",
+    "PaginatedResponseAnnotationTaskResponse",
+    "PaginatedResponseEvaluatorResponse",
+    "PaginatedResponseTestListResponse",
     "PaginationMeta",
     "ResolveAgentNamesResponse",
     "RoutersAgentsAgentResponse",

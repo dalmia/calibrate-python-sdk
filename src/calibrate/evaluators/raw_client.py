@@ -17,7 +17,7 @@ from ..types.evaluator_detail_response import EvaluatorDetailResponse
 from ..types.evaluator_version_create import EvaluatorVersionCreate
 from ..types.http_validation_error import HttpValidationError
 from ..types.output_config import OutputConfig
-from ..types.routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
+from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.variable_spec import VariableSpec
 from ..types.version_create_response import VersionCreateResponse
 from .types.evaluator_create_data_type import EvaluatorCreateDataType
@@ -41,8 +41,11 @@ class RawEvaluatorsClient:
         evaluator_type: typing.Optional[ListEvaluatorsRequestEvaluatorType] = None,
         data_type: typing.Optional[ListEvaluatorsRequestDataType] = None,
         include_defaults: typing.Optional[bool] = None,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[typing.List[RoutersEvaluatorsEvaluatorResponse]]:
+    ) -> HttpResponse[PaginatedResponseEvaluatorResponse]:
         """
         List your evaluators
 
@@ -57,12 +60,21 @@ class RawEvaluatorsClient:
         include_defaults : typing.Optional[bool]
             When `true`, include the built-in default evaluators alongside the ones you created
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[typing.List[RoutersEvaluatorsEvaluatorResponse]]
+        HttpResponse[PaginatedResponseEvaluatorResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -72,15 +84,18 @@ class RawEvaluatorsClient:
                 "evaluator_type": evaluator_type,
                 "data_type": data_type,
                 "include_defaults": include_defaults,
+                "q": q,
+                "limit": limit,
+                "offset": offset,
             },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersEvaluatorsEvaluatorResponse],
+                    PaginatedResponseEvaluatorResponse,
                     parse_obj_as(
-                        type_=typing.List[RoutersEvaluatorsEvaluatorResponse],  # type: ignore
+                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -365,8 +380,11 @@ class AsyncRawEvaluatorsClient:
         evaluator_type: typing.Optional[ListEvaluatorsRequestEvaluatorType] = None,
         data_type: typing.Optional[ListEvaluatorsRequestDataType] = None,
         include_defaults: typing.Optional[bool] = None,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[typing.List[RoutersEvaluatorsEvaluatorResponse]]:
+    ) -> AsyncHttpResponse[PaginatedResponseEvaluatorResponse]:
         """
         List your evaluators
 
@@ -381,12 +399,21 @@ class AsyncRawEvaluatorsClient:
         include_defaults : typing.Optional[bool]
             When `true`, include the built-in default evaluators alongside the ones you created
 
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[typing.List[RoutersEvaluatorsEvaluatorResponse]]
+        AsyncHttpResponse[PaginatedResponseEvaluatorResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -396,15 +423,18 @@ class AsyncRawEvaluatorsClient:
                 "evaluator_type": evaluator_type,
                 "data_type": data_type,
                 "include_defaults": include_defaults,
+                "q": q,
+                "limit": limit,
+                "offset": offset,
             },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    typing.List[RoutersEvaluatorsEvaluatorResponse],
+                    PaginatedResponseEvaluatorResponse,
                     parse_obj_as(
-                        type_=typing.List[RoutersEvaluatorsEvaluatorResponse],  # type: ignore
+                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
