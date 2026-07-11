@@ -588,6 +588,187 @@ For `type=connection`, changing `agent_url` or `agent_headers` resets the connec
 </dl>
 </details>
 
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list_evaluators</a>(...) -> PaginatedResponseEvaluatorResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List evaluators linked to an agent
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.list_evaluators(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — The agent whose evaluators to list
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return. Omit for no limit (all items)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">link_evaluators</a>(...) -> RoutersAgentsEvaluatorLinkResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Link one or more existing evaluators to an agent, skipping any already linked
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.link_evaluators(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    evaluator_ids=[
+        "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    ],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — The agent to link the evaluators to
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluator_ids:** `typing.List[str]` — The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Tests
 <details><summary><code>client.tests.<a href="src/calibrate/tests/client.py">bulk_create</a>(...) -> BulkTestUploadResponse</code></summary>
 <dl>

@@ -63,6 +63,7 @@ if typing.TYPE_CHECKING:
     from .resolve_agent_names_response import ResolveAgentNamesResponse
     from .routers_agents_agent_response import RoutersAgentsAgentResponse
     from .routers_agents_agent_response_type import RoutersAgentsAgentResponseType
+    from .routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
     from .routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
     from .routers_evaluators_evaluator_response_data_type import RoutersEvaluatorsEvaluatorResponseDataType
     from .routers_evaluators_evaluator_response_evaluator_type import RoutersEvaluatorsEvaluatorResponseEvaluatorType
@@ -148,6 +149,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
     "RoutersAgentsAgentResponse": ".routers_agents_agent_response",
     "RoutersAgentsAgentResponseType": ".routers_agents_agent_response_type",
+    "RoutersAgentsEvaluatorLinkResponse": ".routers_agents_evaluator_link_response",
     "RoutersEvaluatorsEvaluatorResponse": ".routers_evaluators_evaluator_response",
     "RoutersEvaluatorsEvaluatorResponseDataType": ".routers_evaluators_evaluator_response_data_type",
     "RoutersEvaluatorsEvaluatorResponseEvaluatorType": ".routers_evaluators_evaluator_response_evaluator_type",
@@ -257,6 +259,7 @@ __all__ = [
     "ResolveAgentNamesResponse",
     "RoutersAgentsAgentResponse",
     "RoutersAgentsAgentResponseType",
+    "RoutersAgentsEvaluatorLinkResponse",
     "RoutersEvaluatorsEvaluatorResponse",
     "RoutersEvaluatorsEvaluatorResponseDataType",
     "RoutersEvaluatorsEvaluatorResponseEvaluatorType",

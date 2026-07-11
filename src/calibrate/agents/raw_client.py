@@ -14,8 +14,10 @@ from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_create_response import AgentCreateResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
+from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
+from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .types.agent_create_type import AgentCreateType
 from pydantic import ValidationError
@@ -504,6 +506,148 @@ class RawAgentsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
+    def list_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[PaginatedResponseEvaluatorResponse]:
+        """
+        List evaluators linked to an agent
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose evaluators to list
+
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[PaginatedResponseEvaluatorResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators",
+            method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    PaginatedResponseEvaluatorResponse,
+                    parse_obj_as(
+                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def link_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[RoutersAgentsEvaluatorLinkResponse]:
+        """
+        Link one or more existing evaluators to an agent, skipping any already linked
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to link the evaluators to
+
+        evaluator_ids : typing.Sequence[str]
+            The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[RoutersAgentsEvaluatorLinkResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators",
+            method="POST",
+            json={
+                "evaluator_ids": evaluator_ids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RoutersAgentsEvaluatorLinkResponse,
+                    parse_obj_as(
+                        type_=RoutersAgentsEvaluatorLinkResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
 
 class AsyncRawAgentsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -961,6 +1105,148 @@ class AsyncRawAgentsClient:
                     RoutersAgentsAgentResponse,
                     parse_obj_as(
                         type_=RoutersAgentsAgentResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def list_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[PaginatedResponseEvaluatorResponse]:
+        """
+        List evaluators linked to an agent
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose evaluators to list
+
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[PaginatedResponseEvaluatorResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators",
+            method="GET",
+            params={
+                "q": q,
+                "limit": limit,
+                "offset": offset,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    PaginatedResponseEvaluatorResponse,
+                    parse_obj_as(
+                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def link_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[RoutersAgentsEvaluatorLinkResponse]:
+        """
+        Link one or more existing evaluators to an agent, skipping any already linked
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to link the evaluators to
+
+        evaluator_ids : typing.Sequence[str]
+            The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[RoutersAgentsEvaluatorLinkResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators",
+            method="POST",
+            json={
+                "evaluator_ids": evaluator_ids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    RoutersAgentsEvaluatorLinkResponse,
+                    parse_obj_as(
+                        type_=RoutersAgentsEvaluatorLinkResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

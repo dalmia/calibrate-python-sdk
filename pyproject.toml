@@ -4,7 +4,7 @@ dynamic = ["version"]
 
 [tool.poetry]
 name = "calibrate-sdk"
-version = "0.0.26"
+version = "0.0.27"
 description = ""
 readme = "README.md"
 authors = []

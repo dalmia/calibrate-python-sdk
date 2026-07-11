@@ -6,8 +6,10 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
+from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
+from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
 from .types.agent_create_type import AgentCreateType
@@ -350,6 +352,99 @@ class AgentsClient:
         )
         """
         _response = self._raw_client.update(agent_uuid, name=name, config=config, request_options=request_options)
+        return _response.data
+
+    def list_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseEvaluatorResponse:
+        """
+        List evaluators linked to an agent
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose evaluators to list
+
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PaginatedResponseEvaluatorResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.list_evaluators(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.list_evaluators(
+            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+        )
+        return _response.data
+
+    def link_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> RoutersAgentsEvaluatorLinkResponse:
+        """
+        Link one or more existing evaluators to an agent, skipping any already linked
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to link the evaluators to
+
+        evaluator_ids : typing.Sequence[str]
+            The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsEvaluatorLinkResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.link_evaluators(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            evaluator_ids=["f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+        )
+        """
+        _response = self._raw_client.link_evaluators(
+            agent_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+        )
         return _response.data
 
 
@@ -735,4 +830,113 @@ class AsyncAgentsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.update(agent_uuid, name=name, config=config, request_options=request_options)
+        return _response.data
+
+    async def list_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        q: typing.Optional[str] = None,
+        limit: typing.Optional[int] = None,
+        offset: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PaginatedResponseEvaluatorResponse:
+        """
+        List evaluators linked to an agent
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent whose evaluators to list
+
+        q : typing.Optional[str]
+            Case-insensitive substring search on `name`. Blank is a no-op
+
+        limit : typing.Optional[int]
+            Maximum number of items to return. Omit for no limit (all items)
+
+        offset : typing.Optional[int]
+            Number of items to skip before returning results
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PaginatedResponseEvaluatorResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.list_evaluators(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.list_evaluators(
+            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+        )
+        return _response.data
+
+    async def link_evaluators(
+        self,
+        agent_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> RoutersAgentsEvaluatorLinkResponse:
+        """
+        Link one or more existing evaluators to an agent, skipping any already linked
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent to link the evaluators to
+
+        evaluator_ids : typing.Sequence[str]
+            The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        RoutersAgentsEvaluatorLinkResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.link_evaluators(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                evaluator_ids=["f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.link_evaluators(
+            agent_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+        )
         return _response.data
