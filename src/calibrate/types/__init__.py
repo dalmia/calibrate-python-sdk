@@ -36,13 +36,13 @@ if typing.TYPE_CHECKING:
     from .evaluator_detail_response_compact_data_type import EvaluatorDetailResponseCompactDataType
     from .evaluator_detail_response_compact_evaluator_type import EvaluatorDetailResponseCompactEvaluatorType
     from .evaluator_detail_response_compact_output_type import EvaluatorDetailResponseCompactOutputType
-    from .evaluator_link_response import EvaluatorLinkResponse
     from .evaluator_live_version_summary import EvaluatorLiveVersionSummary
     from .evaluator_run_launch_response import EvaluatorRunLaunchResponse
     from .evaluator_run_launch_response_status import EvaluatorRunLaunchResponseStatus
     from .evaluator_run_request_entry import EvaluatorRunRequestEntry
     from .evaluator_run_response import EvaluatorRunResponse
     from .evaluator_run_response_status import EvaluatorRunResponseStatus
+    from .evaluator_set_response import EvaluatorSetResponse
     from .evaluator_version_compact import EvaluatorVersionCompact
     from .evaluator_version_create import EvaluatorVersionCreate
     from .expected_tool_call import ExpectedToolCall
@@ -121,13 +121,13 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EvaluatorDetailResponseCompactDataType": ".evaluator_detail_response_compact_data_type",
     "EvaluatorDetailResponseCompactEvaluatorType": ".evaluator_detail_response_compact_evaluator_type",
     "EvaluatorDetailResponseCompactOutputType": ".evaluator_detail_response_compact_output_type",
-    "EvaluatorLinkResponse": ".evaluator_link_response",
     "EvaluatorLiveVersionSummary": ".evaluator_live_version_summary",
     "EvaluatorRunLaunchResponse": ".evaluator_run_launch_response",
     "EvaluatorRunLaunchResponseStatus": ".evaluator_run_launch_response_status",
     "EvaluatorRunRequestEntry": ".evaluator_run_request_entry",
     "EvaluatorRunResponse": ".evaluator_run_response",
     "EvaluatorRunResponseStatus": ".evaluator_run_response_status",
+    "EvaluatorSetResponse": ".evaluator_set_response",
     "EvaluatorVersionCompact": ".evaluator_version_compact",
     "EvaluatorVersionCreate": ".evaluator_version_create",
     "ExpectedToolCall": ".expected_tool_call",
@@ -230,13 +230,13 @@ __all__ = [
     "EvaluatorDetailResponseCompactDataType",
     "EvaluatorDetailResponseCompactEvaluatorType",
     "EvaluatorDetailResponseCompactOutputType",
-    "EvaluatorLinkResponse",
     "EvaluatorLiveVersionSummary",
     "EvaluatorRunLaunchResponse",
     "EvaluatorRunLaunchResponseStatus",
     "EvaluatorRunRequestEntry",
     "EvaluatorRunResponse",
     "EvaluatorRunResponseStatus",
+    "EvaluatorSetResponse",
     "EvaluatorVersionCompact",
     "EvaluatorVersionCreate",
     "ExpectedToolCall",

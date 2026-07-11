@@ -288,7 +288,15 @@ client = Calibrate(
 )
 
 client.agents.create(
-    name="name",
+    name="Support Agent",
+    type="agent",
+    config={
+        "system_prompt": "You are a helpful assistant.",
+        "llm": {"model": "google/gemini-2.5-flash"},
+        "stt": {"provider": "google"},
+        "tts": {"provider": "google"},
+        "settings": {"agent_speaks_first": True, "max_assistant_turns": 50}
+    },
 )
 
 ```
@@ -2605,7 +2613,7 @@ client.annotation_tasks.get(
 </dl>
 </details>
 
-<details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">link_evaluator</a>(...) -> EvaluatorLinkResponse</code></summary>
+<details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">set_evaluators</a>(...) -> EvaluatorSetResponse</code></summary>
 <dl>
 <dd>
 
@@ -2617,7 +2625,7 @@ client.annotation_tasks.get(
 <dl>
 <dd>
 
-Link an evaluator to a task, appending it to the display order
+Replace a task's linked evaluators with the given ordered set, linking, unlinking, and reordering as needed
 </dd>
 </dl>
 </dd>
@@ -2640,9 +2648,11 @@ client = Calibrate(
     environment=CalibrateEnvironment.DEFAULT,
 )
 
-client.annotation_tasks.link_evaluator(
+client.annotation_tasks.set_evaluators(
     task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    evaluator_id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    evaluator_ids=[
+        "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    ],
 )
 
 ```
@@ -2667,7 +2677,7 @@ client.annotation_tasks.link_evaluator(
 <dl>
 <dd>
 
-**evaluator_id:** `str` — The evaluator to link. Must be one you created or a built-in default
+**evaluator_ids:** `typing.List[str]` — The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
     
 </dd>
 </dl>

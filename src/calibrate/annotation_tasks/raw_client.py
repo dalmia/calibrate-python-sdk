@@ -17,10 +17,10 @@ from ..types.annotation_task_create_response import AnnotationTaskCreateResponse
 from ..types.annotation_task_response import AnnotationTaskResponse
 from ..types.bulk_create_items_response import BulkCreateItemsResponse
 from ..types.bulk_update_items_response import BulkUpdateItemsResponse
-from ..types.evaluator_link_response import EvaluatorLinkResponse
 from ..types.evaluator_run_launch_response import EvaluatorRunLaunchResponse
 from ..types.evaluator_run_request_entry import EvaluatorRunRequestEntry
 from ..types.evaluator_run_response import EvaluatorRunResponse
+from ..types.evaluator_set_response import EvaluatorSetResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.item_update_payload import ItemUpdatePayload
 from ..types.paginated_response_annotation_task_response import PaginatedResponseAnnotationTaskResponse
@@ -246,33 +246,37 @@ class RawAnnotationTasksClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def link_evaluator(
-        self, task_uuid: str, *, evaluator_id: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[EvaluatorLinkResponse]:
+    def set_evaluators(
+        self,
+        task_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[EvaluatorSetResponse]:
         """
-        Link an evaluator to a task, appending it to the display order
+        Replace a task's linked evaluators with the given ordered set, linking, unlinking, and reordering as needed
 
         Parameters
         ----------
         task_uuid : str
             Annotation task to act on
 
-        evaluator_id : str
-            The evaluator to link. Must be one you created or a built-in default
+        evaluator_ids : typing.Sequence[str]
+            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[EvaluatorLinkResponse]
+        HttpResponse[EvaluatorSetResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             f"annotation-tasks/{encode_path_param(task_uuid)}/evaluators",
-            method="POST",
+            method="PUT",
             json={
-                "evaluator_id": evaluator_id,
+                "evaluator_ids": evaluator_ids,
             },
             headers={
                 "content-type": "application/json",
@@ -283,9 +287,9 @@ class RawAnnotationTasksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    EvaluatorLinkResponse,
+                    EvaluatorSetResponse,
                     parse_obj_as(
-                        type_=EvaluatorLinkResponse,  # type: ignore
+                        type_=EvaluatorSetResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -982,33 +986,37 @@ class AsyncRawAnnotationTasksClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def link_evaluator(
-        self, task_uuid: str, *, evaluator_id: str, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[EvaluatorLinkResponse]:
+    async def set_evaluators(
+        self,
+        task_uuid: str,
+        *,
+        evaluator_ids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[EvaluatorSetResponse]:
         """
-        Link an evaluator to a task, appending it to the display order
+        Replace a task's linked evaluators with the given ordered set, linking, unlinking, and reordering as needed
 
         Parameters
         ----------
         task_uuid : str
             Annotation task to act on
 
-        evaluator_id : str
-            The evaluator to link. Must be one you created or a built-in default
+        evaluator_ids : typing.Sequence[str]
+            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[EvaluatorLinkResponse]
+        AsyncHttpResponse[EvaluatorSetResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             f"annotation-tasks/{encode_path_param(task_uuid)}/evaluators",
-            method="POST",
+            method="PUT",
             json={
-                "evaluator_id": evaluator_id,
+                "evaluator_ids": evaluator_ids,
             },
             headers={
                 "content-type": "application/json",
@@ -1019,9 +1027,9 @@ class AsyncRawAnnotationTasksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    EvaluatorLinkResponse,
+                    EvaluatorSetResponse,
                     parse_obj_as(
-                        type_=EvaluatorLinkResponse,  # type: ignore
+                        type_=EvaluatorSetResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

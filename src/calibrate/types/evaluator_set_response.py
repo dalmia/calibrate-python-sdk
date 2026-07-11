@@ -6,10 +6,25 @@ import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 
 
-class EvaluatorLinkResponse(UniversalBaseModel):
+class EvaluatorSetResponse(UniversalBaseModel):
     message: str = pydantic.Field()
     """
-    Confirmation that the evaluator was linked
+    Confirmation that the task's evaluators were updated
+    """
+
+    evaluator_ids: typing.List[str] = pydantic.Field()
+    """
+    The task's evaluator IDs after the update, in display order
+    """
+
+    linked: typing.List[str] = pydantic.Field()
+    """
+    Evaluator IDs newly linked by this request
+    """
+
+    unlinked: typing.List[str] = pydantic.Field()
+    """
+    Evaluator IDs unlinked by this request
     """
 
     if IS_PYDANTIC_V2:

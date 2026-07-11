@@ -225,7 +225,15 @@ class AgentsClient:
             api_key="YOUR_API_KEY",
         )
         client.agents.create(
-            name="name",
+            name="Support Agent",
+            type="agent",
+            config={
+                "system_prompt": "You are a helpful assistant.",
+                "llm": {"model": "google/gemini-2.5-flash"},
+                "stt": {"provider": "google"},
+                "tts": {"provider": "google"},
+                "settings": {"agent_speaks_first": True, "max_assistant_turns": 50},
+            },
         )
         """
         _response = self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
@@ -583,7 +591,15 @@ class AsyncAgentsClient:
 
         async def main() -> None:
             await client.agents.create(
-                name="name",
+                name="Support Agent",
+                type="agent",
+                config={
+                    "system_prompt": "You are a helpful assistant.",
+                    "llm": {"model": "google/gemini-2.5-flash"},
+                    "stt": {"provider": "google"},
+                    "tts": {"provider": "google"},
+                    "settings": {"agent_speaks_first": True, "max_assistant_turns": 50},
+                },
             )
 
 
