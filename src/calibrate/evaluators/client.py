@@ -5,7 +5,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.evaluator_create_response import EvaluatorCreateResponse
-from ..types.evaluator_detail_response import EvaluatorDetailResponse
+from ..types.evaluator_detail_response_compact import EvaluatorDetailResponseCompact
 from ..types.evaluator_version_create import EvaluatorVersionCreate
 from ..types.output_config import OutputConfig
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
@@ -180,8 +180,12 @@ class EvaluatorsClient:
         return _response.data
 
     def get(
-        self, evaluator_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> EvaluatorDetailResponse:
+        self,
+        evaluator_uuid: str,
+        *,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> EvaluatorDetailResponseCompact:
         """
         Get one evaluator with its full version history
 
@@ -190,12 +194,15 @@ class EvaluatorsClient:
         evaluator_uuid : str
             Evaluator to retrieve
 
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`versions.system_prompt`, `versions.output_config`, `versions.variables`), keeping only the lightweight decision fields. Omit for full detail
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        EvaluatorDetailResponse
+        EvaluatorDetailResponseCompact
             Successful Response
 
         Examples
@@ -209,7 +216,7 @@ class EvaluatorsClient:
             evaluator_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
         )
         """
-        _response = self._raw_client.get(evaluator_uuid, request_options=request_options)
+        _response = self._raw_client.get(evaluator_uuid, compact=compact, request_options=request_options)
         return _response.data
 
     def create_version(
@@ -453,8 +460,12 @@ class AsyncEvaluatorsClient:
         return _response.data
 
     async def get(
-        self, evaluator_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> EvaluatorDetailResponse:
+        self,
+        evaluator_uuid: str,
+        *,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> EvaluatorDetailResponseCompact:
         """
         Get one evaluator with its full version history
 
@@ -463,12 +474,15 @@ class AsyncEvaluatorsClient:
         evaluator_uuid : str
             Evaluator to retrieve
 
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`versions.system_prompt`, `versions.output_config`, `versions.variables`), keeping only the lightweight decision fields. Omit for full detail
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        EvaluatorDetailResponse
+        EvaluatorDetailResponseCompact
             Successful Response
 
         Examples
@@ -490,7 +504,7 @@ class AsyncEvaluatorsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get(evaluator_uuid, request_options=request_options)
+        _response = await self._raw_client.get(evaluator_uuid, compact=compact, request_options=request_options)
         return _response.data
 
     async def create_version(

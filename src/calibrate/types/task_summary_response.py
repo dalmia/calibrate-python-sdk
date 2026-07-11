@@ -34,7 +34,7 @@ class TaskSummaryResponse(UniversalBaseModel):
     One row per item, evaluator, and version on this page, with the evaluator's value and each annotator's label
     """
 
-    item_comments: typing.Dict[str, typing.Any] = pydantic.Field()
+    item_comments: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
     Annotator comments, keyed by item ID
     """

@@ -13,7 +13,7 @@ from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.evaluator_create_response import EvaluatorCreateResponse
-from ..types.evaluator_detail_response import EvaluatorDetailResponse
+from ..types.evaluator_detail_response_compact import EvaluatorDetailResponseCompact
 from ..types.evaluator_version_create import EvaluatorVersionCreate
 from ..types.http_validation_error import HttpValidationError
 from ..types.output_config import OutputConfig
@@ -224,8 +224,12 @@ class RawEvaluatorsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def get(
-        self, evaluator_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[EvaluatorDetailResponse]:
+        self,
+        evaluator_uuid: str,
+        *,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[EvaluatorDetailResponseCompact]:
         """
         Get one evaluator with its full version history
 
@@ -234,25 +238,31 @@ class RawEvaluatorsClient:
         evaluator_uuid : str
             Evaluator to retrieve
 
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`versions.system_prompt`, `versions.output_config`, `versions.variables`), keeping only the lightweight decision fields. Omit for full detail
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[EvaluatorDetailResponse]
+        HttpResponse[EvaluatorDetailResponseCompact]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
             f"evaluators/{encode_path_param(evaluator_uuid)}",
             method="GET",
+            params={
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    EvaluatorDetailResponse,
+                    EvaluatorDetailResponseCompact,
                     parse_obj_as(
-                        type_=EvaluatorDetailResponse,  # type: ignore
+                        type_=EvaluatorDetailResponseCompact,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -563,8 +573,12 @@ class AsyncRawEvaluatorsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get(
-        self, evaluator_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[EvaluatorDetailResponse]:
+        self,
+        evaluator_uuid: str,
+        *,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[EvaluatorDetailResponseCompact]:
         """
         Get one evaluator with its full version history
 
@@ -573,25 +587,31 @@ class AsyncRawEvaluatorsClient:
         evaluator_uuid : str
             Evaluator to retrieve
 
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`versions.system_prompt`, `versions.output_config`, `versions.variables`), keeping only the lightweight decision fields. Omit for full detail
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[EvaluatorDetailResponse]
+        AsyncHttpResponse[EvaluatorDetailResponseCompact]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
             f"evaluators/{encode_path_param(evaluator_uuid)}",
             method="GET",
+            params={
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    EvaluatorDetailResponse,
+                    EvaluatorDetailResponseCompact,
                     parse_obj_as(
-                        type_=EvaluatorDetailResponse,  # type: ignore
+                        type_=EvaluatorDetailResponseCompact,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

@@ -1687,6 +1687,22 @@ client.agent_tests.get_run(
 <dl>
 <dd>
 
+**only_failed:** `typing.Optional[bool]` — Return only failing test cases. Omit to return every case
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**compact:** `typing.Optional[bool]` — Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -1846,6 +1862,22 @@ client.agent_tests.get_benchmark(
 <dd>
 
 **task_id:** `str` — Benchmark run to poll for status and results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**only_failed:** `typing.Optional[bool]` — Return only failing test cases for each model. Omit to return every case
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**compact:** `typing.Optional[bool]` — Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
     
 </dd>
 </dl>
@@ -2112,7 +2144,7 @@ How the evaluator scores:
 </dl>
 </details>
 
-<details><summary><code>client.evaluators.<a href="src/calibrate/evaluators/client.py">get</a>(...) -> EvaluatorDetailResponse</code></summary>
+<details><summary><code>client.evaluators.<a href="src/calibrate/evaluators/client.py">get</a>(...) -> EvaluatorDetailResponseCompact</code></summary>
 <dl>
 <dd>
 
@@ -2166,6 +2198,14 @@ client.evaluators.get(
 <dd>
 
 **evaluator_uuid:** `str` — Evaluator to retrieve
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**compact:** `typing.Optional[bool]` — Return a compact response that omits heavy detail fields (`versions.system_prompt`, `versions.output_config`, `versions.variables`), keeping only the lightweight decision fields. Omit for full detail
     
 </dd>
 </dl>
@@ -3177,6 +3217,14 @@ client.annotation_tasks.get_summary(
 <dl>
 <dd>
 
+**disagreement_only:** `typing.Optional[bool]` — When true, keep only rows where the evaluator disagreed with at least one annotator
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **q:** `typing.Optional[str]` — Case-insensitive substring search on `payload.name`. Blank is a no-op
     
 </dd>
@@ -3210,6 +3258,14 @@ client.annotation_tasks.get_summary(
 <dd>
 
 **offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**compact:** `typing.Optional[bool]` — Return a compact response that omits heavy detail fields (`rows.payload`, `rows.evaluator_reasoning`, `rows.annotations.reasoning`, `evaluators.versions.system_prompt`, `evaluators.versions.output_config`, `evaluators.versions.variables`, `item_comments`), keeping only the lightweight decision fields. Omit for full detail
     
 </dd>
 </dl>

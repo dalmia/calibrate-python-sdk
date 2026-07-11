@@ -268,7 +268,12 @@ class AgentTestsClient:
         return _response.data
 
     def get_run(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> TestRunStatusResponse:
         """
         Poll a test run for its status and evaluation results.
@@ -277,6 +282,12 @@ class AgentTestsClient:
         ----------
         task_id : str
             Test run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -297,7 +308,9 @@ class AgentTestsClient:
             task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
         )
         """
-        _response = self._raw_client.get_run(task_id, request_options=request_options)
+        _response = self._raw_client.get_run(
+            task_id, only_failed=only_failed, compact=compact, request_options=request_options
+        )
         return _response.data
 
     def benchmark(
@@ -348,7 +361,12 @@ class AgentTestsClient:
         return _response.data
 
     def get_benchmark(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> BenchmarkStatusResponse:
         """
         Get the results of a benchmark run
@@ -357,6 +375,12 @@ class AgentTestsClient:
         ----------
         task_id : str
             Benchmark run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases for each model. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -377,7 +401,9 @@ class AgentTestsClient:
             task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
         )
         """
-        _response = self._raw_client.get_benchmark(task_id, request_options=request_options)
+        _response = self._raw_client.get_benchmark(
+            task_id, only_failed=only_failed, compact=compact, request_options=request_options
+        )
         return _response.data
 
 
@@ -671,7 +697,12 @@ class AsyncAgentTestsClient:
         return _response.data
 
     async def get_run(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> TestRunStatusResponse:
         """
         Poll a test run for its status and evaluation results.
@@ -680,6 +711,12 @@ class AsyncAgentTestsClient:
         ----------
         task_id : str
             Test run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -708,7 +745,9 @@ class AsyncAgentTestsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_run(task_id, request_options=request_options)
+        _response = await self._raw_client.get_run(
+            task_id, only_failed=only_failed, compact=compact, request_options=request_options
+        )
         return _response.data
 
     async def benchmark(
@@ -767,7 +806,12 @@ class AsyncAgentTestsClient:
         return _response.data
 
     async def get_benchmark(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> BenchmarkStatusResponse:
         """
         Get the results of a benchmark run
@@ -776,6 +820,12 @@ class AsyncAgentTestsClient:
         ----------
         task_id : str
             Benchmark run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases for each model. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -804,5 +854,7 @@ class AsyncAgentTestsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_benchmark(task_id, request_options=request_options)
+        _response = await self._raw_client.get_benchmark(
+            task_id, only_failed=only_failed, compact=compact, request_options=request_options
+        )
         return _response.data

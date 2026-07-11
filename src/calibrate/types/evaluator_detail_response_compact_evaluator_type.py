@@ -2,6 +2,6 @@
 
 import typing
 
-EvaluatorDetailResponseEvaluatorType = typing.Union[
+EvaluatorDetailResponseCompactEvaluatorType = typing.Union[
     typing.Literal["tts", "stt", "llm", "llm-general", "conversation"], typing.Any
 ]

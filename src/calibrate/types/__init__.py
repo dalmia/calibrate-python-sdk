@@ -32,10 +32,10 @@ if typing.TYPE_CHECKING:
     from .chat_message import ChatMessage
     from .chat_message_role import ChatMessageRole
     from .evaluator_create_response import EvaluatorCreateResponse
-    from .evaluator_detail_response import EvaluatorDetailResponse
-    from .evaluator_detail_response_data_type import EvaluatorDetailResponseDataType
-    from .evaluator_detail_response_evaluator_type import EvaluatorDetailResponseEvaluatorType
-    from .evaluator_detail_response_output_type import EvaluatorDetailResponseOutputType
+    from .evaluator_detail_response_compact import EvaluatorDetailResponseCompact
+    from .evaluator_detail_response_compact_data_type import EvaluatorDetailResponseCompactDataType
+    from .evaluator_detail_response_compact_evaluator_type import EvaluatorDetailResponseCompactEvaluatorType
+    from .evaluator_detail_response_compact_output_type import EvaluatorDetailResponseCompactOutputType
     from .evaluator_link_response import EvaluatorLinkResponse
     from .evaluator_live_version_summary import EvaluatorLiveVersionSummary
     from .evaluator_run_launch_response import EvaluatorRunLaunchResponse
@@ -43,8 +43,8 @@ if typing.TYPE_CHECKING:
     from .evaluator_run_request_entry import EvaluatorRunRequestEntry
     from .evaluator_run_response import EvaluatorRunResponse
     from .evaluator_run_response_status import EvaluatorRunResponseStatus
+    from .evaluator_version_compact import EvaluatorVersionCompact
     from .evaluator_version_create import EvaluatorVersionCreate
-    from .evaluator_version_response import EvaluatorVersionResponse
     from .expected_tool_call import ExpectedToolCall
     from .http_validation_error import HttpValidationError
     from .human_agreement_block import HumanAgreementBlock
@@ -117,10 +117,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatMessage": ".chat_message",
     "ChatMessageRole": ".chat_message_role",
     "EvaluatorCreateResponse": ".evaluator_create_response",
-    "EvaluatorDetailResponse": ".evaluator_detail_response",
-    "EvaluatorDetailResponseDataType": ".evaluator_detail_response_data_type",
-    "EvaluatorDetailResponseEvaluatorType": ".evaluator_detail_response_evaluator_type",
-    "EvaluatorDetailResponseOutputType": ".evaluator_detail_response_output_type",
+    "EvaluatorDetailResponseCompact": ".evaluator_detail_response_compact",
+    "EvaluatorDetailResponseCompactDataType": ".evaluator_detail_response_compact_data_type",
+    "EvaluatorDetailResponseCompactEvaluatorType": ".evaluator_detail_response_compact_evaluator_type",
+    "EvaluatorDetailResponseCompactOutputType": ".evaluator_detail_response_compact_output_type",
     "EvaluatorLinkResponse": ".evaluator_link_response",
     "EvaluatorLiveVersionSummary": ".evaluator_live_version_summary",
     "EvaluatorRunLaunchResponse": ".evaluator_run_launch_response",
@@ -128,8 +128,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EvaluatorRunRequestEntry": ".evaluator_run_request_entry",
     "EvaluatorRunResponse": ".evaluator_run_response",
     "EvaluatorRunResponseStatus": ".evaluator_run_response_status",
+    "EvaluatorVersionCompact": ".evaluator_version_compact",
     "EvaluatorVersionCreate": ".evaluator_version_create",
-    "EvaluatorVersionResponse": ".evaluator_version_response",
     "ExpectedToolCall": ".expected_tool_call",
     "HttpValidationError": ".http_validation_error",
     "HumanAgreementBlock": ".human_agreement_block",
@@ -226,10 +226,10 @@ __all__ = [
     "ChatMessage",
     "ChatMessageRole",
     "EvaluatorCreateResponse",
-    "EvaluatorDetailResponse",
-    "EvaluatorDetailResponseDataType",
-    "EvaluatorDetailResponseEvaluatorType",
-    "EvaluatorDetailResponseOutputType",
+    "EvaluatorDetailResponseCompact",
+    "EvaluatorDetailResponseCompactDataType",
+    "EvaluatorDetailResponseCompactEvaluatorType",
+    "EvaluatorDetailResponseCompactOutputType",
     "EvaluatorLinkResponse",
     "EvaluatorLiveVersionSummary",
     "EvaluatorRunLaunchResponse",
@@ -237,8 +237,8 @@ __all__ = [
     "EvaluatorRunRequestEntry",
     "EvaluatorRunResponse",
     "EvaluatorRunResponseStatus",
+    "EvaluatorVersionCompact",
     "EvaluatorVersionCreate",
-    "EvaluatorVersionResponse",
     "ExpectedToolCall",
     "HttpValidationError",
     "HumanAgreementBlock",

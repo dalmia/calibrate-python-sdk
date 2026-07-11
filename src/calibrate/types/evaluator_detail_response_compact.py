@@ -6,13 +6,13 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .evaluator_detail_response_data_type import EvaluatorDetailResponseDataType
-from .evaluator_detail_response_evaluator_type import EvaluatorDetailResponseEvaluatorType
-from .evaluator_detail_response_output_type import EvaluatorDetailResponseOutputType
-from .evaluator_version_response import EvaluatorVersionResponse
+from .evaluator_detail_response_compact_data_type import EvaluatorDetailResponseCompactDataType
+from .evaluator_detail_response_compact_evaluator_type import EvaluatorDetailResponseCompactEvaluatorType
+from .evaluator_detail_response_compact_output_type import EvaluatorDetailResponseCompactOutputType
+from .evaluator_version_compact import EvaluatorVersionCompact
 
 
-class EvaluatorDetailResponse(UniversalBaseModel):
+class EvaluatorDetailResponseCompact(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Evaluator ID")
     ]
@@ -26,7 +26,7 @@ class EvaluatorDetailResponse(UniversalBaseModel):
     What the evaluator checks
     """
 
-    evaluator_type: EvaluatorDetailResponseEvaluatorType = pydantic.Field()
+    evaluator_type: EvaluatorDetailResponseCompactEvaluatorType = pydantic.Field()
     """
     What the evaluator judges:
     
@@ -37,7 +37,7 @@ class EvaluatorDetailResponse(UniversalBaseModel):
     - `conversation`: a full conversation
     """
 
-    data_type: EvaluatorDetailResponseDataType = pydantic.Field()
+    data_type: EvaluatorDetailResponseCompactDataType = pydantic.Field()
     """
     The modality the judge reads:
     
@@ -45,7 +45,7 @@ class EvaluatorDetailResponse(UniversalBaseModel):
     - `audio`
     """
 
-    output_type: EvaluatorDetailResponseOutputType = pydantic.Field()
+    output_type: EvaluatorDetailResponseCompactOutputType = pydantic.Field()
     """
     How the evaluator scores:
     
@@ -78,7 +78,7 @@ class EvaluatorDetailResponse(UniversalBaseModel):
     When the evaluator was last updated (ISO 8601 UTC)
     """
 
-    versions: typing.List[EvaluatorVersionResponse] = pydantic.Field()
+    versions: typing.List[EvaluatorVersionCompact] = pydantic.Field()
     """
     Full version history, oldest first
     """

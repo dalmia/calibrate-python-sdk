@@ -391,7 +391,12 @@ class RawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def get_run(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TestRunStatusResponse]:
         """
         Poll a test run for its status and evaluation results.
@@ -400,6 +405,12 @@ class RawAgentTestsClient:
         ----------
         task_id : str
             Test run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -412,6 +423,10 @@ class RawAgentTestsClient:
         _response = self._client_wrapper.httpx_client.request(
             f"agent-tests/run/{encode_path_param(task_id)}",
             method="GET",
+            params={
+                "only_failed": only_failed,
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:
@@ -518,7 +533,12 @@ class RawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def get_benchmark(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[BenchmarkStatusResponse]:
         """
         Get the results of a benchmark run
@@ -527,6 +547,12 @@ class RawAgentTestsClient:
         ----------
         task_id : str
             Benchmark run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases for each model. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -539,6 +565,10 @@ class RawAgentTestsClient:
         _response = self._client_wrapper.httpx_client.request(
             f"agent-tests/benchmark/{encode_path_param(task_id)}",
             method="GET",
+            params={
+                "only_failed": only_failed,
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:
@@ -934,7 +964,12 @@ class AsyncRawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get_run(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TestRunStatusResponse]:
         """
         Poll a test run for its status and evaluation results.
@@ -943,6 +978,12 @@ class AsyncRawAgentTestsClient:
         ----------
         task_id : str
             Test run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -955,6 +996,10 @@ class AsyncRawAgentTestsClient:
         _response = await self._client_wrapper.httpx_client.request(
             f"agent-tests/run/{encode_path_param(task_id)}",
             method="GET",
+            params={
+                "only_failed": only_failed,
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:
@@ -1061,7 +1106,12 @@ class AsyncRawAgentTestsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get_benchmark(
-        self, task_id: str, *, request_options: typing.Optional[RequestOptions] = None
+        self,
+        task_id: str,
+        *,
+        only_failed: typing.Optional[bool] = None,
+        compact: typing.Optional[bool] = None,
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[BenchmarkStatusResponse]:
         """
         Get the results of a benchmark run
@@ -1070,6 +1120,12 @@ class AsyncRawAgentTestsClient:
         ----------
         task_id : str
             Benchmark run to poll for status and results
+
+        only_failed : typing.Optional[bool]
+            Return only failing test cases for each model. Omit to return every case
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1082,6 +1138,10 @@ class AsyncRawAgentTestsClient:
         _response = await self._client_wrapper.httpx_client.request(
             f"agent-tests/benchmark/{encode_path_param(task_id)}",
             method="GET",
+            params={
+                "only_failed": only_failed,
+                "compact": compact,
+            },
             request_options=request_options,
         )
         try:

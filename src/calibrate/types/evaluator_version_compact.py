@@ -10,7 +10,7 @@ from .output_config import OutputConfig
 from .variable_spec import VariableSpec
 
 
-class EvaluatorVersionResponse(UniversalBaseModel):
+class EvaluatorVersionCompact(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="Version ID")
     ]
@@ -24,7 +24,7 @@ class EvaluatorVersionResponse(UniversalBaseModel):
     The model that runs the judge, named the way its provider does, for example `openai/gpt-4.1` or `anthropic/claude-sonnet-4`
     """
 
-    system_prompt: str = pydantic.Field()
+    system_prompt: typing.Optional[str] = pydantic.Field(default=None)
     """
     Judge system prompt, with `{{variable}}` placeholders unrendered
     """

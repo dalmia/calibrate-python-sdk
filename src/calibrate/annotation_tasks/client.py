@@ -447,11 +447,13 @@ class AnnotationTasksClient:
         *,
         item_id: typing.Optional[str] = None,
         live_only: typing.Optional[bool] = None,
+        disagreement_only: typing.Optional[bool] = None,
         q: typing.Optional[str] = None,
         sort_by: typing.Optional[str] = None,
         order: typing.Optional[GetSummaryAnnotationTasksRequestOrder] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
+        compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TaskSummaryResponse:
         """
@@ -468,6 +470,9 @@ class AnnotationTasksClient:
         live_only : typing.Optional[bool]
             When true, emit only one row for each (item, evaluator) pair using the evaluator's live version. Versions other than the live one that have runs are excluded
 
+        disagreement_only : typing.Optional[bool]
+            When true, keep only rows where the evaluator disagreed with at least one annotator
+
         q : typing.Optional[str]
             Case-insensitive substring search on `payload.name`. Blank is a no-op
 
@@ -482,6 +487,9 @@ class AnnotationTasksClient:
 
         offset : typing.Optional[int]
             Number of items to skip before returning results
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`rows.payload`, `rows.evaluator_reasoning`, `rows.annotations.reasoning`, `evaluators.versions.system_prompt`, `evaluators.versions.output_config`, `evaluators.versions.variables`, `item_comments`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -506,11 +514,13 @@ class AnnotationTasksClient:
             task_uuid,
             item_id=item_id,
             live_only=live_only,
+            disagreement_only=disagreement_only,
             q=q,
             sort_by=sort_by,
             order=order,
             limit=limit,
             offset=offset,
+            compact=compact,
             request_options=request_options,
         )
         return _response.data
@@ -1013,11 +1023,13 @@ class AsyncAnnotationTasksClient:
         *,
         item_id: typing.Optional[str] = None,
         live_only: typing.Optional[bool] = None,
+        disagreement_only: typing.Optional[bool] = None,
         q: typing.Optional[str] = None,
         sort_by: typing.Optional[str] = None,
         order: typing.Optional[GetSummaryAnnotationTasksRequestOrder] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
+        compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TaskSummaryResponse:
         """
@@ -1034,6 +1046,9 @@ class AsyncAnnotationTasksClient:
         live_only : typing.Optional[bool]
             When true, emit only one row for each (item, evaluator) pair using the evaluator's live version. Versions other than the live one that have runs are excluded
 
+        disagreement_only : typing.Optional[bool]
+            When true, keep only rows where the evaluator disagreed with at least one annotator
+
         q : typing.Optional[str]
             Case-insensitive substring search on `payload.name`. Blank is a no-op
 
@@ -1048,6 +1063,9 @@ class AsyncAnnotationTasksClient:
 
         offset : typing.Optional[int]
             Number of items to skip before returning results
+
+        compact : typing.Optional[bool]
+            Return a compact response that omits heavy detail fields (`rows.payload`, `rows.evaluator_reasoning`, `rows.annotations.reasoning`, `evaluators.versions.system_prompt`, `evaluators.versions.output_config`, `evaluators.versions.variables`, `item_comments`), keeping only the lightweight decision fields. Omit for full detail
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1080,11 +1098,13 @@ class AsyncAnnotationTasksClient:
             task_uuid,
             item_id=item_id,
             live_only=live_only,
+            disagreement_only=disagreement_only,
             q=q,
             sort_by=sort_by,
             order=order,
             limit=limit,
             offset=offset,
+            compact=compact,
             request_options=request_options,
         )
         return _response.data
