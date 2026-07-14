@@ -2,4 +2,6 @@
 
 import typing
 
-TaskSummaryResponseTaskType = typing.Union[typing.Literal["stt", "llm", "llm-general", "conversation"], typing.Any]
+TaskSummaryResponseTaskType = typing.Union[
+    typing.Literal["stt", "llm", "llm-general", "conversation", "tts"], typing.Any
+]

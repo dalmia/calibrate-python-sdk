@@ -2,4 +2,6 @@
 
 import typing
 
-AnnotationTaskResponseType = typing.Union[typing.Literal["stt", "llm", "llm-general", "conversation"], typing.Any]
+AnnotationTaskResponseType = typing.Union[
+    typing.Literal["stt", "llm", "llm-general", "conversation", "tts"], typing.Any
+]
