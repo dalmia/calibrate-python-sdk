@@ -55,12 +55,17 @@ class EvaluatorDetailResponseCompact(UniversalBaseModel):
 
     is_default: bool = pydantic.Field()
     """
-    True for a built-in default evaluator, which you can't edit. False for an evaluator you created, which you can edit and add versions to
+    True when the evaluator is a built-in default or your workspace's editable copy of one. False for an evaluator you created yourself
     """
 
     slug: typing.Optional[str] = pydantic.Field(default=None)
     """
     Stable slug for a built-in default evaluator
+    """
+
+    source_default_slug: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Stable slug of the built-in default this evaluator is your editable copy of. Set on your default forks so you can identify a specific default by it
     """
 
     live_version_id: typing.Optional[str] = pydantic.Field(default=None)

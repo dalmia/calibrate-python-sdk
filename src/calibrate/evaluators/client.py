@@ -60,7 +60,7 @@ class EvaluatorsClient:
             Filter by modality. Omit for all
 
         include_defaults : typing.Optional[bool]
-            When `true`, include the built-in default evaluators alongside the ones you created
+            Retained for backward compatibility and no longer filters. Your evaluators, including your editable copies of the defaults, are always returned
 
         q : typing.Optional[str]
             Case-insensitive substring search on `name`. Blank is a no-op
@@ -324,7 +324,7 @@ class AsyncEvaluatorsClient:
             Filter by modality. Omit for all
 
         include_defaults : typing.Optional[bool]
-            When `true`, include the built-in default evaluators alongside the ones you created
+            Retained for backward compatibility and no longer filters. Your evaluators, including your editable copies of the defaults, are always returned
 
         q : typing.Optional[str]
             Case-insensitive substring search on `name`. Blank is a no-op

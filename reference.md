@@ -2154,7 +2154,7 @@ client.evaluators.list()
 <dl>
 <dd>
 
-**include_defaults:** `typing.Optional[bool]` — When `true`, include the built-in default evaluators alongside the ones you created
+**include_defaults:** `typing.Optional[bool]` — Retained for backward compatibility and no longer filters. Your evaluators, including your editable copies of the defaults, are always returned
     
 </dd>
 </dl>
