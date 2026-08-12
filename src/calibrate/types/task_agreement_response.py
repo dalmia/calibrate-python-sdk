@@ -30,7 +30,7 @@ class TaskAgreementResponse(UniversalBaseModel):
 
     evaluators: typing.List[typing.Dict[str, typing.Any]] = pydantic.Field()
     """
-    Agreement between each evaluator and the annotators, one entry per linked evaluator
+    Agreement between each evaluator and the annotators, plus that evaluator's own results, one entry per linked evaluator
     """
 
     if IS_PYDANTIC_V2:

@@ -20,6 +20,11 @@ class TestRunStatusResponse(UniversalBaseModel):
     Current status of the run
     """
 
+    test_uuids: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    IDs of the tests this run executed, in run order
+    """
+
     total_tests: typing.Optional[int] = pydantic.Field(default=None)
     """
     Total number of test cases

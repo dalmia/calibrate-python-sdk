@@ -20,6 +20,11 @@ class BenchmarkStatusResponse(UniversalBaseModel):
     Current status of the run
     """
 
+    test_uuids: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    IDs of the tests this benchmark executed, in run order
+    """
+
     evaluators: typing.Optional[typing.List[TestRunEvaluator]] = pydantic.Field(default=None)
     """
     The evaluators used in this run. Each verdict in `judge_results` links to one of these by `evaluator_uuid`

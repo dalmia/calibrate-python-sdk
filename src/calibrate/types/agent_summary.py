@@ -34,6 +34,11 @@ class AgentSummary(UniversalBaseModel):
     Whether the agent's connection has been verified, for a `type=connection` agent
     """
 
+    has_default_inputs: bool = pydantic.Field()
+    """
+    Whether the agent has custom request fields configured
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

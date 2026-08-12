@@ -30,6 +30,11 @@ class BulkTestItem(UniversalBaseModel):
     Expected tool calls. **Required for `tool_call` batches**
     """
 
+    inputs: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Extra request fields for this test, overriding the agent's `default_inputs` per key
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

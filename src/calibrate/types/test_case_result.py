@@ -39,6 +39,11 @@ class TestCaseResult(UniversalBaseModel):
     The test case definition that was run
     """
 
+    inputs: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Extra request fields sent to the agent for this case, the agent's `default_inputs` with this case's overrides applied
+    """
+
     judge_results: typing.Optional[typing.List[JudgeResult]] = pydantic.Field(default=None)
     """
     One verdict for each evaluator

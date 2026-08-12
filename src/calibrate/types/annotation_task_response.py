@@ -52,6 +52,11 @@ class AnnotationTaskResponse(UniversalBaseModel):
     Number of items in the task
     """
 
+    has_agreement: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether the task has at least one comparable human-vs-human or human-vs-evaluator pair, computed over all time
+    """
+
     items: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
     """
     The task's items, each with its agreement stats. You get these when you fetch one task by ID, not when you list tasks
