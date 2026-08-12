@@ -8,6 +8,8 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .types import (
         AgentCreateResponse,
+        AgentResponse,
+        AgentResponseType,
         AgentSummary,
         AgentSummaryType,
         AgentTestRunCreateResponse,
@@ -62,8 +64,6 @@ if typing.TYPE_CHECKING:
         PaginatedResponseTestListResponse,
         PaginationMeta,
         ResolveAgentNamesResponse,
-        RoutersAgentsAgentResponse,
-        RoutersAgentsAgentResponseType,
         RoutersAgentsEvaluatorLinkResponse,
         RoutersEvaluatorsEvaluatorResponse,
         RoutersEvaluatorsEvaluatorResponseDataType,
@@ -117,6 +117,8 @@ if typing.TYPE_CHECKING:
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".types",
     "AgentCreateType": ".agents",
+    "AgentResponse": ".types",
+    "AgentResponseType": ".types",
     "AgentSummary": ".types",
     "AgentSummaryType": ".types",
     "AgentTestRunCreateResponse": ".types",
@@ -186,8 +188,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "PaginatedResponseTestListResponse": ".types",
     "PaginationMeta": ".types",
     "ResolveAgentNamesResponse": ".types",
-    "RoutersAgentsAgentResponse": ".types",
-    "RoutersAgentsAgentResponseType": ".types",
     "RoutersAgentsEvaluatorLinkResponse": ".types",
     "RoutersEvaluatorsEvaluatorResponse": ".types",
     "RoutersEvaluatorsEvaluatorResponseDataType": ".types",
@@ -252,6 +252,8 @@ def __dir__():
 __all__ = [
     "AgentCreateResponse",
     "AgentCreateType",
+    "AgentResponse",
+    "AgentResponseType",
     "AgentSummary",
     "AgentSummaryType",
     "AgentTestRunCreateResponse",
@@ -321,8 +323,6 @@ __all__ = [
     "PaginatedResponseTestListResponse",
     "PaginationMeta",
     "ResolveAgentNamesResponse",
-    "RoutersAgentsAgentResponse",
-    "RoutersAgentsAgentResponseType",
     "RoutersAgentsEvaluatorLinkResponse",
     "RoutersEvaluatorsEvaluatorResponse",
     "RoutersEvaluatorsEvaluatorResponseDataType",

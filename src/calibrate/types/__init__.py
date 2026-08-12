@@ -7,6 +7,8 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .agent_create_response import AgentCreateResponse
+    from .agent_response import AgentResponse
+    from .agent_response_type import AgentResponseType
     from .agent_summary import AgentSummary
     from .agent_summary_type import AgentSummaryType
     from .agent_test_run_create_response import AgentTestRunCreateResponse
@@ -61,8 +63,6 @@ if typing.TYPE_CHECKING:
     from .paginated_response_test_list_response import PaginatedResponseTestListResponse
     from .pagination_meta import PaginationMeta
     from .resolve_agent_names_response import ResolveAgentNamesResponse
-    from .routers_agents_agent_response import RoutersAgentsAgentResponse
-    from .routers_agents_agent_response_type import RoutersAgentsAgentResponseType
     from .routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
     from .routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
     from .routers_evaluators_evaluator_response_data_type import RoutersEvaluatorsEvaluatorResponseDataType
@@ -93,6 +93,8 @@ if typing.TYPE_CHECKING:
     from .version_create_response import VersionCreateResponse
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".agent_create_response",
+    "AgentResponse": ".agent_response",
+    "AgentResponseType": ".agent_response_type",
     "AgentSummary": ".agent_summary",
     "AgentSummaryType": ".agent_summary_type",
     "AgentTestRunCreateResponse": ".agent_test_run_create_response",
@@ -147,8 +149,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "PaginatedResponseTestListResponse": ".paginated_response_test_list_response",
     "PaginationMeta": ".pagination_meta",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
-    "RoutersAgentsAgentResponse": ".routers_agents_agent_response",
-    "RoutersAgentsAgentResponseType": ".routers_agents_agent_response_type",
     "RoutersAgentsEvaluatorLinkResponse": ".routers_agents_evaluator_link_response",
     "RoutersEvaluatorsEvaluatorResponse": ".routers_evaluators_evaluator_response",
     "RoutersEvaluatorsEvaluatorResponseDataType": ".routers_evaluators_evaluator_response_data_type",
@@ -203,6 +203,8 @@ def __dir__():
 
 __all__ = [
     "AgentCreateResponse",
+    "AgentResponse",
+    "AgentResponseType",
     "AgentSummary",
     "AgentSummaryType",
     "AgentTestRunCreateResponse",
@@ -257,8 +259,6 @@ __all__ = [
     "PaginatedResponseTestListResponse",
     "PaginationMeta",
     "ResolveAgentNamesResponse",
-    "RoutersAgentsAgentResponse",
-    "RoutersAgentsAgentResponseType",
     "RoutersAgentsEvaluatorLinkResponse",
     "RoutersEvaluatorsEvaluatorResponse",
     "RoutersEvaluatorsEvaluatorResponseDataType",

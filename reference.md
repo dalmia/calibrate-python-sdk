@@ -388,7 +388,7 @@ For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely 
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">get</a>(...) -> RoutersAgentsAgentResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">get</a>(...) -> AgentResponse</code></summary>
 <dl>
 <dd>
 
@@ -461,7 +461,7 @@ client.agents.get(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">update</a>(...) -> RoutersAgentsAgentResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">update</a>(...) -> AgentResponse</code></summary>
 <dl>
 <dd>
 

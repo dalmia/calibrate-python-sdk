@@ -6,10 +6,10 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .routers_agents_agent_response_type import RoutersAgentsAgentResponseType
+from .agent_response_type import AgentResponseType
 
 
-class RoutersAgentsAgentResponse(UniversalBaseModel):
+class AgentResponse(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="ID of the agent")
     ]
@@ -18,7 +18,7 @@ class RoutersAgentsAgentResponse(UniversalBaseModel):
     Name of the agent
     """
 
-    type: RoutersAgentsAgentResponseType = pydantic.Field()
+    type: AgentResponseType = pydantic.Field()
     """
     - `agent`: built inside Calibrate
     - `connection`: your existing agent connected to Calibrate

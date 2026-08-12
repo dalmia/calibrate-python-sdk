@@ -24,6 +24,11 @@ class AgentSummary(UniversalBaseModel):
     - `connection`: your existing agent connected to Calibrate
     """
 
+    created_at: str = pydantic.Field()
+    """
+    When the agent was created (ISO 8601 UTC)
+    """
+
     updated_at: str = pydantic.Field()
     """
     When the agent was last updated (ISO 8601 UTC)

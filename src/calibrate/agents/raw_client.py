@@ -12,11 +12,11 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_create_response import AgentCreateResponse
+from ..types.agent_response import AgentResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .types.agent_create_type import AgentCreateType
@@ -345,7 +345,7 @@ class RawAgentsClient:
 
     def get(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> HttpResponse[RoutersAgentsAgentResponse]:
+    ) -> HttpResponse[AgentResponse]:
         """
         Get one agent by its ID
 
@@ -359,7 +359,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[RoutersAgentsAgentResponse]
+        HttpResponse[AgentResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -370,9 +370,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    AgentResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=AgentResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -404,7 +404,7 @@ class RawAgentsClient:
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[RoutersAgentsAgentResponse]:
+    ) -> HttpResponse[AgentResponse]:
         """
         Update an agent's configuration
 
@@ -460,7 +460,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[RoutersAgentsAgentResponse]
+        HttpResponse[AgentResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -479,9 +479,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    AgentResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=AgentResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -968,7 +968,7 @@ class AsyncRawAgentsClient:
 
     async def get(
         self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[RoutersAgentsAgentResponse]:
+    ) -> AsyncHttpResponse[AgentResponse]:
         """
         Get one agent by its ID
 
@@ -982,7 +982,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[RoutersAgentsAgentResponse]
+        AsyncHttpResponse[AgentResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -993,9 +993,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    AgentResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=AgentResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1027,7 +1027,7 @@ class AsyncRawAgentsClient:
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[RoutersAgentsAgentResponse]:
+    ) -> AsyncHttpResponse[AgentResponse]:
         """
         Update an agent's configuration
 
@@ -1083,7 +1083,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[RoutersAgentsAgentResponse]
+        AsyncHttpResponse[AgentResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1102,9 +1102,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsAgentResponse,
+                    AgentResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsAgentResponse,  # type: ignore
+                        type_=AgentResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

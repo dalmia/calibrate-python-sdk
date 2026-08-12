@@ -5,10 +5,10 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
+from ..types.agent_response import AgentResponse
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agents_agent_response import RoutersAgentsAgentResponse
 from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
@@ -241,9 +241,7 @@ class AgentsClient:
         _response = self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
         return _response.data
 
-    def get(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> RoutersAgentsAgentResponse:
+    def get(self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> AgentResponse:
         """
         Get one agent by its ID
 
@@ -257,7 +255,7 @@ class AgentsClient:
 
         Returns
         -------
-        RoutersAgentsAgentResponse
+        AgentResponse
             Successful Response
 
         Examples
@@ -281,7 +279,7 @@ class AgentsClient:
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersAgentsAgentResponse:
+    ) -> AgentResponse:
         """
         Update an agent's configuration
 
@@ -337,7 +335,7 @@ class AgentsClient:
 
         Returns
         -------
-        RoutersAgentsAgentResponse
+        AgentResponse
             Successful Response
 
         Examples
@@ -703,9 +701,7 @@ class AsyncAgentsClient:
         _response = await self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
         return _response.data
 
-    async def get(
-        self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> RoutersAgentsAgentResponse:
+    async def get(self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> AgentResponse:
         """
         Get one agent by its ID
 
@@ -719,7 +715,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        RoutersAgentsAgentResponse
+        AgentResponse
             Successful Response
 
         Examples
@@ -751,7 +747,7 @@ class AsyncAgentsClient:
         name: typing.Optional[str] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersAgentsAgentResponse:
+    ) -> AgentResponse:
         """
         Update an agent's configuration
 
@@ -807,7 +803,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        RoutersAgentsAgentResponse
+        AgentResponse
             Successful Response
 
         Examples
