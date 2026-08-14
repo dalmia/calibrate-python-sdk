@@ -3476,3 +3476,221 @@ client.annotation_tasks.get_summary(
 </dl>
 </details>
 
+## Annotators
+<details><summary><code>client.annotators.<a href="src/calibrate/annotators/client.py">list</a>() -> typing.List[AnnotatorResponse]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List annotators with job counts and agreement stats
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.annotators.list()
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.annotators.<a href="src/calibrate/annotators/client.py">create</a>(...) -> AnnotatorCreateResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create an annotator, a human labeller who can be assigned annotation tasks
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.annotators.create(
+    name="name",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**name:** `str` — Annotator name, unique within your workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.annotators.<a href="src/calibrate/annotators/client.py">update</a>(...) -> AnnotatorResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an annotator's name
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.annotators.update(
+    annotator_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**annotator_uuid:** `str` — Annotator to update
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `typing.Optional[str]` — New annotator name, unique within your workspace. Omit to leave unchanged
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+

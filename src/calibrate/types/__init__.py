@@ -20,6 +20,8 @@ if typing.TYPE_CHECKING:
     from .annotation_task_create_response import AnnotationTaskCreateResponse
     from .annotation_task_response import AnnotationTaskResponse
     from .annotation_task_response_type import AnnotationTaskResponseType
+    from .annotator_create_response import AnnotatorCreateResponse
+    from .annotator_response import AnnotatorResponse
     from .batch_run_request import BatchRunRequest
     from .batch_test_run import BatchTestRun
     from .batch_test_run_response import BatchTestRunResponse
@@ -106,6 +108,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AnnotationTaskCreateResponse": ".annotation_task_create_response",
     "AnnotationTaskResponse": ".annotation_task_response",
     "AnnotationTaskResponseType": ".annotation_task_response_type",
+    "AnnotatorCreateResponse": ".annotator_create_response",
+    "AnnotatorResponse": ".annotator_response",
     "BatchRunRequest": ".batch_run_request",
     "BatchTestRun": ".batch_test_run",
     "BatchTestRunResponse": ".batch_test_run_response",
@@ -216,6 +220,8 @@ __all__ = [
     "AnnotationTaskCreateResponse",
     "AnnotationTaskResponse",
     "AnnotationTaskResponseType",
+    "AnnotatorCreateResponse",
+    "AnnotatorResponse",
     "BatchRunRequest",
     "BatchTestRun",
     "BatchTestRunResponse",

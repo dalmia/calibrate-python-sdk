@@ -13,6 +13,7 @@ if typing.TYPE_CHECKING:
     from .agent_tests.client import AgentTestsClient, AsyncAgentTestsClient
     from .agents.client import AgentsClient, AsyncAgentsClient
     from .annotation_tasks.client import AnnotationTasksClient, AsyncAnnotationTasksClient
+    from .annotators.client import AnnotatorsClient, AsyncAnnotatorsClient
     from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
     from .tests.client import AsyncTestsClient, TestsClient
 
@@ -106,6 +107,7 @@ class Calibrate:
         self._agent_tests: typing.Optional[AgentTestsClient] = None
         self._evaluators: typing.Optional[EvaluatorsClient] = None
         self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
+        self._annotators: typing.Optional[AnnotatorsClient] = None
 
     @property
     def agents(self):
@@ -146,6 +148,14 @@ class Calibrate:
 
             self._annotation_tasks = AnnotationTasksClient(client_wrapper=self._client_wrapper)
         return self._annotation_tasks
+
+    @property
+    def annotators(self):
+        if self._annotators is None:
+            from .annotators.client import AnnotatorsClient  # noqa: E402
+
+            self._annotators = AnnotatorsClient(client_wrapper=self._client_wrapper)
+        return self._annotators
 
 
 def _make_default_async_client(
@@ -253,6 +263,7 @@ class AsyncCalibrate:
         self._agent_tests: typing.Optional[AsyncAgentTestsClient] = None
         self._evaluators: typing.Optional[AsyncEvaluatorsClient] = None
         self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
+        self._annotators: typing.Optional[AsyncAnnotatorsClient] = None
 
     @property
     def agents(self):
@@ -293,6 +304,14 @@ class AsyncCalibrate:
 
             self._annotation_tasks = AsyncAnnotationTasksClient(client_wrapper=self._client_wrapper)
         return self._annotation_tasks
+
+    @property
+    def annotators(self):
+        if self._annotators is None:
+            from .annotators.client import AsyncAnnotatorsClient  # noqa: E402
+
+            self._annotators = AsyncAnnotatorsClient(client_wrapper=self._client_wrapper)
+        return self._annotators
 
 
 def _get_base_url(*, base_url: typing.Optional[str] = None, environment: CalibrateEnvironment) -> str:

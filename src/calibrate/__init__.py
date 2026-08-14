@@ -21,6 +21,8 @@ if typing.TYPE_CHECKING:
         AnnotationTaskCreateResponse,
         AnnotationTaskResponse,
         AnnotationTaskResponseType,
+        AnnotatorCreateResponse,
+        AnnotatorResponse,
         BatchRunRequest,
         BatchTestRun,
         BatchTestRunResponse,
@@ -94,7 +96,7 @@ if typing.TYPE_CHECKING:
         VersionCreateResponse,
     )
     from .errors import UnprocessableEntityError
-    from . import agent_tests, agents, annotation_tasks, evaluators, tests
+    from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import ListRunsForAgentAgentTestsRequestType
     from .agents import AgentCreateType
@@ -131,6 +133,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AnnotationTaskCreateType": ".annotation_tasks",
     "AnnotationTaskResponse": ".types",
     "AnnotationTaskResponseType": ".types",
+    "AnnotatorCreateResponse": ".types",
+    "AnnotatorResponse": ".types",
     "AsyncCalibrate": ".client",
     "BatchRunRequest": ".types",
     "BatchTestRun": ".types",
@@ -223,6 +227,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "agent_tests": ".agent_tests",
     "agents": ".agents",
     "annotation_tasks": ".annotation_tasks",
+    "annotators": ".annotators",
     "evaluators": ".evaluators",
     "tests": ".tests",
 }
@@ -266,6 +271,8 @@ __all__ = [
     "AnnotationTaskCreateType",
     "AnnotationTaskResponse",
     "AnnotationTaskResponseType",
+    "AnnotatorCreateResponse",
+    "AnnotatorResponse",
     "AsyncCalibrate",
     "BatchRunRequest",
     "BatchTestRun",
@@ -358,6 +365,7 @@ __all__ = [
     "agent_tests",
     "agents",
     "annotation_tasks",
+    "annotators",
     "evaluators",
     "tests",
 ]
