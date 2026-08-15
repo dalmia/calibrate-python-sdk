@@ -3694,3 +3694,123 @@ client.annotators.update(
 </dl>
 </details>
 
+## Traces
+<details><summary><code>client.traces.<a href="src/calibrate/traces/client.py">create</a>(...) -> TraceIngestResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Store a production agent turn and its conversation history for later review
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate, TraceTurn, TraceOutput
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.traces.create(
+    agent_id="agent_id",
+    input=[
+        TraceTurn(
+            role="role",
+        )
+    ],
+    output=TraceOutput(),
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` — ID of the agent that produced the turn. Must be an agent in your workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**input:** `typing.List[TraceTurn]` — Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**output:** `TraceOutput` — What the agent produced for this turn
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**message_id:** `typing.Optional[str]` — Your own ID for the last user message in `input`, stored for reference only. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**conversation_id:** `typing.Optional[str]` — Your own ID for the conversation this turn belongs to, stored for reference only. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metadata:** `typing.Optional[typing.List[TraceMetadataEntry]]` — Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+

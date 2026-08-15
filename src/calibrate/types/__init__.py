@@ -88,6 +88,11 @@ if typing.TYPE_CHECKING:
     from .test_run_evaluator_output_type import TestRunEvaluatorOutputType
     from .test_run_status_response import TestRunStatusResponse
     from .tool_call_output import ToolCallOutput
+    from .trace_ingest_response import TraceIngestResponse
+    from .trace_metadata_entry import TraceMetadataEntry
+    from .trace_output import TraceOutput
+    from .trace_tool_call import TraceToolCall
+    from .trace_turn import TraceTurn
     from .validation_error import ValidationError
     from .validation_error_loc_item import ValidationErrorLocItem
     from .variable_spec import VariableSpec
@@ -176,6 +181,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestRunEvaluatorOutputType": ".test_run_evaluator_output_type",
     "TestRunStatusResponse": ".test_run_status_response",
     "ToolCallOutput": ".tool_call_output",
+    "TraceIngestResponse": ".trace_ingest_response",
+    "TraceMetadataEntry": ".trace_metadata_entry",
+    "TraceOutput": ".trace_output",
+    "TraceToolCall": ".trace_tool_call",
+    "TraceTurn": ".trace_turn",
     "ValidationError": ".validation_error",
     "ValidationErrorLocItem": ".validation_error_loc_item",
     "VariableSpec": ".variable_spec",
@@ -288,6 +298,11 @@ __all__ = [
     "TestRunEvaluatorOutputType",
     "TestRunStatusResponse",
     "ToolCallOutput",
+    "TraceIngestResponse",
+    "TraceMetadataEntry",
+    "TraceOutput",
+    "TraceToolCall",
+    "TraceTurn",
     "ValidationError",
     "ValidationErrorLocItem",
     "VariableSpec",

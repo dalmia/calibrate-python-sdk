@@ -16,6 +16,7 @@ if typing.TYPE_CHECKING:
     from .annotators.client import AnnotatorsClient, AsyncAnnotatorsClient
     from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
     from .tests.client import AsyncTestsClient, TestsClient
+    from .traces.client import AsyncTracesClient, TracesClient
 
 
 class Calibrate:
@@ -108,6 +109,7 @@ class Calibrate:
         self._evaluators: typing.Optional[EvaluatorsClient] = None
         self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
         self._annotators: typing.Optional[AnnotatorsClient] = None
+        self._traces: typing.Optional[TracesClient] = None
 
     @property
     def agents(self):
@@ -156,6 +158,14 @@ class Calibrate:
 
             self._annotators = AnnotatorsClient(client_wrapper=self._client_wrapper)
         return self._annotators
+
+    @property
+    def traces(self):
+        if self._traces is None:
+            from .traces.client import TracesClient  # noqa: E402
+
+            self._traces = TracesClient(client_wrapper=self._client_wrapper)
+        return self._traces
 
 
 def _make_default_async_client(
@@ -264,6 +274,7 @@ class AsyncCalibrate:
         self._evaluators: typing.Optional[AsyncEvaluatorsClient] = None
         self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
         self._annotators: typing.Optional[AsyncAnnotatorsClient] = None
+        self._traces: typing.Optional[AsyncTracesClient] = None
 
     @property
     def agents(self):
@@ -312,6 +323,14 @@ class AsyncCalibrate:
 
             self._annotators = AsyncAnnotatorsClient(client_wrapper=self._client_wrapper)
         return self._annotators
+
+    @property
+    def traces(self):
+        if self._traces is None:
+            from .traces.client import AsyncTracesClient  # noqa: E402
+
+            self._traces = AsyncTracesClient(client_wrapper=self._client_wrapper)
+        return self._traces
 
 
 def _get_base_url(*, base_url: typing.Optional[str] = None, environment: CalibrateEnvironment) -> str:

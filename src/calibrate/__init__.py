@@ -89,6 +89,11 @@ if typing.TYPE_CHECKING:
         TestRunEvaluatorOutputType,
         TestRunStatusResponse,
         ToolCallOutput,
+        TraceIngestResponse,
+        TraceMetadataEntry,
+        TraceOutput,
+        TraceToolCall,
+        TraceTurn,
         ValidationError,
         ValidationErrorLocItem,
         VariableSpec,
@@ -96,7 +101,7 @@ if typing.TYPE_CHECKING:
         VersionCreateResponse,
     )
     from .errors import UnprocessableEntityError
-    from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests
+    from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import ListRunsForAgentAgentTestsRequestType
     from .agents import AgentCreateType
@@ -217,6 +222,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestRunStatusResponse": ".types",
     "TestUpdateType": ".tests",
     "ToolCallOutput": ".types",
+    "TraceIngestResponse": ".types",
+    "TraceMetadataEntry": ".types",
+    "TraceOutput": ".types",
+    "TraceToolCall": ".types",
+    "TraceTurn": ".types",
     "UnprocessableEntityError": ".errors",
     "ValidationError": ".types",
     "ValidationErrorLocItem": ".types",
@@ -230,6 +240,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "annotators": ".annotators",
     "evaluators": ".evaluators",
     "tests": ".tests",
+    "traces": ".traces",
 }
 
 
@@ -355,6 +366,11 @@ __all__ = [
     "TestRunStatusResponse",
     "TestUpdateType",
     "ToolCallOutput",
+    "TraceIngestResponse",
+    "TraceMetadataEntry",
+    "TraceOutput",
+    "TraceToolCall",
+    "TraceTurn",
     "UnprocessableEntityError",
     "ValidationError",
     "ValidationErrorLocItem",
@@ -368,4 +384,5 @@ __all__ = [
     "annotators",
     "evaluators",
     "tests",
+    "traces",
 ]
