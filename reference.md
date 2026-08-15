@@ -685,7 +685,7 @@ client.agents.list_evaluators(
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">link_evaluators</a>(...) -> RoutersAgentsEvaluatorLinkResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">link_evaluators</a>(...) -> EvaluatorLinkResponse</code></summary>
 <dl>
 <dd>
 

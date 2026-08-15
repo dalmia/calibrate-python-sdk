@@ -13,11 +13,11 @@ from ..core.request_options import RequestOptions
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_create_response import AgentCreateResponse
 from ..types.agent_response import AgentResponse
+from ..types.evaluator_link_response import EvaluatorLinkResponse
 from ..types.http_validation_error import HttpValidationError
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .types.agent_create_type import AgentCreateType
 from pydantic import ValidationError
@@ -586,7 +586,7 @@ class RawAgentsClient:
         *,
         evaluator_ids: typing.Sequence[str],
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[RoutersAgentsEvaluatorLinkResponse]:
+    ) -> HttpResponse[EvaluatorLinkResponse]:
         """
         Link one or more existing evaluators to an agent, skipping any already linked
 
@@ -603,7 +603,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[RoutersAgentsEvaluatorLinkResponse]
+        HttpResponse[EvaluatorLinkResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -621,9 +621,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsEvaluatorLinkResponse,
+                    EvaluatorLinkResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsEvaluatorLinkResponse,  # type: ignore
+                        type_=EvaluatorLinkResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1209,7 +1209,7 @@ class AsyncRawAgentsClient:
         *,
         evaluator_ids: typing.Sequence[str],
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[RoutersAgentsEvaluatorLinkResponse]:
+    ) -> AsyncHttpResponse[EvaluatorLinkResponse]:
         """
         Link one or more existing evaluators to an agent, skipping any already linked
 
@@ -1226,7 +1226,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[RoutersAgentsEvaluatorLinkResponse]
+        AsyncHttpResponse[EvaluatorLinkResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1244,9 +1244,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    RoutersAgentsEvaluatorLinkResponse,
+                    EvaluatorLinkResponse,
                     parse_obj_as(
-                        type_=RoutersAgentsEvaluatorLinkResponse,  # type: ignore
+                        type_=EvaluatorLinkResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

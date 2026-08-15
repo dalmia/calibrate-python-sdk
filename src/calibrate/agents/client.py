@@ -6,10 +6,10 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
 from ..types.agent_response import AgentResponse
+from ..types.evaluator_link_response import EvaluatorLinkResponse
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
-from ..types.routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
 from .types.agent_create_type import AgentCreateType
@@ -408,7 +408,7 @@ class AgentsClient:
         *,
         evaluator_ids: typing.Sequence[str],
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersAgentsEvaluatorLinkResponse:
+    ) -> EvaluatorLinkResponse:
         """
         Link one or more existing evaluators to an agent, skipping any already linked
 
@@ -425,7 +425,7 @@ class AgentsClient:
 
         Returns
         -------
-        RoutersAgentsEvaluatorLinkResponse
+        EvaluatorLinkResponse
             Successful Response
 
         Examples
@@ -892,7 +892,7 @@ class AsyncAgentsClient:
         *,
         evaluator_ids: typing.Sequence[str],
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> RoutersAgentsEvaluatorLinkResponse:
+    ) -> EvaluatorLinkResponse:
         """
         Link one or more existing evaluators to an agent, skipping any already linked
 
@@ -909,7 +909,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        RoutersAgentsEvaluatorLinkResponse
+        EvaluatorLinkResponse
             Successful Response
 
         Examples

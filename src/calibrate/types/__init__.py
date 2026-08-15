@@ -40,6 +40,7 @@ if typing.TYPE_CHECKING:
     from .evaluator_detail_response_compact_data_type import EvaluatorDetailResponseCompactDataType
     from .evaluator_detail_response_compact_evaluator_type import EvaluatorDetailResponseCompactEvaluatorType
     from .evaluator_detail_response_compact_output_type import EvaluatorDetailResponseCompactOutputType
+    from .evaluator_link_response import EvaluatorLinkResponse
     from .evaluator_live_version_summary import EvaluatorLiveVersionSummary
     from .evaluator_run_launch_response import EvaluatorRunLaunchResponse
     from .evaluator_run_launch_response_status import EvaluatorRunLaunchResponseStatus
@@ -65,7 +66,6 @@ if typing.TYPE_CHECKING:
     from .paginated_response_test_list_response import PaginatedResponseTestListResponse
     from .pagination_meta import PaginationMeta
     from .resolve_agent_names_response import ResolveAgentNamesResponse
-    from .routers_agents_evaluator_link_response import RoutersAgentsEvaluatorLinkResponse
     from .routers_evaluators_evaluator_response import RoutersEvaluatorsEvaluatorResponse
     from .routers_evaluators_evaluator_response_data_type import RoutersEvaluatorsEvaluatorResponseDataType
     from .routers_evaluators_evaluator_response_evaluator_type import RoutersEvaluatorsEvaluatorResponseEvaluatorType
@@ -133,6 +133,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EvaluatorDetailResponseCompactDataType": ".evaluator_detail_response_compact_data_type",
     "EvaluatorDetailResponseCompactEvaluatorType": ".evaluator_detail_response_compact_evaluator_type",
     "EvaluatorDetailResponseCompactOutputType": ".evaluator_detail_response_compact_output_type",
+    "EvaluatorLinkResponse": ".evaluator_link_response",
     "EvaluatorLiveVersionSummary": ".evaluator_live_version_summary",
     "EvaluatorRunLaunchResponse": ".evaluator_run_launch_response",
     "EvaluatorRunLaunchResponseStatus": ".evaluator_run_launch_response_status",
@@ -158,7 +159,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "PaginatedResponseTestListResponse": ".paginated_response_test_list_response",
     "PaginationMeta": ".pagination_meta",
     "ResolveAgentNamesResponse": ".resolve_agent_names_response",
-    "RoutersAgentsEvaluatorLinkResponse": ".routers_agents_evaluator_link_response",
     "RoutersEvaluatorsEvaluatorResponse": ".routers_evaluators_evaluator_response",
     "RoutersEvaluatorsEvaluatorResponseDataType": ".routers_evaluators_evaluator_response_data_type",
     "RoutersEvaluatorsEvaluatorResponseEvaluatorType": ".routers_evaluators_evaluator_response_evaluator_type",
@@ -250,6 +250,7 @@ __all__ = [
     "EvaluatorDetailResponseCompactDataType",
     "EvaluatorDetailResponseCompactEvaluatorType",
     "EvaluatorDetailResponseCompactOutputType",
+    "EvaluatorLinkResponse",
     "EvaluatorLiveVersionSummary",
     "EvaluatorRunLaunchResponse",
     "EvaluatorRunLaunchResponseStatus",
@@ -275,7 +276,6 @@ __all__ = [
     "PaginatedResponseTestListResponse",
     "PaginationMeta",
     "ResolveAgentNamesResponse",
-    "RoutersAgentsEvaluatorLinkResponse",
     "RoutersEvaluatorsEvaluatorResponse",
     "RoutersEvaluatorsEvaluatorResponseDataType",
     "RoutersEvaluatorsEvaluatorResponseEvaluatorType",
