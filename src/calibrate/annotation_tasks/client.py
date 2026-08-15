@@ -174,6 +174,7 @@ class AnnotationTasksClient:
         task_uuid: str,
         *,
         evaluator_ids: typing.Sequence[str],
+        optional_evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> EvaluatorSetResponse:
         """
@@ -186,6 +187,9 @@ class AnnotationTasksClient:
 
         evaluator_ids : typing.Sequence[str]
             The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+
+        optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -208,7 +212,10 @@ class AnnotationTasksClient:
         )
         """
         _response = self._raw_client.set_evaluators(
-            task_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+            task_uuid,
+            evaluator_ids=evaluator_ids,
+            optional_evaluator_ids=optional_evaluator_ids,
+            request_options=request_options,
         )
         return _response.data
 
@@ -704,6 +711,7 @@ class AsyncAnnotationTasksClient:
         task_uuid: str,
         *,
         evaluator_ids: typing.Sequence[str],
+        optional_evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> EvaluatorSetResponse:
         """
@@ -716,6 +724,9 @@ class AsyncAnnotationTasksClient:
 
         evaluator_ids : typing.Sequence[str]
             The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+
+        optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -746,7 +757,10 @@ class AsyncAnnotationTasksClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.set_evaluators(
-            task_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+            task_uuid,
+            evaluator_ids=evaluator_ids,
+            optional_evaluator_ids=optional_evaluator_ids,
+            request_options=request_options,
         )
         return _response.data
 

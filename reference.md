@@ -2866,6 +2866,14 @@ client.annotation_tasks.set_evaluators(
 <dl>
 <dd>
 
+**optional_evaluator_ids:** `typing.Optional[typing.List[str]]` — Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>

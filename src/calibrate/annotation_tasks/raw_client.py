@@ -251,6 +251,7 @@ class RawAnnotationTasksClient:
         task_uuid: str,
         *,
         evaluator_ids: typing.Sequence[str],
+        optional_evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[EvaluatorSetResponse]:
         """
@@ -263,6 +264,9 @@ class RawAnnotationTasksClient:
 
         evaluator_ids : typing.Sequence[str]
             The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+
+        optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -277,6 +281,7 @@ class RawAnnotationTasksClient:
             method="PUT",
             json={
                 "evaluator_ids": evaluator_ids,
+                "optional_evaluator_ids": optional_evaluator_ids,
             },
             headers={
                 "content-type": "application/json",
@@ -991,6 +996,7 @@ class AsyncRawAnnotationTasksClient:
         task_uuid: str,
         *,
         evaluator_ids: typing.Sequence[str],
+        optional_evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[EvaluatorSetResponse]:
         """
@@ -1003,6 +1009,9 @@ class AsyncRawAnnotationTasksClient:
 
         evaluator_ids : typing.Sequence[str]
             The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+
+        optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1017,6 +1026,7 @@ class AsyncRawAnnotationTasksClient:
             method="PUT",
             json={
                 "evaluator_ids": evaluator_ids,
+                "optional_evaluator_ids": optional_evaluator_ids,
             },
             headers={
                 "content-type": "application/json",
