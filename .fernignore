@@ -1,1 +1,3 @@
 # Specify files that shouldn't be modified by Fern
+src/calibrate/tracing.py
+tests/test_tracing.py
