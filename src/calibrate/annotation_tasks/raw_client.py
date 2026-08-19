@@ -17,6 +17,7 @@ from ..types.annotation_task_create_response import AnnotationTaskCreateResponse
 from ..types.annotation_task_response import AnnotationTaskResponse
 from ..types.bulk_create_items_response import BulkCreateItemsResponse
 from ..types.bulk_update_items_response import BulkUpdateItemsResponse
+from ..types.create_jobs_response import CreateJobsResponse
 from ..types.evaluator_run_launch_response import EvaluatorRunLaunchResponse
 from ..types.evaluator_run_request_entry import EvaluatorRunRequestEntry
 from ..types.evaluator_run_response import EvaluatorRunResponse
@@ -440,6 +441,94 @@ class RawAnnotationTasksClient:
                     BulkUpdateItemsResponse,
                     parse_obj_as(
                         type_=BulkUpdateItemsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def create_labelling_jobs(
+        self,
+        task_uuid: str,
+        *,
+        annotator_ids: typing.Sequence[str],
+        item_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        select_all: typing.Optional[bool] = OMIT,
+        q: typing.Optional[str] = OMIT,
+        evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[CreateJobsResponse]:
+        """
+        Assign items to annotators, creating one labelling job per annotator
+
+        Parameters
+        ----------
+        task_uuid : str
+            Annotation task to act on
+
+        annotator_ids : typing.Sequence[str]
+            Annotator IDs to assign, creating one labelling job for each annotator. Must be in your workspace
+
+        item_ids : typing.Optional[typing.Sequence[str]]
+            Item IDs to assign. **Required when `select_all=false`**. Ignored when `select_all=true`
+
+        select_all : typing.Optional[bool]
+            When `true`, assign every item in the task and ignore `item_ids`. Set `q` to assign only items whose name matches it
+
+        q : typing.Optional[str]
+            Case-insensitive substring filter on `payload.name`. Applies only when `select_all=true`
+
+        evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[CreateJobsResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"annotation-tasks/{encode_path_param(task_uuid)}/jobs",
+            method="POST",
+            json={
+                "annotator_ids": annotator_ids,
+                "item_ids": item_ids,
+                "select_all": select_all,
+                "q": q,
+                "evaluator_ids": evaluator_ids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateJobsResponse,
+                    parse_obj_as(
+                        type_=CreateJobsResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1185,6 +1274,94 @@ class AsyncRawAnnotationTasksClient:
                     BulkUpdateItemsResponse,
                     parse_obj_as(
                         type_=BulkUpdateItemsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def create_labelling_jobs(
+        self,
+        task_uuid: str,
+        *,
+        annotator_ids: typing.Sequence[str],
+        item_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        select_all: typing.Optional[bool] = OMIT,
+        q: typing.Optional[str] = OMIT,
+        evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[CreateJobsResponse]:
+        """
+        Assign items to annotators, creating one labelling job per annotator
+
+        Parameters
+        ----------
+        task_uuid : str
+            Annotation task to act on
+
+        annotator_ids : typing.Sequence[str]
+            Annotator IDs to assign, creating one labelling job for each annotator. Must be in your workspace
+
+        item_ids : typing.Optional[typing.Sequence[str]]
+            Item IDs to assign. **Required when `select_all=false`**. Ignored when `select_all=true`
+
+        select_all : typing.Optional[bool]
+            When `true`, assign every item in the task and ignore `item_ids`. Set `q` to assign only items whose name matches it
+
+        q : typing.Optional[str]
+            Case-insensitive substring filter on `payload.name`. Applies only when `select_all=true`
+
+        evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[CreateJobsResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"annotation-tasks/{encode_path_param(task_uuid)}/jobs",
+            method="POST",
+            json={
+                "annotator_ids": annotator_ids,
+                "item_ids": item_ids,
+                "select_all": select_all,
+                "q": q,
+                "evaluator_ids": evaluator_ids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    CreateJobsResponse,
+                    parse_obj_as(
+                        type_=CreateJobsResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

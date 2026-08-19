@@ -3058,6 +3058,122 @@ client.annotation_tasks.update_items(
 </dl>
 </details>
 
+<details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">create_labelling_jobs</a>(...) -> CreateJobsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Assign items to annotators, creating one labelling job per annotator
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.annotation_tasks.create_labelling_jobs(
+    task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    annotator_ids=[
+        "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    ],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_uuid:** `str` — Annotation task to act on
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**annotator_ids:** `typing.List[str]` — Annotator IDs to assign, creating one labelling job for each annotator. Must be in your workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**item_ids:** `typing.Optional[typing.List[str]]` — Item IDs to assign. **Required when `select_all=false`**. Ignored when `select_all=true`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**select_all:** `typing.Optional[bool]` — When `true`, assign every item in the task and ignore `item_ids`. Set `q` to assign only items whose name matches it
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive substring filter on `payload.name`. Applies only when `select_all=true`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluator_ids:** `typing.Optional[typing.List[str]]` — Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">create_evaluator_run</a>(...) -> EvaluatorRunLaunchResponse</code></summary>
 <dl>
 <dd>

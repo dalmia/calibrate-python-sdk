@@ -9,6 +9,7 @@ from ..types.annotation_task_create_response import AnnotationTaskCreateResponse
 from ..types.annotation_task_response import AnnotationTaskResponse
 from ..types.bulk_create_items_response import BulkCreateItemsResponse
 from ..types.bulk_update_items_response import BulkUpdateItemsResponse
+from ..types.create_jobs_response import CreateJobsResponse
 from ..types.evaluator_run_launch_response import EvaluatorRunLaunchResponse
 from ..types.evaluator_run_request_entry import EvaluatorRunRequestEntry
 from ..types.evaluator_run_response import EvaluatorRunResponse
@@ -305,6 +306,71 @@ class AnnotationTasksClient:
         )
         """
         _response = self._raw_client.update_items(task_uuid, updates=updates, request_options=request_options)
+        return _response.data
+
+    def create_labelling_jobs(
+        self,
+        task_uuid: str,
+        *,
+        annotator_ids: typing.Sequence[str],
+        item_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        select_all: typing.Optional[bool] = OMIT,
+        q: typing.Optional[str] = OMIT,
+        evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> CreateJobsResponse:
+        """
+        Assign items to annotators, creating one labelling job per annotator
+
+        Parameters
+        ----------
+        task_uuid : str
+            Annotation task to act on
+
+        annotator_ids : typing.Sequence[str]
+            Annotator IDs to assign, creating one labelling job for each annotator. Must be in your workspace
+
+        item_ids : typing.Optional[typing.Sequence[str]]
+            Item IDs to assign. **Required when `select_all=false`**. Ignored when `select_all=true`
+
+        select_all : typing.Optional[bool]
+            When `true`, assign every item in the task and ignore `item_ids`. Set `q` to assign only items whose name matches it
+
+        q : typing.Optional[str]
+            Case-insensitive substring filter on `payload.name`. Applies only when `select_all=true`
+
+        evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        CreateJobsResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.annotation_tasks.create_labelling_jobs(
+            task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            annotator_ids=["f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+        )
+        """
+        _response = self._raw_client.create_labelling_jobs(
+            task_uuid,
+            annotator_ids=annotator_ids,
+            item_ids=item_ids,
+            select_all=select_all,
+            q=q,
+            evaluator_ids=evaluator_ids,
+            request_options=request_options,
+        )
         return _response.data
 
     def create_evaluator_run(
@@ -866,6 +932,79 @@ class AsyncAnnotationTasksClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.update_items(task_uuid, updates=updates, request_options=request_options)
+        return _response.data
+
+    async def create_labelling_jobs(
+        self,
+        task_uuid: str,
+        *,
+        annotator_ids: typing.Sequence[str],
+        item_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        select_all: typing.Optional[bool] = OMIT,
+        q: typing.Optional[str] = OMIT,
+        evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> CreateJobsResponse:
+        """
+        Assign items to annotators, creating one labelling job per annotator
+
+        Parameters
+        ----------
+        task_uuid : str
+            Annotation task to act on
+
+        annotator_ids : typing.Sequence[str]
+            Annotator IDs to assign, creating one labelling job for each annotator. Must be in your workspace
+
+        item_ids : typing.Optional[typing.Sequence[str]]
+            Item IDs to assign. **Required when `select_all=false`**. Ignored when `select_all=true`
+
+        select_all : typing.Optional[bool]
+            When `true`, assign every item in the task and ignore `item_ids`. Set `q` to assign only items whose name matches it
+
+        q : typing.Optional[str]
+            Case-insensitive substring filter on `payload.name`. Applies only when `select_all=true`
+
+        evaluator_ids : typing.Optional[typing.Sequence[str]]
+            Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        CreateJobsResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.annotation_tasks.create_labelling_jobs(
+                task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                annotator_ids=["f47ac10b-58cc-4372-a567-0e02b2c3d479"],
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.create_labelling_jobs(
+            task_uuid,
+            annotator_ids=annotator_ids,
+            item_ids=item_ids,
+            select_all=select_all,
+            q=q,
+            evaluator_ids=evaluator_ids,
+            request_options=request_options,
+        )
         return _response.data
 
     async def create_evaluator_run(
