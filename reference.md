@@ -3162,6 +3162,22 @@ client.annotation_tasks.create_labelling_jobs(
 <dl>
 <dd>
 
+**comments_enabled:** `typing.Optional[bool]` — When `true`, the labelling form lets the annotator leave a comment on each item
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**reasoning_mode:** `typing.Optional[CreateJobsRequestReasoningMode]` — How the labelling form treats the reasoning box on each judgement. `optional` shows it, `required` shows it and asks the annotator to fill it in, `hidden` leaves it out
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>

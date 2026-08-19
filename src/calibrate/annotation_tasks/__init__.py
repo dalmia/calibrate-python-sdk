@@ -8,11 +8,13 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .types import (
         AnnotationTaskCreateType,
+        CreateJobsRequestReasoningMode,
         GetAgreementAnnotationTasksRequestBucket,
         GetSummaryAnnotationTasksRequestOrder,
     )
 _dynamic_imports: typing.Dict[str, str] = {
     "AnnotationTaskCreateType": ".types",
+    "CreateJobsRequestReasoningMode": ".types",
     "GetAgreementAnnotationTasksRequestBucket": ".types",
     "GetSummaryAnnotationTasksRequestOrder": ".types",
 }
@@ -41,6 +43,7 @@ def __dir__():
 
 __all__ = [
     "AnnotationTaskCreateType",
+    "CreateJobsRequestReasoningMode",
     "GetAgreementAnnotationTasksRequestBucket",
     "GetSummaryAnnotationTasksRequestOrder",
 ]

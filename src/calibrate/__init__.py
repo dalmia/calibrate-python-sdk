@@ -110,6 +110,7 @@ if typing.TYPE_CHECKING:
     from .agents import AgentCreateType
     from .annotation_tasks import (
         AnnotationTaskCreateType,
+        CreateJobsRequestReasoningMode,
         GetAgreementAnnotationTasksRequestBucket,
         GetSummaryAnnotationTasksRequestOrder,
     )
@@ -160,6 +161,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "CalibrateEnvironment": ".environment",
     "ChatMessage": ".types",
     "ChatMessageRole": ".types",
+    "CreateJobsRequestReasoningMode": ".annotation_tasks",
     "CreateJobsResponse": ".types",
     "DefaultAioHttpClient": "._default_clients",
     "DefaultAsyncHttpxClient": "._default_clients",
@@ -307,6 +309,7 @@ __all__ = [
     "CalibrateEnvironment",
     "ChatMessage",
     "ChatMessageRole",
+    "CreateJobsRequestReasoningMode",
     "CreateJobsResponse",
     "DefaultAioHttpClient",
     "DefaultAsyncHttpxClient",

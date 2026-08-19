@@ -20,6 +20,7 @@ from ..types.task_agreement_response import TaskAgreementResponse
 from ..types.task_summary_response import TaskSummaryResponse
 from .raw_client import AsyncRawAnnotationTasksClient, RawAnnotationTasksClient
 from .types.annotation_task_create_type import AnnotationTaskCreateType
+from .types.create_jobs_request_reasoning_mode import CreateJobsRequestReasoningMode
 from .types.get_agreement_annotation_tasks_request_bucket import GetAgreementAnnotationTasksRequestBucket
 from .types.get_summary_annotation_tasks_request_order import GetSummaryAnnotationTasksRequestOrder
 
@@ -317,6 +318,8 @@ class AnnotationTasksClient:
         select_all: typing.Optional[bool] = OMIT,
         q: typing.Optional[str] = OMIT,
         evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        comments_enabled: typing.Optional[bool] = OMIT,
+        reasoning_mode: typing.Optional[CreateJobsRequestReasoningMode] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CreateJobsResponse:
         """
@@ -341,6 +344,12 @@ class AnnotationTasksClient:
 
         evaluator_ids : typing.Optional[typing.Sequence[str]]
             Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        comments_enabled : typing.Optional[bool]
+            When `true`, the labelling form lets the annotator leave a comment on each item
+
+        reasoning_mode : typing.Optional[CreateJobsRequestReasoningMode]
+            How the labelling form treats the reasoning box on each judgement. `optional` shows it, `required` shows it and asks the annotator to fill it in, `hidden` leaves it out
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -369,6 +378,8 @@ class AnnotationTasksClient:
             select_all=select_all,
             q=q,
             evaluator_ids=evaluator_ids,
+            comments_enabled=comments_enabled,
+            reasoning_mode=reasoning_mode,
             request_options=request_options,
         )
         return _response.data
@@ -943,6 +954,8 @@ class AsyncAnnotationTasksClient:
         select_all: typing.Optional[bool] = OMIT,
         q: typing.Optional[str] = OMIT,
         evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
+        comments_enabled: typing.Optional[bool] = OMIT,
+        reasoning_mode: typing.Optional[CreateJobsRequestReasoningMode] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CreateJobsResponse:
         """
@@ -967,6 +980,12 @@ class AsyncAnnotationTasksClient:
 
         evaluator_ids : typing.Optional[typing.Sequence[str]]
             Subset of the task's linked evaluators to show in these jobs. Must be a subset of the current links, an empty list gives a 400. Applies to every annotator's job. Omit (`None`) to snapshot every linked evaluator
+
+        comments_enabled : typing.Optional[bool]
+            When `true`, the labelling form lets the annotator leave a comment on each item
+
+        reasoning_mode : typing.Optional[CreateJobsRequestReasoningMode]
+            How the labelling form treats the reasoning box on each judgement. `optional` shows it, `required` shows it and asks the annotator to fill it in, `hidden` leaves it out
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1003,6 +1022,8 @@ class AsyncAnnotationTasksClient:
             select_all=select_all,
             q=q,
             evaluator_ids=evaluator_ids,
+            comments_enabled=comments_enabled,
+            reasoning_mode=reasoning_mode,
             request_options=request_options,
         )
         return _response.data
