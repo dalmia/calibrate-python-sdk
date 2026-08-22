@@ -15,7 +15,7 @@ from ..types.http_validation_error import HttpValidationError
 from ..types.trace_ingest_response import TraceIngestResponse
 from ..types.trace_metadata_entry import TraceMetadataEntry
 from ..types.trace_output import TraceOutput
-from ..types.trace_turn import TraceTurn
+from .types.trace_ingest_input import TraceIngestInput
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -30,7 +30,7 @@ class RawTracesClient:
         self,
         *,
         agent_id: str,
-        input: typing.Sequence[TraceTurn],
+        input: TraceIngestInput,
         output: TraceOutput,
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
@@ -45,8 +45,8 @@ class RawTracesClient:
         agent_id : str
             ID of the agent that produced the turn. Must be an agent in your workspace
 
-        input : typing.Sequence[TraceTurn]
-            Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+        input : TraceIngestInput
+            What the agent was given for this turn. For a `general` agent, the standalone prompt as a string. For a `conversation` agent, the history up to the reported output, oldest turn first, in OpenAI chat format
 
         output : TraceOutput
             What the agent produced for this turn
@@ -76,7 +76,7 @@ class RawTracesClient:
                 "message_id": message_id,
                 "conversation_id": conversation_id,
                 "input": convert_and_respect_annotation_metadata(
-                    object_=input, annotation=typing.Sequence[TraceTurn], direction="write"
+                    object_=input, annotation=TraceIngestInput, direction="write"
                 ),
                 "output": convert_and_respect_annotation_metadata(
                     object_=output, annotation=TraceOutput, direction="write"
@@ -130,7 +130,7 @@ class AsyncRawTracesClient:
         self,
         *,
         agent_id: str,
-        input: typing.Sequence[TraceTurn],
+        input: TraceIngestInput,
         output: TraceOutput,
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
@@ -145,8 +145,8 @@ class AsyncRawTracesClient:
         agent_id : str
             ID of the agent that produced the turn. Must be an agent in your workspace
 
-        input : typing.Sequence[TraceTurn]
-            Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+        input : TraceIngestInput
+            What the agent was given for this turn. For a `general` agent, the standalone prompt as a string. For a `conversation` agent, the history up to the reported output, oldest turn first, in OpenAI chat format
 
         output : TraceOutput
             What the agent produced for this turn
@@ -176,7 +176,7 @@ class AsyncRawTracesClient:
                 "message_id": message_id,
                 "conversation_id": conversation_id,
                 "input": convert_and_respect_annotation_metadata(
-                    object_=input, annotation=typing.Sequence[TraceTurn], direction="write"
+                    object_=input, annotation=TraceIngestInput, direction="write"
                 ),
                 "output": convert_and_respect_annotation_metadata(
                     object_=output, annotation=TraceOutput, direction="write"

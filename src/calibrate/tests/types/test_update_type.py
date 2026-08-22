@@ -2,4 +2,4 @@
 
 import typing
 
-TestUpdateType = typing.Union[typing.Literal["response", "tool_call", "conversation"], typing.Any]
+TestUpdateType = typing.Union[typing.Literal["response", "tool_call", "conversation", "general"], typing.Any]

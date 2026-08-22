@@ -332,6 +332,19 @@ client.agents.create(
 <dl>
 <dd>
 
+**interaction_type:** `typing.Optional[AgentCreateInteractionType]` 
+
+What the agent expects in the request body:
+
+- `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+- `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **config:** `typing.Optional[typing.Dict[str, typing.Any]]` 
 
 Agent behavioral config. The keys depend on `type`.
@@ -797,7 +810,7 @@ Create many test cases at once and link them to your agents
 <dd>
 
 ```python
-from calibrate import Calibrate, BulkTestItem, ChatMessage
+from calibrate import Calibrate, BulkTestItem
 from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
@@ -810,11 +823,6 @@ client.tests.bulk_create(
     tests=[
         BulkTestItem(
             name="name",
-            conversation_history=[
-                ChatMessage(
-                    role="user",
-                )
-            ],
         )
     ],
 )
@@ -840,6 +848,7 @@ What the test judges:
 - `response`: judges the generated reply
 - `tool_call`: diffs the generated tool calls
 - `conversation`: judges the full conversation
+- `general`: judges a single plain-text input/output pair with no conversation involved (e.g. summarization, extraction, classification)
 
 
 Applied to every test in the batch
@@ -1042,6 +1051,7 @@ What the test judges:
 - `response`: judges the generated reply
 - `tool_call`: diffs the generated tool calls
 - `conversation`: judges the full conversation
+- `general`: judges a single plain-text input/output pair with no conversation involved (e.g. summarization, extraction, classification)
     
 </dd>
 </dl>
@@ -1051,16 +1061,20 @@ What the test judges:
 
 **config:** `typing.Optional[typing.Dict[str, typing.Any]]` 
 
-The calibrate test config. Three top-level keys.
+The calibrate test config.
 
-- `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+- `history`: the conversation up to the agent's turn, required for `response` and `conversation` tests and for a `tool_call` test aimed at a conversational agent. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+- `input`: a standalone prompt with no conversation around it, required for `general` tests and for a `tool_call` test aimed at a `general` agent. A string, not a conversation.
 - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
 - `settings`: an optional object, e.g. `{"language": "en"}`.
+
+A `tool_call` test carries exactly one of `history` or `input`, and which one it carries decides the agent it can be linked to.
 
 `evaluation` by test type:
 - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
 - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
 - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+- `general`: judge a standalone, non-conversational input/output pair, graded by the linked evaluators. `{"type": "general"}`
 
 For `tool_call`, each expected argument value is one of:
 - `{"match_type": "exact", "value": <any>}`: must equal `value`
@@ -1076,7 +1090,7 @@ For `tool_call`, each expected argument value is one of:
 }
 ```
 
-`tool_call` example:
+`tool_call` example, for a conversational agent. Swap `history` for `input` to aim it at a `general` agent:
 ```json
 {
   "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
@@ -1093,6 +1107,15 @@ For `tool_call`, each expected argument value is one of:
       }
     ]
   }
+}
+```
+
+`general` example:
+```json
+{
+  "input": "Summarize this article: ...",
+  "evaluation": {"type": "general"},
+  "settings": {"language": "en"}
 }
 ```
 
@@ -1275,6 +1298,7 @@ What the test judges:
 - `response`: judges the generated reply
 - `tool_call`: diffs the generated tool calls
 - `conversation`: judges the full conversation
+- `general`: judges a single plain-text input/output pair with no conversation involved (e.g. summarization, extraction, classification)
 
 
 Immutable. Omit it, or send the current value
@@ -1287,16 +1311,20 @@ Immutable. Omit it, or send the current value
 
 **config:** `typing.Optional[typing.Dict[str, typing.Any]]` 
 
-The calibrate test config. Three top-level keys.
+The calibrate test config.
 
-- `history`: the required conversation up to the agent's turn. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+- `history`: the conversation up to the agent's turn, required for `response` and `conversation` tests and for a `tool_call` test aimed at a conversational agent. Each item is `{role, content}` with `role` one of `user`, `assistant`, `tool`. A `tool` message also carries `tool_call_id` and `name`.
+- `input`: a standalone prompt with no conversation around it, required for `general` tests and for a `tool_call` test aimed at a `general` agent. A string, not a conversation.
 - `evaluation`: the required `{type, ...}`, where `type` matches the test's `type` below.
 - `settings`: an optional object, e.g. `{"language": "en"}`.
+
+A `tool_call` test carries exactly one of `history` or `input`, and which one it carries decides the agent it can be linked to.
 
 `evaluation` by test type:
 - `response`: judge the agent's reply, graded by the linked evaluators. `{"type": "response"}`
 - `conversation`: append the reply and judge the whole conversation. `{"type": "conversation"}`
 - `tool_call`: diff the agent's tool calls against expected ones. Add `tool_calls`, a list of `{tool, arguments, accept_any_arguments?}`.
+- `general`: judge a standalone, non-conversational input/output pair, graded by the linked evaluators. `{"type": "general"}`
 
 For `tool_call`, each expected argument value is one of:
 - `{"match_type": "exact", "value": <any>}`: must equal `value`
@@ -1312,7 +1340,7 @@ For `tool_call`, each expected argument value is one of:
 }
 ```
 
-`tool_call` example:
+`tool_call` example, for a conversational agent. Swap `history` for `input` to aim it at a `general` agent:
 ```json
 {
   "history": [{"role": "user", "content": "Book room 101 for tomorrow"}],
@@ -1329,6 +1357,15 @@ For `tool_call`, each expected argument value is one of:
       }
     ]
   }
+}
+```
+
+`general` example:
+```json
+{
+  "input": "Summarize this article: ...",
+  "evaluation": {"type": "general"},
+  "settings": {"language": "en"}
 }
 ```
 
@@ -1626,6 +1663,14 @@ Filter by run type. Omit to return both:
 <dd>
 
 **has_failures:** `typing.Optional[bool]` — Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**around:** `typing.Optional[str]` — ID of a run to jump to, returning the page that contains it instead of the page at `offset`
     
 </dd>
 </dl>
@@ -3862,7 +3907,7 @@ Store a production agent turn and its conversation history for later review
 <dd>
 
 ```python
-from calibrate import Calibrate, TraceTurn, TraceOutput
+from calibrate import Calibrate, TraceOutput
 from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
@@ -3872,11 +3917,7 @@ client = Calibrate(
 
 client.traces.create(
     agent_id="agent_id",
-    input=[
-        TraceTurn(
-            role="role",
-        )
-    ],
+    input="input",
     output=TraceOutput(),
 )
 
@@ -3902,7 +3943,7 @@ client.traces.create(
 <dl>
 <dd>
 
-**input:** `typing.List[TraceTurn]` — Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+**input:** `TraceIngestInput` — What the agent was given for this turn. For a `general` agent, the standalone prompt as a string. For a `conversation` agent, the history up to the reported output, oldest turn first, in OpenAI chat format
     
 </dd>
 </dl>

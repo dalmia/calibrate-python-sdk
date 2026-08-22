@@ -133,6 +133,7 @@ class AgentTestsClient:
         type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
         status: typing.Optional[TaskStatus] = None,
         has_failures: typing.Optional[bool] = None,
+        around: typing.Optional[str] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -155,6 +156,9 @@ class AgentTestsClient:
 
         has_failures : typing.Optional[bool]
             Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        around : typing.Optional[str]
+            ID of a run to jump to, returning the page that contains it instead of the page at `offset`
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -186,6 +190,7 @@ class AgentTestsClient:
             type=type,
             status=status,
             has_failures=has_failures,
+            around=around,
             limit=limit,
             offset=offset,
             request_options=request_options,
@@ -538,6 +543,7 @@ class AsyncAgentTestsClient:
         type: typing.Optional[ListRunsForAgentAgentTestsRequestType] = None,
         status: typing.Optional[TaskStatus] = None,
         has_failures: typing.Optional[bool] = None,
+        around: typing.Optional[str] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -560,6 +566,9 @@ class AsyncAgentTestsClient:
 
         has_failures : typing.Optional[bool]
             Filter by whether the run has any failing test case or model. `true` returns only runs with failures (or errors), `false` only clean runs. Omit for both
+
+        around : typing.Optional[str]
+            ID of a run to jump to, returning the page that contains it instead of the page at `offset`
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -599,6 +608,7 @@ class AsyncAgentTestsClient:
             type=type,
             status=status,
             has_failures=has_failures,
+            around=around,
             limit=limit,
             offset=offset,
             request_options=request_options,

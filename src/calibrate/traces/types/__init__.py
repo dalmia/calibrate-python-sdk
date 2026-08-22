@@ -6,8 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import TraceIngestInput
-_dynamic_imports: typing.Dict[str, str] = {"TraceIngestInput": ".types"}
+    from .trace_ingest_input import TraceIngestInput
+_dynamic_imports: typing.Dict[str, str] = {"TraceIngestInput": ".trace_ingest_input"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:

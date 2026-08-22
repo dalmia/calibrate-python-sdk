@@ -9,8 +9,10 @@ if typing.TYPE_CHECKING:
     from .types import (
         AgentCreateResponse,
         AgentResponse,
+        AgentResponseInteractionType,
         AgentResponseType,
         AgentSummary,
+        AgentSummaryInteractionType,
         AgentSummaryType,
         AgentTestRunCreateResponse,
         AgentTestRunCreateResponseStatus,
@@ -107,7 +109,7 @@ if typing.TYPE_CHECKING:
     from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import ListRunsForAgentAgentTestsRequestType
-    from .agents import AgentCreateType
+    from .agents import AgentCreateInteractionType, AgentCreateType
     from .annotation_tasks import (
         AnnotationTaskCreateType,
         CreateJobsRequestReasoningMode,
@@ -124,13 +126,17 @@ if typing.TYPE_CHECKING:
         ListEvaluatorsRequestEvaluatorType,
     )
     from .tests import BulkTestUploadType, TestCreateType, TestUpdateType
+    from .traces import TraceIngestInput
     from .version import __version__
 _dynamic_imports: typing.Dict[str, str] = {
+    "AgentCreateInteractionType": ".agents",
     "AgentCreateResponse": ".types",
     "AgentCreateType": ".agents",
     "AgentResponse": ".types",
+    "AgentResponseInteractionType": ".types",
     "AgentResponseType": ".types",
     "AgentSummary": ".types",
+    "AgentSummaryInteractionType": ".types",
     "AgentSummaryType": ".types",
     "AgentTestRunCreateResponse": ".types",
     "AgentTestRunCreateResponseStatus": ".types",
@@ -230,6 +236,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestRunStatusResponse": ".types",
     "TestUpdateType": ".tests",
     "ToolCallOutput": ".types",
+    "TraceIngestInput": ".traces",
     "TraceIngestResponse": ".types",
     "TraceMetadataEntry": ".types",
     "TraceOutput": ".types",
@@ -274,11 +281,14 @@ def __dir__():
 
 
 __all__ = [
+    "AgentCreateInteractionType",
     "AgentCreateResponse",
     "AgentCreateType",
     "AgentResponse",
+    "AgentResponseInteractionType",
     "AgentResponseType",
     "AgentSummary",
+    "AgentSummaryInteractionType",
     "AgentSummaryType",
     "AgentTestRunCreateResponse",
     "AgentTestRunCreateResponseStatus",
@@ -378,6 +388,7 @@ __all__ = [
     "TestRunStatusResponse",
     "TestUpdateType",
     "ToolCallOutput",
+    "TraceIngestInput",
     "TraceIngestResponse",
     "TraceMetadataEntry",
     "TraceOutput",

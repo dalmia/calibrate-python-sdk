@@ -12,6 +12,7 @@ from ..types.paginated_response_evaluator_response import PaginatedResponseEvalu
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
+from .types.agent_create_interaction_type import AgentCreateInteractionType
 from .types.agent_create_type import AgentCreateType
 
 # this is used as the default value for optional parameters
@@ -159,6 +160,7 @@ class AgentsClient:
         *,
         name: str,
         type: typing.Optional[AgentCreateType] = OMIT,
+        interaction_type: typing.Optional[AgentCreateInteractionType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentCreateResponse:
@@ -173,6 +175,12 @@ class AgentsClient:
         type : typing.Optional[AgentCreateType]
             - `agent`: built inside Calibrate
             - `connection`: your existing agent connected to Calibrate
+
+        interaction_type : typing.Optional[AgentCreateInteractionType]
+            What the agent expects in the request body:
+
+            - `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+            - `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
@@ -238,7 +246,9 @@ class AgentsClient:
             },
         )
         """
-        _response = self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
+        _response = self._raw_client.create(
+            name=name, type=type, interaction_type=interaction_type, config=config, request_options=request_options
+        )
         return _response.data
 
     def get(self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> AgentResponse:
@@ -611,6 +621,7 @@ class AsyncAgentsClient:
         *,
         name: str,
         type: typing.Optional[AgentCreateType] = OMIT,
+        interaction_type: typing.Optional[AgentCreateInteractionType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentCreateResponse:
@@ -625,6 +636,12 @@ class AsyncAgentsClient:
         type : typing.Optional[AgentCreateType]
             - `agent`: built inside Calibrate
             - `connection`: your existing agent connected to Calibrate
+
+        interaction_type : typing.Optional[AgentCreateInteractionType]
+            What the agent expects in the request body:
+
+            - `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+            - `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
@@ -698,7 +715,9 @@ class AsyncAgentsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.create(name=name, type=type, config=config, request_options=request_options)
+        _response = await self._raw_client.create(
+            name=name, type=type, interaction_type=interaction_type, config=config, request_options=request_options
+        )
         return _response.data
 
     async def get(self, agent_uuid: str, *, request_options: typing.Optional[RequestOptions] = None) -> AgentResponse:

@@ -33,6 +33,11 @@ class AgentTestRunListItem(UniversalBaseModel):
     - `llm-benchmark`: a multi-model comparison
     """
 
+    created_at: str = pydantic.Field()
+    """
+    When the run was created (ISO 8601 UTC)
+    """
+
     updated_at: str = pydantic.Field()
     """
     When the run was last updated (ISO 8601 UTC)
@@ -51,6 +56,11 @@ class AgentTestRunListItem(UniversalBaseModel):
     failed: typing.Optional[int] = pydantic.Field(default=None)
     """
     Number of test cases that failed
+    """
+
+    evaluators: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    """
+    Names of the evaluators that judged this run, deduplicated and in display order. `Tool call` is appended when any test in the run was a tool-call test. Empty when the run had no evaluators
     """
 
     results: typing.Optional[typing.List[TestRunCaseSummary]] = pydantic.Field(default=None)

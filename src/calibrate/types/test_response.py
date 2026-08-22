@@ -25,6 +25,7 @@ class TestResponse(UniversalBaseModel):
     - `response`: judges the generated reply
     - `tool_call`: diffs the generated tool calls
     - `conversation`: judges the full conversation
+    - `general`: judges a single plain-text input/output pair with no conversation involved (e.g. summarization, extraction, classification)
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)

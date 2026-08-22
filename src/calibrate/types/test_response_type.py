@@ -2,4 +2,4 @@
 
 import typing
 
-TestResponseType = typing.Union[typing.Literal["response", "tool_call", "conversation"], typing.Any]
+TestResponseType = typing.Union[typing.Literal["response", "tool_call", "conversation", "general"], typing.Any]

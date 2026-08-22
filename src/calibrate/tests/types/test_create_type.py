@@ -2,4 +2,4 @@
 
 import typing
 
-TestCreateType = typing.Union[typing.Literal["response", "tool_call", "conversation"], typing.Any]
+TestCreateType = typing.Union[typing.Literal["response", "tool_call", "conversation", "general"], typing.Any]

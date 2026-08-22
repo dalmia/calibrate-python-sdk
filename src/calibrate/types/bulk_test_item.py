@@ -15,14 +15,19 @@ class BulkTestItem(UniversalBaseModel):
     Name of the test, unique within the workspace and within the batch
     """
 
-    conversation_history: typing.List[ChatMessage] = pydantic.Field()
+    conversation_history: typing.Optional[typing.List[ChatMessage]] = pydantic.Field(default=None)
     """
-    Ordered messages ending at the user turn the agent should answer
+    Ordered messages ending at the user turn the agent should answer. **Required for `response` and `conversation` batches**, and for `tool_call` batches aimed at a conversational agent
+    """
+
+    input: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Standalone prompt with no conversation around it. **Required for `general` batches**, and for `tool_call` batches aimed at a general agent
     """
 
     evaluators: typing.Optional[typing.List[RoutersTestsEvaluatorRef]] = pydantic.Field(default=None)
     """
-    Evaluators to link. Used by `response` and `conversation` tests
+    Evaluators to link. Used by `response`, `conversation`, and `general` tests
     """
 
     tool_calls: typing.Optional[typing.List[ExpectedToolCall]] = pydantic.Field(default=None)

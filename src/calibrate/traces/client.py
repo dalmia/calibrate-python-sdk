@@ -7,8 +7,8 @@ from ..core.request_options import RequestOptions
 from ..types.trace_ingest_response import TraceIngestResponse
 from ..types.trace_metadata_entry import TraceMetadataEntry
 from ..types.trace_output import TraceOutput
-from ..types.trace_turn import TraceTurn
 from .raw_client import AsyncRawTracesClient, RawTracesClient
+from .types.trace_ingest_input import TraceIngestInput
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -33,7 +33,7 @@ class TracesClient:
         self,
         *,
         agent_id: str,
-        input: typing.Sequence[TraceTurn],
+        input: TraceIngestInput,
         output: TraceOutput,
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
@@ -48,8 +48,8 @@ class TracesClient:
         agent_id : str
             ID of the agent that produced the turn. Must be an agent in your workspace
 
-        input : typing.Sequence[TraceTurn]
-            Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+        input : TraceIngestInput
+            What the agent was given for this turn. For a `general` agent, the standalone prompt as a string. For a `conversation` agent, the history up to the reported output, oldest turn first, in OpenAI chat format
 
         output : TraceOutput
             What the agent produced for this turn
@@ -73,18 +73,14 @@ class TracesClient:
 
         Examples
         --------
-        from calibrate import Calibrate, TraceOutput, TraceTurn
+        from calibrate import Calibrate, TraceOutput
 
         client = Calibrate(
             api_key="YOUR_API_KEY",
         )
         client.traces.create(
             agent_id="agent_id",
-            input=[
-                TraceTurn(
-                    role="role",
-                )
-            ],
+            input="input",
             output=TraceOutput(),
         )
         """
@@ -119,7 +115,7 @@ class AsyncTracesClient:
         self,
         *,
         agent_id: str,
-        input: typing.Sequence[TraceTurn],
+        input: TraceIngestInput,
         output: TraceOutput,
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
@@ -134,8 +130,8 @@ class AsyncTracesClient:
         agent_id : str
             ID of the agent that produced the turn. Must be an agent in your workspace
 
-        input : typing.Sequence[TraceTurn]
-            Conversation history up to the reported output, oldest turn first, in OpenAI chat format
+        input : TraceIngestInput
+            What the agent was given for this turn. For a `general` agent, the standalone prompt as a string. For a `conversation` agent, the history up to the reported output, oldest turn first, in OpenAI chat format
 
         output : TraceOutput
             What the agent produced for this turn
@@ -161,7 +157,7 @@ class AsyncTracesClient:
         --------
         import asyncio
 
-        from calibrate import AsyncCalibrate, TraceOutput, TraceTurn
+        from calibrate import AsyncCalibrate, TraceOutput
 
         client = AsyncCalibrate(
             api_key="YOUR_API_KEY",
@@ -171,11 +167,7 @@ class AsyncTracesClient:
         async def main() -> None:
             await client.traces.create(
                 agent_id="agent_id",
-                input=[
-                    TraceTurn(
-                        role="role",
-                    )
-                ],
+                input="input",
                 output=TraceOutput(),
             )
 

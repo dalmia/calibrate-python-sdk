@@ -2,4 +2,4 @@
 
 import typing
 
-BulkTestUploadType = typing.Union[typing.Literal["response", "tool_call", "conversation"], typing.Any]
+BulkTestUploadType = typing.Union[typing.Literal["response", "tool_call", "conversation", "general"], typing.Any]

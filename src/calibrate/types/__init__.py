@@ -8,8 +8,10 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .agent_create_response import AgentCreateResponse
     from .agent_response import AgentResponse
+    from .agent_response_interaction_type import AgentResponseInteractionType
     from .agent_response_type import AgentResponseType
     from .agent_summary import AgentSummary
+    from .agent_summary_interaction_type import AgentSummaryInteractionType
     from .agent_summary_type import AgentSummaryType
     from .agent_test_run_create_response import AgentTestRunCreateResponse
     from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
@@ -104,8 +106,10 @@ if typing.TYPE_CHECKING:
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".agent_create_response",
     "AgentResponse": ".agent_response",
+    "AgentResponseInteractionType": ".agent_response_interaction_type",
     "AgentResponseType": ".agent_response_type",
     "AgentSummary": ".agent_summary",
+    "AgentSummaryInteractionType": ".agent_summary_interaction_type",
     "AgentSummaryType": ".agent_summary_type",
     "AgentTestRunCreateResponse": ".agent_test_run_create_response",
     "AgentTestRunCreateResponseStatus": ".agent_test_run_create_response_status",
@@ -224,8 +228,10 @@ def __dir__():
 __all__ = [
     "AgentCreateResponse",
     "AgentResponse",
+    "AgentResponseInteractionType",
     "AgentResponseType",
     "AgentSummary",
+    "AgentSummaryInteractionType",
     "AgentSummaryType",
     "AgentTestRunCreateResponse",
     "AgentTestRunCreateResponseStatus",

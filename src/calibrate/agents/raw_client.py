@@ -19,6 +19,7 @@ from ..types.paginated_response_agent_summary import PaginatedResponseAgentSumma
 from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
+from .types.agent_create_interaction_type import AgentCreateInteractionType
 from .types.agent_create_type import AgentCreateType
 from pydantic import ValidationError
 
@@ -239,6 +240,7 @@ class RawAgentsClient:
         *,
         name: str,
         type: typing.Optional[AgentCreateType] = OMIT,
+        interaction_type: typing.Optional[AgentCreateInteractionType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[AgentCreateResponse]:
@@ -253,6 +255,12 @@ class RawAgentsClient:
         type : typing.Optional[AgentCreateType]
             - `agent`: built inside Calibrate
             - `connection`: your existing agent connected to Calibrate
+
+        interaction_type : typing.Optional[AgentCreateInteractionType]
+            What the agent expects in the request body:
+
+            - `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+            - `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
@@ -305,6 +313,7 @@ class RawAgentsClient:
             json={
                 "name": name,
                 "type": type,
+                "interaction_type": interaction_type,
                 "config": config,
             },
             headers={
@@ -862,6 +871,7 @@ class AsyncRawAgentsClient:
         *,
         name: str,
         type: typing.Optional[AgentCreateType] = OMIT,
+        interaction_type: typing.Optional[AgentCreateInteractionType] = OMIT,
         config: typing.Optional[typing.Dict[str, typing.Any]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[AgentCreateResponse]:
@@ -876,6 +886,12 @@ class AsyncRawAgentsClient:
         type : typing.Optional[AgentCreateType]
             - `agent`: built inside Calibrate
             - `connection`: your existing agent connected to Calibrate
+
+        interaction_type : typing.Optional[AgentCreateInteractionType]
+            What the agent expects in the request body:
+
+            - `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+            - `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
 
         config : typing.Optional[typing.Dict[str, typing.Any]]
             Agent behavioral config. The keys depend on `type`.
@@ -928,6 +944,7 @@ class AsyncRawAgentsClient:
             json={
                 "name": name,
                 "type": type,
+                "interaction_type": interaction_type,
                 "config": config,
             },
             headers={

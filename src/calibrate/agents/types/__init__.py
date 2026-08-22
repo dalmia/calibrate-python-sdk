@@ -6,8 +6,12 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .agent_create_interaction_type import AgentCreateInteractionType
     from .agent_create_type import AgentCreateType
-_dynamic_imports: typing.Dict[str, str] = {"AgentCreateType": ".agent_create_type"}
+_dynamic_imports: typing.Dict[str, str] = {
+    "AgentCreateInteractionType": ".agent_create_interaction_type",
+    "AgentCreateType": ".agent_create_type",
+}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -31,4 +35,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["AgentCreateType"]
+__all__ = ["AgentCreateInteractionType", "AgentCreateType"]

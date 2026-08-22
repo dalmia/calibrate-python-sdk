@@ -6,6 +6,7 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .agent_response_interaction_type import AgentResponseInteractionType
 from .agent_response_type import AgentResponseType
 
 
@@ -22,6 +23,14 @@ class AgentResponse(UniversalBaseModel):
     """
     - `agent`: built inside Calibrate
     - `connection`: your existing agent connected to Calibrate
+    """
+
+    interaction_type: AgentResponseInteractionType = pydantic.Field()
+    """
+    What the agent expects in the request body:
+    
+    - `conversation`: a normal back-and-forth agent, answers within an ongoing conversation. Receives `{"messages": [...]}`
+    - `general`: a one-shot agent, takes a single plain input and produces a single plain output, no conversation. Receives `{"input": "..."}`
     """
 
     config: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)

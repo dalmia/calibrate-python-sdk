@@ -17,6 +17,11 @@ class TraceToolCall(UniversalBaseModel):
     Argument values the agent passed to the tool. Omit when the call had none
     """
 
+    output: typing.Optional[typing.Any] = pydantic.Field(default=None)
+    """
+    What the tool returned for this call. Any JSON value. Omit when you do not record it
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
