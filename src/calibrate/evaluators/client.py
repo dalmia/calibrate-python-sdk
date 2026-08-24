@@ -132,6 +132,7 @@ class EvaluatorsClient:
             - `llm`: a reply with its conversation history
             - `llm-general`: a standalone input and output pair
             - `conversation`: a full conversation
+            - `tool-call`: whether the agent called the right tool, labelled by a person
 
         data_type : typing.Optional[EvaluatorCreateDataType]
             The modality the judge reads:
@@ -404,6 +405,7 @@ class AsyncEvaluatorsClient:
             - `llm`: a reply with its conversation history
             - `llm-general`: a standalone input and output pair
             - `conversation`: a full conversation
+            - `tool-call`: whether the agent called the right tool, labelled by a person
 
         data_type : typing.Optional[EvaluatorCreateDataType]
             The modality the judge reads:

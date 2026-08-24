@@ -3,5 +3,5 @@
 import typing
 
 EvaluatorCreateEvaluatorType = typing.Union[
-    typing.Literal["tts", "stt", "llm", "llm-general", "conversation"], typing.Any
+    typing.Literal["tts", "stt", "llm", "llm-general", "conversation", "tool-call"], typing.Any
 ]

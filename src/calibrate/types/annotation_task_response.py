@@ -59,7 +59,7 @@ class AnnotationTaskResponse(UniversalBaseModel):
 
     items: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
     """
-    The task's items, each with its agreement stats. You get these when you fetch one task by ID, not when you list tasks
+    The task's items, each with its agreement stats and an `is_tool_call` flag marking the rows a person labels on the tool call rather than a text reply. You get these when you fetch one task by ID, not when you list tasks
     """
 
     jobs: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)

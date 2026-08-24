@@ -2333,6 +2333,7 @@ What the evaluator judges:
 - `llm`: a reply with its conversation history
 - `llm-general`: a standalone input and output pair
 - `conversation`: a full conversation
+- `tool-call`: whether the agent called the right tool, labelled by a person
     
 </dd>
 </dl>

@@ -35,6 +35,7 @@ class RoutersEvaluatorsEvaluatorResponse(UniversalBaseModel):
     - `llm`: a reply with its conversation history
     - `llm-general`: a standalone input and output pair
     - `conversation`: a full conversation
+    - `tool-call`: whether the agent called the right tool, labelled by a person
     """
 
     data_type: RoutersEvaluatorsEvaluatorResponseDataType = pydantic.Field()
@@ -56,6 +57,11 @@ class RoutersEvaluatorsEvaluatorResponse(UniversalBaseModel):
     is_default: bool = pydantic.Field()
     """
     True when the evaluator is a built-in default or your workspace's editable copy of one. False for an evaluator you created yourself
+    """
+
+    is_protected: bool = pydantic.Field()
+    """
+    True when the evaluator is locked. A locked evaluator cannot be deleted, and only its name, description and rubric can change
     """
 
     slug: typing.Optional[str] = pydantic.Field(default=None)
