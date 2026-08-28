@@ -8,6 +8,7 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .agent_test_run_list_item_type import AgentTestRunListItemType
 from .model_run_summary import ModelRunSummary
+from .run_list_evaluator import RunListEvaluator
 from .task_status import TaskStatus
 from .test_run_case_summary import TestRunCaseSummary
 
@@ -58,9 +59,9 @@ class AgentTestRunListItem(UniversalBaseModel):
     Number of test cases that failed
     """
 
-    evaluators: typing.Optional[typing.List[str]] = pydantic.Field(default=None)
+    evaluators: typing.Optional[typing.List[RunListEvaluator]] = pydantic.Field(default=None)
     """
-    Names of the evaluators that judged this run, deduplicated and in display order. `Tool call` is appended when any test in the run was a tool-call test. Empty when the run had no evaluators
+    The evaluators that judged this run, deduplicated and in display order. A `Tool call` entry is appended when any test in the run was a tool-call test. That entry has no `uuid`, because it is not an evaluator in the library. Empty when the run had no evaluators
     """
 
     results: typing.Optional[typing.List[TestRunCaseSummary]] = pydantic.Field(default=None)
