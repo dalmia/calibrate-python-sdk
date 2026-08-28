@@ -18,6 +18,7 @@ if typing.TYPE_CHECKING:
         AgentTestRunCreateResponseStatus,
         AgentTestRunListItem,
         AgentTestRunListItemType,
+        AgentTestsBulkUnlinkResponse,
         AgentTestsCreateResponse,
         AnnotationItemPayload,
         AnnotationTaskCreateResponse,
@@ -109,7 +110,7 @@ if typing.TYPE_CHECKING:
     from .errors import UnprocessableEntityError
     from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
-    from .agent_tests import ListRunsForAgentAgentTestsRequestType
+    from .agent_tests import ListForAgentAgentTestsRequestQMode, ListRunsForAgentAgentTestsRequestType
     from .agents import AgentCreateInteractionType, AgentCreateType
     from .annotation_tasks import (
         AnnotationTaskCreateType,
@@ -143,6 +144,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AgentTestRunCreateResponseStatus": ".types",
     "AgentTestRunListItem": ".types",
     "AgentTestRunListItemType": ".types",
+    "AgentTestsBulkUnlinkResponse": ".types",
     "AgentTestsCreateResponse": ".types",
     "AnnotationItemPayload": ".types",
     "AnnotationTaskCreateResponse": ".types",
@@ -201,6 +203,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "LabellingJobCreatedStatus": ".types",
     "ListEvaluatorsRequestDataType": ".evaluators",
     "ListEvaluatorsRequestEvaluatorType": ".evaluators",
+    "ListForAgentAgentTestsRequestQMode": ".agent_tests",
     "ListRunsForAgentAgentTestsRequestType": ".agent_tests",
     "ModelResult": ".types",
     "ModelRunSummary": ".types",
@@ -296,6 +299,7 @@ __all__ = [
     "AgentTestRunCreateResponseStatus",
     "AgentTestRunListItem",
     "AgentTestRunListItemType",
+    "AgentTestsBulkUnlinkResponse",
     "AgentTestsCreateResponse",
     "AnnotationItemPayload",
     "AnnotationTaskCreateResponse",
@@ -354,6 +358,7 @@ __all__ = [
     "LabellingJobCreatedStatus",
     "ListEvaluatorsRequestDataType",
     "ListEvaluatorsRequestEvaluatorType",
+    "ListForAgentAgentTestsRequestQMode",
     "ListRunsForAgentAgentTestsRequestType",
     "ModelResult",
     "ModelRunSummary",

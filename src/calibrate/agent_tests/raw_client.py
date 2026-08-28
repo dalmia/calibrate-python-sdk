@@ -13,6 +13,7 @@ from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
+from ..types.agent_tests_bulk_unlink_response import AgentTestsBulkUnlinkResponse
 from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
@@ -22,6 +23,7 @@ from ..types.paginated_response_agent_test_run_list_item import PaginatedRespons
 from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
 from ..types.task_status import TaskStatus
 from ..types.test_run_status_response import TestRunStatusResponse
+from .types.list_for_agent_agent_tests_request_q_mode import ListForAgentAgentTestsRequestQMode
 from .types.list_runs_for_agent_agent_tests_request_type import ListRunsForAgentAgentTestsRequestType
 from pydantic import ValidationError
 
@@ -106,7 +108,9 @@ class RawAgentTestsClient:
         self,
         agent_uuid: str,
         *,
+        type: typing.Optional[typing.Sequence[str]] = None,
         q: typing.Optional[str] = None,
+        q_mode: typing.Optional[ListForAgentAgentTestsRequestQMode] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -119,8 +123,14 @@ class RawAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        type : typing.Optional[typing.Sequence[str]]
+            Keep only tests of these types. Repeat the parameter or pass one comma-separated value. Accepts `response`, `tool_call`, `conversation`, `general`
+
         q : typing.Optional[str]
-            Case-insensitive substring search on `name`. Blank is a no-op
+            Case-insensitive search on `name`. Blank is a no-op
+
+        q_mode : typing.Optional[ListForAgentAgentTestsRequestQMode]
+            How to match `q` against the searched fields
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -140,7 +150,9 @@ class RawAgentTestsClient:
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
             method="GET",
             params={
+                "type": type,
                 "q": q,
+                "q_mode": q_mode,
                 "limit": limit,
                 "offset": offset,
             },
@@ -243,6 +255,75 @@ class RawAgentTestsClient:
                     PaginatedResponseAgentTestRunListItem,
                     parse_obj_as(
                         type_=PaginatedResponseAgentTestRunListItem,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def bulk_unlink(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[AgentTestsBulkUnlinkResponse]:
+        """
+        Unlink one or more tests from an agent. Tests that are not linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to unlink tests from
+
+        test_uuids : typing.Sequence[str]
+            Tests to unlink from the agent
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[AgentTestsBulkUnlinkResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            "agent-tests/bulk-unlink",
+            method="POST",
+            json={
+                "agent_uuid": agent_uuid,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestsBulkUnlinkResponse,
+                    parse_obj_as(
+                        type_=AgentTestsBulkUnlinkResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -684,7 +765,9 @@ class AsyncRawAgentTestsClient:
         self,
         agent_uuid: str,
         *,
+        type: typing.Optional[typing.Sequence[str]] = None,
         q: typing.Optional[str] = None,
+        q_mode: typing.Optional[ListForAgentAgentTestsRequestQMode] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -697,8 +780,14 @@ class AsyncRawAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        type : typing.Optional[typing.Sequence[str]]
+            Keep only tests of these types. Repeat the parameter or pass one comma-separated value. Accepts `response`, `tool_call`, `conversation`, `general`
+
         q : typing.Optional[str]
-            Case-insensitive substring search on `name`. Blank is a no-op
+            Case-insensitive search on `name`. Blank is a no-op
+
+        q_mode : typing.Optional[ListForAgentAgentTestsRequestQMode]
+            How to match `q` against the searched fields
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -718,7 +807,9 @@ class AsyncRawAgentTestsClient:
             f"agent-tests/agent/{encode_path_param(agent_uuid)}/tests",
             method="GET",
             params={
+                "type": type,
                 "q": q,
+                "q_mode": q_mode,
                 "limit": limit,
                 "offset": offset,
             },
@@ -821,6 +912,75 @@ class AsyncRawAgentTestsClient:
                     PaginatedResponseAgentTestRunListItem,
                     parse_obj_as(
                         type_=PaginatedResponseAgentTestRunListItem,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def bulk_unlink(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[AgentTestsBulkUnlinkResponse]:
+        """
+        Unlink one or more tests from an agent. Tests that are not linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to unlink tests from
+
+        test_uuids : typing.Sequence[str]
+            Tests to unlink from the agent
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[AgentTestsBulkUnlinkResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            "agent-tests/bulk-unlink",
+            method="POST",
+            json={
+                "agent_uuid": agent_uuid,
+                "test_uuids": test_uuids,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    AgentTestsBulkUnlinkResponse,
+                    parse_obj_as(
+                        type_=AgentTestsBulkUnlinkResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

@@ -5,6 +5,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.agent_test_run_create_response import AgentTestRunCreateResponse
+from ..types.agent_tests_bulk_unlink_response import AgentTestsBulkUnlinkResponse
 from ..types.agent_tests_create_response import AgentTestsCreateResponse
 from ..types.batch_run_request import BatchRunRequest
 from ..types.batch_test_run_response import BatchTestRunResponse
@@ -14,6 +15,7 @@ from ..types.paginated_response_test_list_response import PaginatedResponseTestL
 from ..types.task_status import TaskStatus
 from ..types.test_run_status_response import TestRunStatusResponse
 from .raw_client import AsyncRawAgentTestsClient, RawAgentTestsClient
+from .types.list_for_agent_agent_tests_request_q_mode import ListForAgentAgentTestsRequestQMode
 from .types.list_runs_for_agent_agent_tests_request_type import ListRunsForAgentAgentTestsRequestType
 
 # this is used as the default value for optional parameters
@@ -80,7 +82,9 @@ class AgentTestsClient:
         self,
         agent_uuid: str,
         *,
+        type: typing.Optional[typing.Sequence[str]] = None,
         q: typing.Optional[str] = None,
+        q_mode: typing.Optional[ListForAgentAgentTestsRequestQMode] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -93,8 +97,14 @@ class AgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        type : typing.Optional[typing.Sequence[str]]
+            Keep only tests of these types. Repeat the parameter or pass one comma-separated value. Accepts `response`, `tool_call`, `conversation`, `general`
+
         q : typing.Optional[str]
-            Case-insensitive substring search on `name`. Blank is a no-op
+            Case-insensitive search on `name`. Blank is a no-op
+
+        q_mode : typing.Optional[ListForAgentAgentTestsRequestQMode]
+            How to match `q` against the searched fields
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -122,7 +132,7 @@ class AgentTestsClient:
         )
         """
         _response = self._raw_client.list_for_agent(
-            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+            agent_uuid, type=type, q=q, q_mode=q_mode, limit=limit, offset=offset, request_options=request_options
         )
         return _response.data
 
@@ -194,6 +204,49 @@ class AgentTestsClient:
             limit=limit,
             offset=offset,
             request_options=request_options,
+        )
+        return _response.data
+
+    def bulk_unlink(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestsBulkUnlinkResponse:
+        """
+        Unlink one or more tests from an agent. Tests that are not linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to unlink tests from
+
+        test_uuids : typing.Sequence[str]
+            Tests to unlink from the agent
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestsBulkUnlinkResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agent_tests.bulk_unlink(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            test_uuids=["b1c2d3e4-f5a6-7890-bcde-f12345678901"],
+        )
+        """
+        _response = self._raw_client.bulk_unlink(
+            agent_uuid=agent_uuid, test_uuids=test_uuids, request_options=request_options
         )
         return _response.data
 
@@ -482,7 +535,9 @@ class AsyncAgentTestsClient:
         self,
         agent_uuid: str,
         *,
+        type: typing.Optional[typing.Sequence[str]] = None,
         q: typing.Optional[str] = None,
+        q_mode: typing.Optional[ListForAgentAgentTestsRequestQMode] = None,
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
@@ -495,8 +550,14 @@ class AsyncAgentTestsClient:
         agent_uuid : str
             Agent whose linked tests to list
 
+        type : typing.Optional[typing.Sequence[str]]
+            Keep only tests of these types. Repeat the parameter or pass one comma-separated value. Accepts `response`, `tool_call`, `conversation`, `general`
+
         q : typing.Optional[str]
-            Case-insensitive substring search on `name`. Blank is a no-op
+            Case-insensitive search on `name`. Blank is a no-op
+
+        q_mode : typing.Optional[ListForAgentAgentTestsRequestQMode]
+            How to match `q` against the searched fields
 
         limit : typing.Optional[int]
             Maximum number of items to return. Omit for no limit (all items)
@@ -532,7 +593,7 @@ class AsyncAgentTestsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.list_for_agent(
-            agent_uuid, q=q, limit=limit, offset=offset, request_options=request_options
+            agent_uuid, type=type, q=q, q_mode=q_mode, limit=limit, offset=offset, request_options=request_options
         )
         return _response.data
 
@@ -612,6 +673,57 @@ class AsyncAgentTestsClient:
             limit=limit,
             offset=offset,
             request_options=request_options,
+        )
+        return _response.data
+
+    async def bulk_unlink(
+        self,
+        *,
+        agent_uuid: str,
+        test_uuids: typing.Sequence[str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AgentTestsBulkUnlinkResponse:
+        """
+        Unlink one or more tests from an agent. Tests that are not linked are skipped.
+
+        Parameters
+        ----------
+        agent_uuid : str
+            Agent to unlink tests from
+
+        test_uuids : typing.Sequence[str]
+            Tests to unlink from the agent
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AgentTestsBulkUnlinkResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agent_tests.bulk_unlink(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                test_uuids=["b1c2d3e4-f5a6-7890-bcde-f12345678901"],
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.bulk_unlink(
+            agent_uuid=agent_uuid, test_uuids=test_uuids, request_options=request_options
         )
         return _response.data
 

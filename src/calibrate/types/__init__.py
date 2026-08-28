@@ -17,6 +17,7 @@ if typing.TYPE_CHECKING:
     from .agent_test_run_create_response_status import AgentTestRunCreateResponseStatus
     from .agent_test_run_list_item import AgentTestRunListItem
     from .agent_test_run_list_item_type import AgentTestRunListItemType
+    from .agent_tests_bulk_unlink_response import AgentTestsBulkUnlinkResponse
     from .agent_tests_create_response import AgentTestsCreateResponse
     from .annotation_item_payload import AnnotationItemPayload
     from .annotation_task_create_response import AnnotationTaskCreateResponse
@@ -116,6 +117,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AgentTestRunCreateResponseStatus": ".agent_test_run_create_response_status",
     "AgentTestRunListItem": ".agent_test_run_list_item",
     "AgentTestRunListItemType": ".agent_test_run_list_item_type",
+    "AgentTestsBulkUnlinkResponse": ".agent_tests_bulk_unlink_response",
     "AgentTestsCreateResponse": ".agent_tests_create_response",
     "AnnotationItemPayload": ".annotation_item_payload",
     "AnnotationTaskCreateResponse": ".annotation_task_create_response",
@@ -239,6 +241,7 @@ __all__ = [
     "AgentTestRunCreateResponseStatus",
     "AgentTestRunListItem",
     "AgentTestRunListItemType",
+    "AgentTestsBulkUnlinkResponse",
     "AgentTestsCreateResponse",
     "AnnotationItemPayload",
     "AnnotationTaskCreateResponse",

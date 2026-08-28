@@ -1545,7 +1545,23 @@ client.agent_tests.list_for_agent(
 <dl>
 <dd>
 
-**q:** `typing.Optional[str]` — Case-insensitive substring search on `name`. Blank is a no-op
+**type:** `typing.Optional[typing.List[str]]` — Keep only tests of these types. Repeat the parameter or pass one comma-separated value. Accepts `response`, `tool_call`, `conversation`, `general`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Case-insensitive search on `name`. Blank is a no-op
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q_mode:** `typing.Optional[ListForAgentAgentTestsRequestQMode]` — How to match `q` against the searched fields
     
 </dd>
 </dl>
@@ -1687,6 +1703,90 @@ Filter by run type. Omit to return both:
 <dd>
 
 **offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">bulk_unlink</a>(...) -> AgentTestsBulkUnlinkResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Unlink one or more tests from an agent. Tests that are not linked are skipped.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agent_tests.bulk_unlink(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    test_uuids=[
+        "b1c2d3e4-f5a6-7890-bcde-f12345678901"
+    ],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — Agent to unlink tests from
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**test_uuids:** `typing.List[str]` — Tests to unlink from the agent
     
 </dd>
 </dl>
