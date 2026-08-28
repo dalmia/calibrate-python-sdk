@@ -13,6 +13,11 @@ class AnnotationItemPayload(UniversalBaseModel):
     Human annotations to seed, keyed by evaluator ID. Each evaluator ID must be linked to the task. Put the judgement in `value`, a bool for binary or a number for rating, with optional `reasoning`. Requires `annotator_id`
     """
 
+    evaluator_results: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
+    """
+    Evaluator scores to record, keyed by evaluator ID. Each evaluator ID must be linked to the task. Put the score in `value`, a bool for binary or a number within the scale for rating, with optional `reasoning` and `version_number`. Omit `version_number` to record against the evaluator's live version. An item recording a tool call takes the tool-call evaluator and no other, and every other item takes any evaluator except that one
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

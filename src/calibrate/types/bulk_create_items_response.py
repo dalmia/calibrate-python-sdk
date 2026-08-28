@@ -32,6 +32,16 @@ class BulkCreateItemsResponse(UniversalBaseModel):
     ID of the labelling job that holds the annotations you provided, present only when you send annotations with the items
     """
 
+    evaluator_result_count: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    How many evaluator scores were stored, present only when you send `evaluator_results` with the items
+    """
+
+    evaluator_run_job_id: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    ID of the evaluator-run job that holds the scores you provided, present only when you send `evaluator_results` with the items
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:
