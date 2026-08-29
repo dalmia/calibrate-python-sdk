@@ -217,6 +217,10 @@ class AgentsClient:
             }
             ```
 
+            Every request Calibrate makes to your endpoint carries the header
+            `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+            to tag the trace you send back or to skip sending one.
+
             For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely to use all defaults. For `type=connection`, `config` is stored as-is and must contain `agent_url`
 
         request_options : typing.Optional[RequestOptions]
@@ -335,6 +339,10 @@ class AgentsClient:
               "benchmark_provider": "openrouter"
             }
             ```
+
+            Every request Calibrate makes to your endpoint carries the header
+            `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+            to tag the trace you send back or to skip sending one.
 
             Replaces the stored config. Omit to leave unchanged
 
@@ -678,6 +686,10 @@ class AsyncAgentsClient:
             }
             ```
 
+            Every request Calibrate makes to your endpoint carries the header
+            `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+            to tag the trace you send back or to skip sending one.
+
             For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely to use all defaults. For `type=connection`, `config` is stored as-is and must contain `agent_url`
 
         request_options : typing.Optional[RequestOptions]
@@ -812,6 +824,10 @@ class AsyncAgentsClient:
               "benchmark_provider": "openrouter"
             }
             ```
+
+            Every request Calibrate makes to your endpoint carries the header
+            `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+            to tag the trace you send back or to skip sending one.
 
             Replaces the stored config. Omit to leave unchanged
 

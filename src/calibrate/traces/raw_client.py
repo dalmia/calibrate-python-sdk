@@ -35,6 +35,7 @@ class RawTracesClient:
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
+        labels: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TraceIngestResponse]:
         """
@@ -60,6 +61,9 @@ class RawTracesClient:
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
 
+        labels : typing.Optional[typing.Sequence[str]]
+            Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -84,6 +88,7 @@ class RawTracesClient:
                 "metadata": convert_and_respect_annotation_metadata(
                     object_=metadata, annotation=typing.Optional[typing.Sequence[TraceMetadataEntry]], direction="write"
                 ),
+                "labels": labels,
             },
             headers={
                 "content-type": "application/json",
@@ -135,6 +140,7 @@ class AsyncRawTracesClient:
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
+        labels: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TraceIngestResponse]:
         """
@@ -160,6 +166,9 @@ class AsyncRawTracesClient:
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
 
+        labels : typing.Optional[typing.Sequence[str]]
+            Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -184,6 +193,7 @@ class AsyncRawTracesClient:
                 "metadata": convert_and_respect_annotation_metadata(
                     object_=metadata, annotation=typing.Optional[typing.Sequence[TraceMetadataEntry]], direction="write"
                 ),
+                "labels": labels,
             },
             headers={
                 "content-type": "application/json",

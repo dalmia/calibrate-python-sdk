@@ -38,6 +38,7 @@ class TracesClient:
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
+        labels: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TraceIngestResponse:
         """
@@ -62,6 +63,9 @@ class TracesClient:
 
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
+
+        labels : typing.Optional[typing.Sequence[str]]
+            Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -91,6 +95,7 @@ class TracesClient:
             message_id=message_id,
             conversation_id=conversation_id,
             metadata=metadata,
+            labels=labels,
             request_options=request_options,
         )
         return _response.data
@@ -120,6 +125,7 @@ class AsyncTracesClient:
         message_id: typing.Optional[str] = OMIT,
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
+        labels: typing.Optional[typing.Sequence[str]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TraceIngestResponse:
         """
@@ -144,6 +150,9 @@ class AsyncTracesClient:
 
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
+
+        labels : typing.Optional[typing.Sequence[str]]
+            Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -181,6 +190,7 @@ class AsyncTracesClient:
             message_id=message_id,
             conversation_id=conversation_id,
             metadata=metadata,
+            labels=labels,
             request_options=request_options,
         )
         return _response.data

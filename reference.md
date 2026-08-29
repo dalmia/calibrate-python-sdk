@@ -381,6 +381,10 @@ Agent behavioral config. The keys depend on `type`.
 }
 ```
 
+Every request Calibrate makes to your endpoint carries the header
+`X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+to tag the trace you send back or to skip sending one.
+
 For `type=agent`, omitted keys inherit managed defaults. Omit `config` entirely to use all defaults. For `type=connection`, `config` is stored as-is and must contain `agent_url`
     
 </dd>
@@ -578,6 +582,10 @@ Agent behavioral config. The keys depend on `type`.
   "benchmark_provider": "openrouter"
 }
 ```
+
+Every request Calibrate makes to your endpoint carries the header
+`X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
+to tag the trace you send back or to skip sending one.
 
 Replaces the stored config. Omit to leave unchanged
 
@@ -4077,6 +4085,14 @@ client.traces.create(
 <dd>
 
 **metadata:** `typing.Optional[typing.List[TraceMetadataEntry]]` — Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**labels:** `typing.Optional[typing.List[str]]` — Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
     
 </dd>
 </dl>
