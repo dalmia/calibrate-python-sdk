@@ -2,4 +2,6 @@
 
 import typing
 
-BatchTestSkipReason = typing.Union[typing.Literal["no_linked_tests", "connection_not_verified"], typing.Any]
+BatchTestSkipReason = typing.Union[
+    typing.Literal["no_linked_tests", "connection_not_verified", "over_row_limit"], typing.Any
+]

@@ -23,6 +23,7 @@ class BatchTestSkip(UniversalBaseModel):
     Why this agent was not run:
     - `no_linked_tests`: the agent has no tests linked
     - `connection_not_verified`: the agent's connection is not verified
+    - `over_row_limit`: the agent has more linked tests than this workspace allows in one run
     """
 
     if IS_PYDANTIC_V2:
