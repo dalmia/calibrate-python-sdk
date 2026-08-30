@@ -22,7 +22,7 @@ class TestRunCaseSummary(UniversalBaseModel):
 
     passed: typing.Optional[bool] = pydantic.Field(default=None)
     """
-    Whether the case passed (null if it errored or is still running)
+    Whether the case passed (null while the case is still running)
     """
 
     if IS_PYDANTIC_V2:

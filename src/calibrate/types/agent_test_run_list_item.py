@@ -89,6 +89,11 @@ class AgentTestRunListItem(UniversalBaseModel):
     Flat summary for each model in a benchmark run (fetch the benchmark detail for full results)
     """
 
+    unanswered_tests: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Number of test cases that produced no answer because the agent or the judge could not be reached, which makes the pass rate an unfair measure of the agent
+    """
+
     error: typing.Optional[bool] = pydantic.Field(default=None)
     """
     True if the run failed

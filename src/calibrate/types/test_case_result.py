@@ -59,6 +59,11 @@ class TestCaseResult(UniversalBaseModel):
     Cost of this case (USD)
     """
 
+    unanswered: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether this case produced no answer because the agent or the judge could not be reached, in which case `reasoning` carries the error and `passed` is not a verdict on the agent
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

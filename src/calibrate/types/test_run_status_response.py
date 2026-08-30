@@ -65,6 +65,16 @@ class TestRunStatusResponse(UniversalBaseModel):
     Results for each test case
     """
 
+    unanswered_tests: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Number of test cases that produced no answer because the agent or the judge could not be reached, which makes the pass rate an unfair measure of the agent
+    """
+
+    stopped_early: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether the run stopped before starting every test case, after too many failed in a row
+    """
+
     error: typing.Optional[bool] = pydantic.Field(default=None)
     """
     True if the run failed
