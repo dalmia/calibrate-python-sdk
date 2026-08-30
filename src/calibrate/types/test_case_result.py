@@ -64,6 +64,11 @@ class TestCaseResult(UniversalBaseModel):
     Whether this case produced no answer because the agent or the judge could not be reached, in which case `reasoning` carries the error and `passed` is not a verdict on the agent
     """
 
+    not_run: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether this case never started, because a user stopped the run first. It is counted neither as passed nor as failed
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

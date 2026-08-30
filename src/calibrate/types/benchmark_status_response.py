@@ -40,6 +40,11 @@ class BenchmarkStatusResponse(UniversalBaseModel):
     Leaderboard comparing the models, one row per model. Columns vary by benchmark: a `model` column plus pass/fail counts, latency, cost, and one score column per evaluator, keyed by evaluator name
     """
 
+    aborted: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether a user stopped this run before it finished. The results collected up to that point are kept, and test cases that never ran are counted neither as passed nor as failed
+    """
+
     error: typing.Optional[bool] = pydantic.Field(default=None)
     """
     True if the run failed
