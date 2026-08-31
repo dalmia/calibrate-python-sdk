@@ -15,6 +15,11 @@ class BenchmarkStatusResponse(UniversalBaseModel):
     Benchmark run job ID
     """
 
+    name: str = pydantic.Field()
+    """
+    Name of the run. A run nobody has renamed shows its number instead, such as `Run 1` for a test run or `Benchmark 1` for a benchmark
+    """
+
     status: TaskStatus = pydantic.Field()
     """
     Current status of the run

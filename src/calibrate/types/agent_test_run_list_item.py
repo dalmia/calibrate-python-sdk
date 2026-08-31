@@ -19,7 +19,7 @@ class AgentTestRunListItem(UniversalBaseModel):
     ]
     name: str = pydantic.Field()
     """
-    Display name, such as `Run 1` for a unit test or `Benchmark 1` for a benchmark
+    Name of the run. A run nobody has renamed shows its number instead, such as `Run 1` for a test run or `Benchmark 1` for a benchmark
     """
 
     status: TaskStatus = pydantic.Field()
