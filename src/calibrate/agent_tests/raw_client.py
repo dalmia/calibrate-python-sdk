@@ -22,7 +22,10 @@ from ..types.http_validation_error import HttpValidationError
 from ..types.paginated_response_agent_test_run_list_item import PaginatedResponseAgentTestRunListItem
 from ..types.paginated_response_test_list_response import PaginatedResponseTestListResponse
 from ..types.task_status import TaskStatus
+from ..types.test_case_result import TestCaseResult
 from ..types.test_run_status_response import TestRunStatusResponse
+from .types.get_benchmark_agent_tests_request_mode import GetBenchmarkAgentTestsRequestMode
+from .types.get_run_agent_tests_request_mode import GetRunAgentTestsRequestMode
 from .types.list_for_agent_agent_tests_request_q_mode import ListForAgentAgentTestsRequestQMode
 from .types.list_runs_for_agent_agent_tests_request_type import ListRunsForAgentAgentTestsRequestType
 from pydantic import ValidationError
@@ -481,6 +484,7 @@ class RawAgentTestsClient:
         task_id: str,
         *,
         only_failed: typing.Optional[bool] = None,
+        mode: typing.Optional[GetRunAgentTestsRequestMode] = None,
         compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TestRunStatusResponse]:
@@ -494,6 +498,9 @@ class RawAgentTestsClient:
 
         only_failed : typing.Optional[bool]
             Return only failing test cases. Omit to return every case
+
+        mode : typing.Optional[GetRunAgentTestsRequestMode]
+            How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
 
         compact : typing.Optional[bool]
             Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
@@ -511,6 +518,7 @@ class RawAgentTestsClient:
             method="GET",
             params={
                 "only_failed": only_failed,
+                "mode": mode,
                 "compact": compact,
             },
             request_options=request_options,
@@ -521,6 +529,74 @@ class RawAgentTestsClient:
                     TestRunStatusResponse,
                     parse_obj_as(
                         type_=TestRunStatusResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def get_run_case(
+        self,
+        task_id: str,
+        test_uuid: str,
+        *,
+        model: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[TestCaseResult]:
+        """
+        Get the full result of one test case in a run
+
+        Parameters
+        ----------
+        task_id : str
+            Test run or benchmark the case was run in
+
+        test_uuid : str
+            The test whose result to read, as `test_uuid` on the case
+
+        model : typing.Optional[str]
+            Which model's answer to read. Required for a benchmark, which runs every test once per model
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[TestCaseResult]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agent-tests/run/{encode_path_param(task_id)}/results/{encode_path_param(test_uuid)}",
+            method="GET",
+            params={
+                "model": model,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TestCaseResult,
+                    parse_obj_as(
+                        type_=TestCaseResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -623,6 +699,7 @@ class RawAgentTestsClient:
         task_id: str,
         *,
         only_failed: typing.Optional[bool] = None,
+        mode: typing.Optional[GetBenchmarkAgentTestsRequestMode] = None,
         compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[BenchmarkStatusResponse]:
@@ -636,6 +713,9 @@ class RawAgentTestsClient:
 
         only_failed : typing.Optional[bool]
             Return only failing test cases for each model. Omit to return every case
+
+        mode : typing.Optional[GetBenchmarkAgentTestsRequestMode]
+            How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
 
         compact : typing.Optional[bool]
             Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
@@ -653,6 +733,7 @@ class RawAgentTestsClient:
             method="GET",
             params={
                 "only_failed": only_failed,
+                "mode": mode,
                 "compact": compact,
             },
             request_options=request_options,
@@ -1138,6 +1219,7 @@ class AsyncRawAgentTestsClient:
         task_id: str,
         *,
         only_failed: typing.Optional[bool] = None,
+        mode: typing.Optional[GetRunAgentTestsRequestMode] = None,
         compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TestRunStatusResponse]:
@@ -1151,6 +1233,9 @@ class AsyncRawAgentTestsClient:
 
         only_failed : typing.Optional[bool]
             Return only failing test cases. Omit to return every case
+
+        mode : typing.Optional[GetRunAgentTestsRequestMode]
+            How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
 
         compact : typing.Optional[bool]
             Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
@@ -1168,6 +1253,7 @@ class AsyncRawAgentTestsClient:
             method="GET",
             params={
                 "only_failed": only_failed,
+                "mode": mode,
                 "compact": compact,
             },
             request_options=request_options,
@@ -1178,6 +1264,74 @@ class AsyncRawAgentTestsClient:
                     TestRunStatusResponse,
                     parse_obj_as(
                         type_=TestRunStatusResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def get_run_case(
+        self,
+        task_id: str,
+        test_uuid: str,
+        *,
+        model: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[TestCaseResult]:
+        """
+        Get the full result of one test case in a run
+
+        Parameters
+        ----------
+        task_id : str
+            Test run or benchmark the case was run in
+
+        test_uuid : str
+            The test whose result to read, as `test_uuid` on the case
+
+        model : typing.Optional[str]
+            Which model's answer to read. Required for a benchmark, which runs every test once per model
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[TestCaseResult]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agent-tests/run/{encode_path_param(task_id)}/results/{encode_path_param(test_uuid)}",
+            method="GET",
+            params={
+                "model": model,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TestCaseResult,
+                    parse_obj_as(
+                        type_=TestCaseResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1280,6 +1434,7 @@ class AsyncRawAgentTestsClient:
         task_id: str,
         *,
         only_failed: typing.Optional[bool] = None,
+        mode: typing.Optional[GetBenchmarkAgentTestsRequestMode] = None,
         compact: typing.Optional[bool] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[BenchmarkStatusResponse]:
@@ -1293,6 +1448,9 @@ class AsyncRawAgentTestsClient:
 
         only_failed : typing.Optional[bool]
             Return only failing test cases for each model. Omit to return every case
+
+        mode : typing.Optional[GetBenchmarkAgentTestsRequestMode]
+            How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
 
         compact : typing.Optional[bool]
             Return a compact response that omits heavy detail fields (`model_results.test_results`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
@@ -1310,6 +1468,7 @@ class AsyncRawAgentTestsClient:
             method="GET",
             params={
                 "only_failed": only_failed,
+                "mode": mode,
                 "compact": compact,
             },
             request_options=request_options,

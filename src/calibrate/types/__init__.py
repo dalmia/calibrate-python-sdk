@@ -83,6 +83,7 @@ if typing.TYPE_CHECKING:
     from .task_summary_response import TaskSummaryResponse
     from .task_summary_response_task_type import TaskSummaryResponseTaskType
     from .test_case_result import TestCaseResult
+    from .test_case_result_test_type import TestCaseResultTestType
     from .test_create_response import TestCreateResponse
     from .test_list_config import TestListConfig
     from .test_list_response import TestListResponse
@@ -183,6 +184,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TaskSummaryResponse": ".task_summary_response",
     "TaskSummaryResponseTaskType": ".task_summary_response_task_type",
     "TestCaseResult": ".test_case_result",
+    "TestCaseResultTestType": ".test_case_result_test_type",
     "TestCreateResponse": ".test_create_response",
     "TestListConfig": ".test_list_config",
     "TestListResponse": ".test_list_response",
@@ -307,6 +309,7 @@ __all__ = [
     "TaskSummaryResponse",
     "TaskSummaryResponseTaskType",
     "TestCaseResult",
+    "TestCaseResultTestType",
     "TestCreateResponse",
     "TestListConfig",
     "TestListResponse",

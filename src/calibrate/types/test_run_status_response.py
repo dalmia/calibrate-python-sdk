@@ -65,6 +65,11 @@ class TestRunStatusResponse(UniversalBaseModel):
     The evaluators used in this run. Each verdict in `judge_results` links to one of these by `evaluator_uuid`
     """
 
+    evaluator_summary: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)
+    """
+    Totals for each evaluator over the whole run, matching the shape a benchmark reports for each model. Only evaluators that returned a verdict appear
+    """
+
     results: typing.Optional[typing.List[TestCaseResult]] = pydantic.Field(default=None)
     """
     Results for each test case

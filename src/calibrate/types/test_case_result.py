@@ -5,6 +5,7 @@ import typing
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .judge_result import JudgeResult
+from .test_case_result_test_type import TestCaseResultTestType
 from .test_output import TestOutput
 
 
@@ -17,6 +18,16 @@ class TestCaseResult(UniversalBaseModel):
     name: typing.Optional[str] = pydantic.Field(default=None)
     """
     Name of the test
+    """
+
+    test_uuid: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    ID of the test this case ran, which is what you pass to read the case on its own
+    """
+
+    test_type: typing.Optional[TestCaseResultTestType] = pydantic.Field(default=None)
+    """
+    What the test asks of the agent, which decides how a reader draws the case
     """
 
     passed: typing.Optional[bool] = pydantic.Field(default=None)

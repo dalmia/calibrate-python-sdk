@@ -84,6 +84,7 @@ if typing.TYPE_CHECKING:
         TaskSummaryResponse,
         TaskSummaryResponseTaskType,
         TestCaseResult,
+        TestCaseResultTestType,
         TestCreateResponse,
         TestListConfig,
         TestListResponse,
@@ -110,7 +111,12 @@ if typing.TYPE_CHECKING:
     from .errors import UnprocessableEntityError
     from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
-    from .agent_tests import ListForAgentAgentTestsRequestQMode, ListRunsForAgentAgentTestsRequestType
+    from .agent_tests import (
+        GetBenchmarkAgentTestsRequestMode,
+        GetRunAgentTestsRequestMode,
+        ListForAgentAgentTestsRequestQMode,
+        ListRunsForAgentAgentTestsRequestType,
+    )
     from .agents import AgentCreateInteractionType, AgentCreateType
     from .annotation_tasks import (
         AnnotationTaskCreateType,
@@ -194,6 +200,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EvaluatorVersionCreate": ".types",
     "ExpectedToolCall": ".types",
     "GetAgreementAnnotationTasksRequestBucket": ".annotation_tasks",
+    "GetBenchmarkAgentTestsRequestMode": ".agent_tests",
+    "GetRunAgentTestsRequestMode": ".agent_tests",
     "GetSummaryAnnotationTasksRequestOrder": ".annotation_tasks",
     "HttpValidationError": ".types",
     "HumanAgreementBlock": ".types",
@@ -227,6 +235,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TaskSummaryResponse": ".types",
     "TaskSummaryResponseTaskType": ".types",
     "TestCaseResult": ".types",
+    "TestCaseResultTestType": ".types",
     "TestCreateResponse": ".types",
     "TestCreateType": ".tests",
     "TestListConfig": ".types",
@@ -349,6 +358,8 @@ __all__ = [
     "EvaluatorVersionCreate",
     "ExpectedToolCall",
     "GetAgreementAnnotationTasksRequestBucket",
+    "GetBenchmarkAgentTestsRequestMode",
+    "GetRunAgentTestsRequestMode",
     "GetSummaryAnnotationTasksRequestOrder",
     "HttpValidationError",
     "HumanAgreementBlock",
@@ -382,6 +393,7 @@ __all__ = [
     "TaskSummaryResponse",
     "TaskSummaryResponseTaskType",
     "TestCaseResult",
+    "TestCaseResultTestType",
     "TestCreateResponse",
     "TestCreateType",
     "TestListConfig",

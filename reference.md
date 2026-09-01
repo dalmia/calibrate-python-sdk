@@ -2037,7 +2037,105 @@ client.agent_tests.get_run(
 <dl>
 <dd>
 
+**mode:** `typing.Optional[GetRunAgentTestsRequestMode]` — How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **compact:** `typing.Optional[bool]` — Return a compact response that omits heavy detail fields (`results.output`, `results.test_case`, `results.judge_results`, `results.reasoning`, `evaluators.output_config`), keeping only the lightweight decision fields. Omit for full detail
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agent_tests.<a href="src/calibrate/agent_tests/client.py">get_run_case</a>(...) -> TestCaseResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the full result of one test case in a run
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agent_tests.get_run_case(
+    task_id="a3b2c1d0-e5f4-3210-abcd-ef1234567890",
+    test_uuid="b1c2d3e4-f5a6-7890-bcde-f12345678901",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Test run or benchmark the case was run in
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**test_uuid:** `str` — The test whose result to read, as `test_uuid` on the case
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**model:** `typing.Optional[str]` — Which model's answer to read. Required for a benchmark, which runs every test once per model
     
 </dd>
 </dl>
@@ -2212,6 +2310,14 @@ client.agent_tests.get_benchmark(
 <dd>
 
 **only_failed:** `typing.Optional[bool]` — Return only failing test cases for each model. Omit to return every case
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**mode:** `typing.Optional[GetBenchmarkAgentTestsRequestMode]` — How much of each test case to return. `full` returns every field of every case. `summary` returns one light row per case, with its ID, name, verdict and short reason, leaving out the conversation, the agent's output and the evaluator verdicts. Read those one case at a time from `GET /agent-tests/run/{task_id}/results/{test_uuid}`
     
 </dd>
 </dl>
