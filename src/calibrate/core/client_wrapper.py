@@ -33,12 +33,12 @@ class BaseClientWrapper:
         import platform
 
         headers: typing.Dict[str, str] = {
-            "User-Agent": "calibrate-sdk/0.0.54",
+            "User-Agent": "calibrate-sdk/0.0.55",
             "X-Fern-Language": "Python",
             "X-Fern-Runtime": f"python/{platform.python_version()}",
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             "X-Fern-SDK-Name": "calibrate-sdk",
-            "X-Fern-SDK-Version": "0.0.54",
+            "X-Fern-SDK-Version": "0.0.55",
             **(self.get_custom_headers() or {}),
         }
         headers["X-API-Key"] = self.api_key
