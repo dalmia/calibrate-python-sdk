@@ -627,6 +627,7 @@ class RawAgentTestsClient:
         *,
         models: typing.Sequence[str],
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        parallel_models: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[AgentTestRunCreateResponse]:
         """
@@ -643,6 +644,9 @@ class RawAgentTestsClient:
         test_uuids : typing.Optional[typing.Sequence[str]]
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
 
+        parallel_models : typing.Optional[bool]
+            Whether to run the models at the same time. Set false to run them one after another
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -657,6 +661,7 @@ class RawAgentTestsClient:
             json={
                 "models": models,
                 "test_uuids": test_uuids,
+                "parallel_models": parallel_models,
             },
             headers={
                 "content-type": "application/json",
@@ -1362,6 +1367,7 @@ class AsyncRawAgentTestsClient:
         *,
         models: typing.Sequence[str],
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        parallel_models: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[AgentTestRunCreateResponse]:
         """
@@ -1378,6 +1384,9 @@ class AsyncRawAgentTestsClient:
         test_uuids : typing.Optional[typing.Sequence[str]]
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
 
+        parallel_models : typing.Optional[bool]
+            Whether to run the models at the same time. Set false to run them one after another
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -1392,6 +1401,7 @@ class AsyncRawAgentTestsClient:
             json={
                 "models": models,
                 "test_uuids": test_uuids,
+                "parallel_models": parallel_models,
             },
             headers={
                 "content-type": "application/json",

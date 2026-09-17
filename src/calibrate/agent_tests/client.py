@@ -429,6 +429,7 @@ class AgentTestsClient:
         *,
         models: typing.Sequence[str],
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        parallel_models: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentTestRunCreateResponse:
         """
@@ -444,6 +445,9 @@ class AgentTestsClient:
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        parallel_models : typing.Optional[bool]
+            Whether to run the models at the same time. Set false to run them one after another
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -466,7 +470,11 @@ class AgentTestsClient:
         )
         """
         _response = self._raw_client.benchmark(
-            agent_uuid, models=models, test_uuids=test_uuids, request_options=request_options
+            agent_uuid,
+            models=models,
+            test_uuids=test_uuids,
+            parallel_models=parallel_models,
+            request_options=request_options,
         )
         return _response.data
 
@@ -993,6 +1001,7 @@ class AsyncAgentTestsClient:
         *,
         models: typing.Sequence[str],
         test_uuids: typing.Optional[typing.Sequence[str]] = OMIT,
+        parallel_models: typing.Optional[bool] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AgentTestRunCreateResponse:
         """
@@ -1008,6 +1017,9 @@ class AsyncAgentTestsClient:
 
         test_uuids : typing.Optional[typing.Sequence[str]]
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
+
+        parallel_models : typing.Optional[bool]
+            Whether to run the models at the same time. Set false to run them one after another
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1038,7 +1050,11 @@ class AsyncAgentTestsClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.benchmark(
-            agent_uuid, models=models, test_uuids=test_uuids, request_options=request_options
+            agent_uuid,
+            models=models,
+            test_uuids=test_uuids,
+            parallel_models=parallel_models,
+            request_options=request_options,
         )
         return _response.data
 

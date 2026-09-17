@@ -2236,6 +2236,14 @@ client.agent_tests.benchmark(
 <dl>
 <dd>
 
+**parallel_models:** `typing.Optional[bool]` — Whether to run the models at the same time. Set false to run them one after another
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
