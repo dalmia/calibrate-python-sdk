@@ -94,6 +94,11 @@ class AgentTestRunListItem(UniversalBaseModel):
     Number of test cases that produced no answer because the agent or the judge could not be reached, which makes the pass rate an unfair measure of the agent
     """
 
+    stopped_early: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    Whether the run stopped before starting every test case, after too many failed in a row
+    """
+
     aborted: typing.Optional[bool] = pydantic.Field(default=None)
     """
     Whether a user stopped this run before it finished. The results collected up to that point are kept, and test cases that never ran are counted neither as passed nor as failed
