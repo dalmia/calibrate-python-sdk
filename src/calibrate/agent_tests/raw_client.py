@@ -645,7 +645,7 @@ class RawAgentTestsClient:
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
 
         parallel_models : typing.Optional[bool]
-            Whether to run the models at the same time. Set false to run them one after another
+            How to run the models. `true` runs several at a time, `false` runs each one only after the one before it has finished. Use `false` to keep the load on your own agent down
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1385,7 +1385,7 @@ class AsyncRawAgentTestsClient:
             A subset of the agent's linked tests to benchmark. Each ID must be linked to the agent. Omit to run all linked tests
 
         parallel_models : typing.Optional[bool]
-            Whether to run the models at the same time. Set false to run them one after another
+            How to run the models. `true` runs several at a time, `false` runs each one only after the one before it has finished. Use `false` to keep the load on your own agent down
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.

@@ -30,6 +30,11 @@ class BenchmarkStatusResponse(UniversalBaseModel):
     IDs of the tests this benchmark executed, in run order
     """
 
+    parallel_models: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    How the models were run. `true` means several ran at a time, `false` means each one ran only after the one before it had finished
+    """
+
     evaluators: typing.Optional[typing.List[TestRunEvaluator]] = pydantic.Field(default=None)
     """
     The evaluators used in this run. Each verdict in `judge_results` links to one of these by `evaluator_uuid`

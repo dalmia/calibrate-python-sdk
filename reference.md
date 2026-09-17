@@ -2236,7 +2236,7 @@ client.agent_tests.benchmark(
 <dl>
 <dd>
 
-**parallel_models:** `typing.Optional[bool]` — Whether to run the models at the same time. Set false to run them one after another
+**parallel_models:** `typing.Optional[bool]` — How to run the models. `true` runs several at a time, `false` runs each one only after the one before it has finished. Use `false` to keep the load on your own agent down
     
 </dd>
 </dl>
