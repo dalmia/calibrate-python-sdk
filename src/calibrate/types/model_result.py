@@ -35,7 +35,7 @@ class ModelResult(UniversalBaseModel):
 
     failed: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Number of test cases that failed
+    Number of test cases that did not pass, which includes the ones that produced no answer
     """
 
     evaluator_summary: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = pydantic.Field(default=None)

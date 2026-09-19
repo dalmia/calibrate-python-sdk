@@ -40,7 +40,12 @@ class ModelRunSummary(UniversalBaseModel):
 
     failed: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Number of test cases that failed for this model
+    Number of test cases that did not pass for this model, which includes the ones that produced no answer
+    """
+
+    unanswered_tests: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    Number of this model's test cases that produced no answer, already counted in `failed`
     """
 
     if IS_PYDANTIC_V2:

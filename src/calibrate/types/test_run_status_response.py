@@ -42,7 +42,7 @@ class TestRunStatusResponse(UniversalBaseModel):
 
     failed: typing.Optional[int] = pydantic.Field(default=None)
     """
-    Number of test cases that failed
+    Number of test cases that did not pass, which includes the ones that produced no answer
     """
 
     latency_ms: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
