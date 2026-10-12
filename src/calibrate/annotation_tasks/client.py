@@ -253,14 +253,20 @@ class AnnotationTasksClient:
 
         Examples
         --------
-        from calibrate import Calibrate
+        from calibrate import AnnotationItemPayload, Calibrate, ItemPayload
 
         client = Calibrate(
             api_key="YOUR_API_KEY",
         )
         client.annotation_tasks.add_items(
             task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            items=[],
+            items=[
+                AnnotationItemPayload(
+                    payload=ItemPayload(
+                        name="name",
+                    ),
+                )
+            ],
         )
         """
         _response = self._raw_client.add_items(
@@ -296,14 +302,21 @@ class AnnotationTasksClient:
 
         Examples
         --------
-        from calibrate import Calibrate
+        from calibrate import Calibrate, ItemPayload, ItemUpdatePayload
 
         client = Calibrate(
             api_key="YOUR_API_KEY",
         )
         client.annotation_tasks.update_items(
             task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            updates=[],
+            updates=[
+                ItemUpdatePayload(
+                    uuid_="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                    payload=ItemPayload(
+                        name="name",
+                    ),
+                )
+            ],
         )
         """
         _response = self._raw_client.update_items(task_uuid, updates=updates, request_options=request_options)
@@ -875,7 +888,7 @@ class AsyncAnnotationTasksClient:
         --------
         import asyncio
 
-        from calibrate import AsyncCalibrate
+        from calibrate import AnnotationItemPayload, AsyncCalibrate, ItemPayload
 
         client = AsyncCalibrate(
             api_key="YOUR_API_KEY",
@@ -885,7 +898,13 @@ class AsyncAnnotationTasksClient:
         async def main() -> None:
             await client.annotation_tasks.add_items(
                 task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                items=[],
+                items=[
+                    AnnotationItemPayload(
+                        payload=ItemPayload(
+                            name="name",
+                        ),
+                    )
+                ],
             )
 
 
@@ -926,7 +945,7 @@ class AsyncAnnotationTasksClient:
         --------
         import asyncio
 
-        from calibrate import AsyncCalibrate
+        from calibrate import AsyncCalibrate, ItemPayload, ItemUpdatePayload
 
         client = AsyncCalibrate(
             api_key="YOUR_API_KEY",
@@ -936,7 +955,14 @@ class AsyncAnnotationTasksClient:
         async def main() -> None:
             await client.annotation_tasks.update_items(
                 task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                updates=[],
+                updates=[
+                    ItemUpdatePayload(
+                        uuid_="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                        payload=ItemPayload(
+                            name="name",
+                        ),
+                    )
+                ],
             )
 
 

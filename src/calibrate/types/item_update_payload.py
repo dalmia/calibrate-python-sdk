@@ -6,13 +6,29 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .item_metadata_entry import ItemMetadataEntry
+from .item_payload import ItemPayload
 
 
 class ItemUpdatePayload(UniversalBaseModel):
     uuid_: typing_extensions.Annotated[
         str, FieldMetadata(alias="uuid"), pydantic.Field(alias="uuid", description="ID of the item to update")
     ]
-    payload: typing.Any
+    payload: ItemPayload = pydantic.Field()
+    """
+    The item's new payload. It replaces the stored one. `name` is unique within the task for every type, and `description` is accepted by every type. The other fields depend on the task `type`:
+    
+    - `stt`: `predicted_transcript`, `reference_transcript`
+    - `tts`: `audio_path`, `text`
+    - `llm`: `agent_response`, `chat_history`, optional `actual_tool_calls`, `evaluator_variables`, `expected_tool_calls`, `tool_calls`
+    - `llm-general`: `input`, `output`, optional `actual_tool_calls`, `evaluator_variables`, `expected_tool_calls`, `tool_calls`
+    - `conversation`: `transcript`, optional `evaluator_variables`
+    """
+
+    metadata: typing.Optional[typing.List[ItemMetadataEntry]] = pydantic.Field(default=None)
+    """
+    Key-value pairs stored with the item and shown beside it on the labelling form. Omit to leave the stored pairs as they are. Send an empty list to clear them
+    """
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

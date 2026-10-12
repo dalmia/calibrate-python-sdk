@@ -3195,7 +3195,7 @@ Bulk-create annotation items in a task, optionally seeding human annotations
 <dd>
 
 ```python
-from calibrate import Calibrate
+from calibrate import Calibrate, AnnotationItemPayload, ItemPayload
 from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
@@ -3205,7 +3205,13 @@ client = Calibrate(
 
 client.annotation_tasks.add_items(
     task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    items=[],
+    items=[
+        AnnotationItemPayload(
+            payload=ItemPayload(
+                name="name",
+            ),
+        )
+    ],
 )
 
 ```
@@ -3285,7 +3291,7 @@ Bulk-update item payloads in a task
 <dd>
 
 ```python
-from calibrate import Calibrate
+from calibrate import Calibrate, ItemUpdatePayload, ItemPayload
 from calibrate.environment import CalibrateEnvironment
 
 client = Calibrate(
@@ -3295,7 +3301,14 @@ client = Calibrate(
 
 client.annotation_tasks.update_items(
     task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    updates=[],
+    updates=[
+        ItemUpdatePayload(
+            uuid_="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            payload=ItemPayload(
+                name="name",
+            ),
+        )
+    ],
 )
 
 ```

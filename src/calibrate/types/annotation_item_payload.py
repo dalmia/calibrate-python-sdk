@@ -4,10 +4,27 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .item_metadata_entry import ItemMetadataEntry
+from .item_payload import ItemPayload
 
 
 class AnnotationItemPayload(UniversalBaseModel):
-    payload: typing.Any
+    payload: ItemPayload = pydantic.Field()
+    """
+    The item's payload. `name` is unique within the task for every type, and `description` is accepted by every type. The other fields depend on the task `type`:
+    
+    - `stt`: `predicted_transcript`, `reference_transcript`
+    - `tts`: `audio_path`, `text`
+    - `llm`: `agent_response`, `chat_history`, optional `actual_tool_calls`, `evaluator_variables`, `expected_tool_calls`, `tool_calls`
+    - `llm-general`: `input`, `output`, optional `actual_tool_calls`, `evaluator_variables`, `expected_tool_calls`, `tool_calls`
+    - `conversation`: `transcript`, optional `evaluator_variables`
+    """
+
+    metadata: typing.Optional[typing.List[ItemMetadataEntry]] = pydantic.Field(default=None)
+    """
+    Key-value pairs stored with the item and shown beside it on the labelling form. Omit if you have none
+    """
+
     annotations: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
     Human annotations to seed, keyed by evaluator ID. Each evaluator ID must be linked to the task. Put the judgement in `value`, a bool for binary or a number for rating, with optional `reasoning`. Requires `annotator_id`

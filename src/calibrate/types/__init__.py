@@ -38,6 +38,7 @@ if typing.TYPE_CHECKING:
     from .bulk_update_items_response import BulkUpdateItemsResponse
     from .chat_message import ChatMessage
     from .chat_message_role import ChatMessageRole
+    from .chat_turn import ChatTurn
     from .create_jobs_response import CreateJobsResponse
     from .evaluator_create_response import EvaluatorCreateResponse
     from .evaluator_detail_response_compact import EvaluatorDetailResponseCompact
@@ -57,6 +58,8 @@ if typing.TYPE_CHECKING:
     from .expected_tool_call import ExpectedToolCall
     from .http_validation_error import HttpValidationError
     from .human_agreement_block import HumanAgreementBlock
+    from .item_metadata_entry import ItemMetadataEntry
+    from .item_payload import ItemPayload
     from .item_update_payload import ItemUpdatePayload
     from .judge_result import JudgeResult
     from .labelling_job_created import LabellingJobCreated
@@ -95,6 +98,7 @@ if typing.TYPE_CHECKING:
     from .test_run_evaluator import TestRunEvaluator
     from .test_run_evaluator_output_type import TestRunEvaluatorOutputType
     from .test_run_status_response import TestRunStatusResponse
+    from .tool_call import ToolCall
     from .tool_call_output import ToolCallOutput
     from .trace_ingest_response import TraceIngestResponse
     from .trace_metadata_entry import TraceMetadataEntry
@@ -139,6 +143,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BulkUpdateItemsResponse": ".bulk_update_items_response",
     "ChatMessage": ".chat_message",
     "ChatMessageRole": ".chat_message_role",
+    "ChatTurn": ".chat_turn",
     "CreateJobsResponse": ".create_jobs_response",
     "EvaluatorCreateResponse": ".evaluator_create_response",
     "EvaluatorDetailResponseCompact": ".evaluator_detail_response_compact",
@@ -158,6 +163,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ExpectedToolCall": ".expected_tool_call",
     "HttpValidationError": ".http_validation_error",
     "HumanAgreementBlock": ".human_agreement_block",
+    "ItemMetadataEntry": ".item_metadata_entry",
+    "ItemPayload": ".item_payload",
     "ItemUpdatePayload": ".item_update_payload",
     "JudgeResult": ".judge_result",
     "LabellingJobCreated": ".labelling_job_created",
@@ -196,6 +203,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestRunEvaluator": ".test_run_evaluator",
     "TestRunEvaluatorOutputType": ".test_run_evaluator_output_type",
     "TestRunStatusResponse": ".test_run_status_response",
+    "ToolCall": ".tool_call",
     "ToolCallOutput": ".tool_call_output",
     "TraceIngestResponse": ".trace_ingest_response",
     "TraceMetadataEntry": ".trace_metadata_entry",
@@ -264,6 +272,7 @@ __all__ = [
     "BulkUpdateItemsResponse",
     "ChatMessage",
     "ChatMessageRole",
+    "ChatTurn",
     "CreateJobsResponse",
     "EvaluatorCreateResponse",
     "EvaluatorDetailResponseCompact",
@@ -283,6 +292,8 @@ __all__ = [
     "ExpectedToolCall",
     "HttpValidationError",
     "HumanAgreementBlock",
+    "ItemMetadataEntry",
+    "ItemPayload",
     "ItemUpdatePayload",
     "JudgeResult",
     "LabellingJobCreated",
@@ -321,6 +332,7 @@ __all__ = [
     "TestRunEvaluator",
     "TestRunEvaluatorOutputType",
     "TestRunStatusResponse",
+    "ToolCall",
     "ToolCallOutput",
     "TraceIngestResponse",
     "TraceMetadataEntry",
