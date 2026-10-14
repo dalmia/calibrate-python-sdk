@@ -5,6 +5,9 @@ import typing
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from .chat_turn import ChatTurn
+from .item_payload_agent_response import ItemPayloadAgentResponse
+from .item_payload_input import ItemPayloadInput
+from .item_payload_output import ItemPayloadOutput
 from .tool_call import ToolCall
 
 
@@ -48,17 +51,17 @@ class ItemPayload(UniversalBaseModel):
     The conversation up to the reply being judged, ending at the user turn. For `llm` tasks
     """
 
-    agent_response: typing.Optional[str] = pydantic.Field(default=None)
+    agent_response: typing.Optional[ItemPayloadAgentResponse] = pydantic.Field(default=None)
     """
     The reply to judge. An empty string when the reply was a tool call. For `llm` tasks
     """
 
-    input: typing.Optional[str] = pydantic.Field(default=None)
+    input: typing.Optional[ItemPayloadInput] = pydantic.Field(default=None)
     """
     The standalone input the agent was given. For `llm-general` tasks
     """
 
-    output: typing.Optional[str] = pydantic.Field(default=None)
+    output: typing.Optional[ItemPayloadOutput] = pydantic.Field(default=None)
     """
     The output to judge. For `llm-general` tasks
     """

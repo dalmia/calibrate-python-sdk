@@ -21,6 +21,16 @@ class ChatTurn(UniversalBaseModel):
     Message text. Omit for turns that only carry tool calls
     """
 
+    label: typing.Optional[str] = pydantic.Field(default=None)
+    """
+    Display name for the text in `content`, shown to annotators
+    """
+
+    versions: typing.Optional[typing.Dict[str, typing.Optional[str]]] = pydantic.Field(default=None)
+    """
+    Other forms of the same text, such as a translation or a human rewrite, keyed by the name annotators see for each. Shown to annotators only
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

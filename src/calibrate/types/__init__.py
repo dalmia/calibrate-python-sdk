@@ -60,6 +60,9 @@ if typing.TYPE_CHECKING:
     from .human_agreement_block import HumanAgreementBlock
     from .item_metadata_entry import ItemMetadataEntry
     from .item_payload import ItemPayload
+    from .item_payload_agent_response import ItemPayloadAgentResponse
+    from .item_payload_input import ItemPayloadInput
+    from .item_payload_output import ItemPayloadOutput
     from .item_update_payload import ItemUpdatePayload
     from .judge_result import JudgeResult
     from .labelling_job_created import LabellingJobCreated
@@ -105,6 +108,7 @@ if typing.TYPE_CHECKING:
     from .trace_output import TraceOutput
     from .trace_tool_call import TraceToolCall
     from .trace_turn import TraceTurn
+    from .turn_text import TurnText
     from .validation_error import ValidationError
     from .validation_error_loc_item import ValidationErrorLocItem
     from .variable_spec import VariableSpec
@@ -165,6 +169,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "HumanAgreementBlock": ".human_agreement_block",
     "ItemMetadataEntry": ".item_metadata_entry",
     "ItemPayload": ".item_payload",
+    "ItemPayloadAgentResponse": ".item_payload_agent_response",
+    "ItemPayloadInput": ".item_payload_input",
+    "ItemPayloadOutput": ".item_payload_output",
     "ItemUpdatePayload": ".item_update_payload",
     "JudgeResult": ".judge_result",
     "LabellingJobCreated": ".labelling_job_created",
@@ -210,6 +217,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TraceOutput": ".trace_output",
     "TraceToolCall": ".trace_tool_call",
     "TraceTurn": ".trace_turn",
+    "TurnText": ".turn_text",
     "ValidationError": ".validation_error",
     "ValidationErrorLocItem": ".validation_error_loc_item",
     "VariableSpec": ".variable_spec",
@@ -294,6 +302,9 @@ __all__ = [
     "HumanAgreementBlock",
     "ItemMetadataEntry",
     "ItemPayload",
+    "ItemPayloadAgentResponse",
+    "ItemPayloadInput",
+    "ItemPayloadOutput",
     "ItemUpdatePayload",
     "JudgeResult",
     "LabellingJobCreated",
@@ -339,6 +350,7 @@ __all__ = [
     "TraceOutput",
     "TraceToolCall",
     "TraceTurn",
+    "TurnText",
     "ValidationError",
     "ValidationErrorLocItem",
     "VariableSpec",
