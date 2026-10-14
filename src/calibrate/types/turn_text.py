@@ -23,7 +23,7 @@ class TurnText(UniversalBaseModel):
 
     versions: typing.Optional[typing.Dict[str, typing.Optional[str]]] = pydantic.Field(default=None)
     """
-    Other forms of the same text, such as a translation or a human rewrite, keyed by the name annotators see for each. Shown to annotators only
+    Other forms of the same text, such as a translation or a human rewrite, keyed by the name annotators see for each. Shown to annotators only. Requires text in `content`
     """
 
     if IS_PYDANTIC_V2:
