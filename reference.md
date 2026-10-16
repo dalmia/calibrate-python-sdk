@@ -4217,7 +4217,7 @@ client.traces.create(
 <dl>
 <dd>
 
-**conversation_id:** `typing.Optional[str]` — Your own ID for the conversation this turn belongs to, stored for reference only. Omit if you have none
+**conversation_id:** `typing.Optional[str]` — Your own ID for the conversation this turn belongs to. Turns sharing it are grouped into one conversation. Omit if you have none
     
 </dd>
 </dl>

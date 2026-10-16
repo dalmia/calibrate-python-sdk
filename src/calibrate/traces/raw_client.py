@@ -56,7 +56,7 @@ class RawTracesClient:
             Your own ID for the last user message in `input`, stored for reference only. Omit if you have none
 
         conversation_id : typing.Optional[str]
-            Your own ID for the conversation this turn belongs to, stored for reference only. Omit if you have none
+            Your own ID for the conversation this turn belongs to. Turns sharing it are grouped into one conversation. Omit if you have none
 
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
@@ -161,7 +161,7 @@ class AsyncRawTracesClient:
             Your own ID for the last user message in `input`, stored for reference only. Omit if you have none
 
         conversation_id : typing.Optional[str]
-            Your own ID for the conversation this turn belongs to, stored for reference only. Omit if you have none
+            Your own ID for the conversation this turn belongs to. Turns sharing it are grouped into one conversation. Omit if you have none
 
         metadata : typing.Optional[typing.Sequence[TraceMetadataEntry]]
             Key-value pairs stored with the trace. Prefer OTel `gen_ai.*` key names where they fit. Omit if you have none
