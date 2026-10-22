@@ -2811,6 +2811,253 @@ client.evaluators.create_version(
 </dl>
 </details>
 
+## Datasets
+<details><summary><code>client.datasets.<a href="src/calibrate/datasets/client.py">create</a>(...) -> DatasetResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a new empty dataset. Add items separately
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.datasets.create(
+    name="name",
+    dataset_type="stt",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**name:** `str` — Dataset name, unique within the workspace
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**dataset_type:** `DatasetCreateRequestDatasetType` — `stt` items carry audio + ground-truth text. `tts` items carry text only
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.datasets.<a href="src/calibrate/datasets/client.py">get</a>(...) -> DatasetDetailResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a dataset with all of its items
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.datasets.get(
+    dataset_id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**dataset_id:** `str` — The dataset to retrieve
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.datasets.<a href="src/calibrate/datasets/client.py">upload_item</a>(...) -> DatasetItemResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Upload one audio clip with its transcript and append it to an STT dataset
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.datasets.upload_item(
+    dataset_id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    audio="example_audio",
+    text="text",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**dataset_id:** `str` — The STT dataset to add the item to
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**audio:** `core.File` — WAV file of the spoken audio, at most 25 MB and 10 minutes long
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**text:** `str` — Ground-truth transcript of the audio
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## AnnotationTasks
 <details><summary><code>client.annotation_tasks.<a href="src/calibrate/annotation_tasks/client.py">list</a>(...) -> PaginatedResponseAnnotationTaskResponse</code></summary>
 <dl>

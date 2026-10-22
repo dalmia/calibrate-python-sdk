@@ -14,6 +14,7 @@ if typing.TYPE_CHECKING:
     from .agents.client import AgentsClient, AsyncAgentsClient
     from .annotation_tasks.client import AnnotationTasksClient, AsyncAnnotationTasksClient
     from .annotators.client import AnnotatorsClient, AsyncAnnotatorsClient
+    from .datasets.client import AsyncDatasetsClient, DatasetsClient
     from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
     from .tests.client import AsyncTestsClient, TestsClient
     from .traces.client import AsyncTracesClient, TracesClient
@@ -107,6 +108,7 @@ class Calibrate:
         self._tests: typing.Optional[TestsClient] = None
         self._agent_tests: typing.Optional[AgentTestsClient] = None
         self._evaluators: typing.Optional[EvaluatorsClient] = None
+        self._datasets: typing.Optional[DatasetsClient] = None
         self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
         self._annotators: typing.Optional[AnnotatorsClient] = None
         self._traces: typing.Optional[TracesClient] = None
@@ -142,6 +144,14 @@ class Calibrate:
 
             self._evaluators = EvaluatorsClient(client_wrapper=self._client_wrapper)
         return self._evaluators
+
+    @property
+    def datasets(self):
+        if self._datasets is None:
+            from .datasets.client import DatasetsClient  # noqa: E402
+
+            self._datasets = DatasetsClient(client_wrapper=self._client_wrapper)
+        return self._datasets
 
     @property
     def annotation_tasks(self):
@@ -272,6 +282,7 @@ class AsyncCalibrate:
         self._tests: typing.Optional[AsyncTestsClient] = None
         self._agent_tests: typing.Optional[AsyncAgentTestsClient] = None
         self._evaluators: typing.Optional[AsyncEvaluatorsClient] = None
+        self._datasets: typing.Optional[AsyncDatasetsClient] = None
         self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
         self._annotators: typing.Optional[AsyncAnnotatorsClient] = None
         self._traces: typing.Optional[AsyncTracesClient] = None
@@ -307,6 +318,14 @@ class AsyncCalibrate:
 
             self._evaluators = AsyncEvaluatorsClient(client_wrapper=self._client_wrapper)
         return self._evaluators
+
+    @property
+    def datasets(self):
+        if self._datasets is None:
+            from .datasets.client import AsyncDatasetsClient  # noqa: E402
+
+            self._datasets = AsyncDatasetsClient(client_wrapper=self._client_wrapper)
+        return self._datasets
 
     @property
     def annotation_tasks(self):

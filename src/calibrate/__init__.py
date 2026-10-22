@@ -41,6 +41,9 @@ if typing.TYPE_CHECKING:
         ChatMessageRole,
         ChatTurn,
         CreateJobsResponse,
+        DatasetDetailResponse,
+        DatasetItemResponse,
+        DatasetResponse,
         EvaluatorCreateResponse,
         EvaluatorDetailResponseCompact,
         EvaluatorDetailResponseCompactDataType,
@@ -117,7 +120,7 @@ if typing.TYPE_CHECKING:
         VersionCreateResponse,
     )
     from .errors import UnprocessableEntityError
-    from . import agent_tests, agents, annotation_tasks, annotators, evaluators, tests, traces
+    from . import agent_tests, agents, annotation_tasks, annotators, datasets, evaluators, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import (
         GetBenchmarkAgentTestsRequestMode,
@@ -133,6 +136,7 @@ if typing.TYPE_CHECKING:
         GetSummaryAnnotationTasksRequestOrder,
     )
     from .client import AsyncCalibrate, Calibrate
+    from .datasets import DatasetCreateRequestDatasetType
     from .environment import CalibrateEnvironment
     from .evaluators import (
         EvaluatorCreateDataType,
@@ -187,6 +191,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatTurn": ".types",
     "CreateJobsRequestReasoningMode": ".annotation_tasks",
     "CreateJobsResponse": ".types",
+    "DatasetCreateRequestDatasetType": ".datasets",
+    "DatasetDetailResponse": ".types",
+    "DatasetItemResponse": ".types",
+    "DatasetResponse": ".types",
     "DefaultAioHttpClient": "._default_clients",
     "DefaultAsyncHttpxClient": "._default_clients",
     "EvaluatorCreateDataType": ".evaluators",
@@ -283,6 +291,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "agents": ".agents",
     "annotation_tasks": ".annotation_tasks",
     "annotators": ".annotators",
+    "datasets": ".datasets",
     "evaluators": ".evaluators",
     "tests": ".tests",
     "traces": ".traces",
@@ -353,6 +362,10 @@ __all__ = [
     "ChatTurn",
     "CreateJobsRequestReasoningMode",
     "CreateJobsResponse",
+    "DatasetCreateRequestDatasetType",
+    "DatasetDetailResponse",
+    "DatasetItemResponse",
+    "DatasetResponse",
     "DefaultAioHttpClient",
     "DefaultAsyncHttpxClient",
     "EvaluatorCreateDataType",
@@ -449,6 +462,7 @@ __all__ = [
     "agents",
     "annotation_tasks",
     "annotators",
+    "datasets",
     "evaluators",
     "tests",
     "traces",

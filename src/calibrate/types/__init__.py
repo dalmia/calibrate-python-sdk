@@ -40,6 +40,9 @@ if typing.TYPE_CHECKING:
     from .chat_message_role import ChatMessageRole
     from .chat_turn import ChatTurn
     from .create_jobs_response import CreateJobsResponse
+    from .dataset_detail_response import DatasetDetailResponse
+    from .dataset_item_response import DatasetItemResponse
+    from .dataset_response import DatasetResponse
     from .evaluator_create_response import EvaluatorCreateResponse
     from .evaluator_detail_response_compact import EvaluatorDetailResponseCompact
     from .evaluator_detail_response_compact_data_type import EvaluatorDetailResponseCompactDataType
@@ -149,6 +152,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatMessageRole": ".chat_message_role",
     "ChatTurn": ".chat_turn",
     "CreateJobsResponse": ".create_jobs_response",
+    "DatasetDetailResponse": ".dataset_detail_response",
+    "DatasetItemResponse": ".dataset_item_response",
+    "DatasetResponse": ".dataset_response",
     "EvaluatorCreateResponse": ".evaluator_create_response",
     "EvaluatorDetailResponseCompact": ".evaluator_detail_response_compact",
     "EvaluatorDetailResponseCompactDataType": ".evaluator_detail_response_compact_data_type",
@@ -282,6 +288,9 @@ __all__ = [
     "ChatMessageRole",
     "ChatTurn",
     "CreateJobsResponse",
+    "DatasetDetailResponse",
+    "DatasetItemResponse",
+    "DatasetResponse",
     "EvaluatorCreateResponse",
     "EvaluatorDetailResponseCompact",
     "EvaluatorDetailResponseCompactDataType",
