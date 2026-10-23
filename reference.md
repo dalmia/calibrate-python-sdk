@@ -4376,6 +4376,70 @@ client.annotators.update(
 </dl>
 </details>
 
+## Workspace
+<details><summary><code>client.workspace.<a href="src/calibrate/workspace/client.py">current</a>() -> CurrentWorkspaceResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the workspace your API key belongs to
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.workspace.current()
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Traces
 <details><summary><code>client.traces.<a href="src/calibrate/traces/client.py">create</a>(...) -> TraceIngestResponse</code></summary>
 <dl>

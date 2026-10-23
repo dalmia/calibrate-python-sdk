@@ -18,6 +18,7 @@ if typing.TYPE_CHECKING:
     from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
     from .tests.client import AsyncTestsClient, TestsClient
     from .traces.client import AsyncTracesClient, TracesClient
+    from .workspace.client import AsyncWorkspaceClient, WorkspaceClient
 
 
 class Calibrate:
@@ -111,6 +112,7 @@ class Calibrate:
         self._datasets: typing.Optional[DatasetsClient] = None
         self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
         self._annotators: typing.Optional[AnnotatorsClient] = None
+        self._workspace: typing.Optional[WorkspaceClient] = None
         self._traces: typing.Optional[TracesClient] = None
 
     @property
@@ -168,6 +170,14 @@ class Calibrate:
 
             self._annotators = AnnotatorsClient(client_wrapper=self._client_wrapper)
         return self._annotators
+
+    @property
+    def workspace(self):
+        if self._workspace is None:
+            from .workspace.client import WorkspaceClient  # noqa: E402
+
+            self._workspace = WorkspaceClient(client_wrapper=self._client_wrapper)
+        return self._workspace
 
     @property
     def traces(self):
@@ -285,6 +295,7 @@ class AsyncCalibrate:
         self._datasets: typing.Optional[AsyncDatasetsClient] = None
         self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
         self._annotators: typing.Optional[AsyncAnnotatorsClient] = None
+        self._workspace: typing.Optional[AsyncWorkspaceClient] = None
         self._traces: typing.Optional[AsyncTracesClient] = None
 
     @property
@@ -342,6 +353,14 @@ class AsyncCalibrate:
 
             self._annotators = AsyncAnnotatorsClient(client_wrapper=self._client_wrapper)
         return self._annotators
+
+    @property
+    def workspace(self):
+        if self._workspace is None:
+            from .workspace.client import AsyncWorkspaceClient  # noqa: E402
+
+            self._workspace = AsyncWorkspaceClient(client_wrapper=self._client_wrapper)
+        return self._workspace
 
     @property
     def traces(self):

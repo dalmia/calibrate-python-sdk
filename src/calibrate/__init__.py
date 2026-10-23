@@ -41,6 +41,7 @@ if typing.TYPE_CHECKING:
         ChatMessageRole,
         ChatTurn,
         CreateJobsResponse,
+        CurrentWorkspaceResponse,
         DatasetDetailResponse,
         DatasetItemResponse,
         DatasetResponse,
@@ -120,7 +121,7 @@ if typing.TYPE_CHECKING:
         VersionCreateResponse,
     )
     from .errors import UnprocessableEntityError
-    from . import agent_tests, agents, annotation_tasks, annotators, datasets, evaluators, tests, traces
+    from . import agent_tests, agents, annotation_tasks, annotators, datasets, evaluators, tests, traces, workspace
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import (
         GetBenchmarkAgentTestsRequestMode,
@@ -191,6 +192,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatTurn": ".types",
     "CreateJobsRequestReasoningMode": ".annotation_tasks",
     "CreateJobsResponse": ".types",
+    "CurrentWorkspaceResponse": ".types",
     "DatasetCreateRequestDatasetType": ".datasets",
     "DatasetDetailResponse": ".types",
     "DatasetItemResponse": ".types",
@@ -295,6 +297,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "evaluators": ".evaluators",
     "tests": ".tests",
     "traces": ".traces",
+    "workspace": ".workspace",
 }
 
 
@@ -362,6 +365,7 @@ __all__ = [
     "ChatTurn",
     "CreateJobsRequestReasoningMode",
     "CreateJobsResponse",
+    "CurrentWorkspaceResponse",
     "DatasetCreateRequestDatasetType",
     "DatasetDetailResponse",
     "DatasetItemResponse",
@@ -466,4 +470,5 @@ __all__ = [
     "evaluators",
     "tests",
     "traces",
+    "workspace",
 ]

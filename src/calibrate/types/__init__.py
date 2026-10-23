@@ -40,6 +40,7 @@ if typing.TYPE_CHECKING:
     from .chat_message_role import ChatMessageRole
     from .chat_turn import ChatTurn
     from .create_jobs_response import CreateJobsResponse
+    from .current_workspace_response import CurrentWorkspaceResponse
     from .dataset_detail_response import DatasetDetailResponse
     from .dataset_item_response import DatasetItemResponse
     from .dataset_response import DatasetResponse
@@ -152,6 +153,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatMessageRole": ".chat_message_role",
     "ChatTurn": ".chat_turn",
     "CreateJobsResponse": ".create_jobs_response",
+    "CurrentWorkspaceResponse": ".current_workspace_response",
     "DatasetDetailResponse": ".dataset_detail_response",
     "DatasetItemResponse": ".dataset_item_response",
     "DatasetResponse": ".dataset_response",
@@ -288,6 +290,7 @@ __all__ = [
     "ChatMessageRole",
     "ChatTurn",
     "CreateJobsResponse",
+    "CurrentWorkspaceResponse",
     "DatasetDetailResponse",
     "DatasetItemResponse",
     "DatasetResponse",
