@@ -29,7 +29,6 @@ from ..types.task_agreement_response import TaskAgreementResponse
 from ..types.task_summary_response import TaskSummaryResponse
 from .types.annotation_task_create_type import AnnotationTaskCreateType
 from .types.create_jobs_request_reasoning_mode import CreateJobsRequestReasoningMode
-from .types.get_agreement_annotation_tasks_request_bucket import GetAgreementAnnotationTasksRequestBucket
 from .types.get_summary_annotation_tasks_request_order import GetSummaryAnnotationTasksRequestOrder
 from pydantic import ValidationError
 
@@ -707,12 +706,7 @@ class RawAnnotationTasksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     def get_agreement(
-        self,
-        task_uuid: str,
-        *,
-        bucket: typing.Optional[GetAgreementAnnotationTasksRequestBucket] = None,
-        days: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
+        self, task_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> HttpResponse[TaskAgreementResponse]:
         """
         Get human-vs-human and human-vs-evaluator agreement metrics for a task
@@ -721,12 +715,6 @@ class RawAnnotationTasksClient:
         ----------
         task_uuid : str
             Annotation task to act on
-
-        bucket : typing.Optional[GetAgreementAnnotationTasksRequestBucket]
-            How to bucket points in the trend series
-
-        days : typing.Optional[int]
-            Trailing window in days for the trend series
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -739,10 +727,6 @@ class RawAnnotationTasksClient:
         _response = self._client_wrapper.httpx_client.request(
             f"annotation-tasks/{encode_path_param(task_uuid)}/agreement",
             method="GET",
-            params={
-                "bucket": bucket,
-                "days": days,
-            },
             request_options=request_options,
         )
         try:
@@ -1550,12 +1534,7 @@ class AsyncRawAnnotationTasksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get_agreement(
-        self,
-        task_uuid: str,
-        *,
-        bucket: typing.Optional[GetAgreementAnnotationTasksRequestBucket] = None,
-        days: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
+        self, task_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[TaskAgreementResponse]:
         """
         Get human-vs-human and human-vs-evaluator agreement metrics for a task
@@ -1564,12 +1543,6 @@ class AsyncRawAnnotationTasksClient:
         ----------
         task_uuid : str
             Annotation task to act on
-
-        bucket : typing.Optional[GetAgreementAnnotationTasksRequestBucket]
-            How to bucket points in the trend series
-
-        days : typing.Optional[int]
-            Trailing window in days for the trend series
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1582,10 +1555,6 @@ class AsyncRawAnnotationTasksClient:
         _response = await self._client_wrapper.httpx_client.request(
             f"annotation-tasks/{encode_path_param(task_uuid)}/agreement",
             method="GET",
-            params={
-                "bucket": bucket,
-                "days": days,
-            },
             request_options=request_options,
         )
         try:

@@ -17,11 +17,6 @@ class HumanAgreementBlock(UniversalBaseModel):
     How many annotator pairs the current value averages over
     """
 
-    series: typing.List[typing.Dict[str, typing.Any]] = pydantic.Field()
-    """
-    Agreement over time, one point per time bucket
-    """
-
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

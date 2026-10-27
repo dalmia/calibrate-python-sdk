@@ -6,6 +6,7 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
+from .kappa_of_answer_kind import KappaOfAnswerKind
 
 
 class AnnotatorResponse(UniversalBaseModel):
@@ -40,6 +41,11 @@ class AnnotatorResponse(UniversalBaseModel):
     pair_count: typing.Optional[int] = pydantic.Field(default=None)
     """
     Number of comparable annotation pairs behind the current agreement score
+    """
+
+    kappa_by_kind: typing.Optional[typing.List[KappaOfAnswerKind]] = pydantic.Field(default=None)
+    """
+    Agreement with the other annotators and its kappa, one entry for each kind of answer compared, binary answers first. The kinds are never combined into one kappa
     """
 
     if IS_PYDANTIC_V2:

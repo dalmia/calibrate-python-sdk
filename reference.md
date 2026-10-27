@@ -3985,22 +3985,6 @@ client.annotation_tasks.get_agreement(
 <dl>
 <dd>
 
-**bucket:** `typing.Optional[GetAgreementAnnotationTasksRequestBucket]` — How to bucket points in the trend series
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**days:** `typing.Optional[int]` — Trailing window in days for the trend series
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>

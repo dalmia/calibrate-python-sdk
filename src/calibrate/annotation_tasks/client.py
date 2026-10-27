@@ -21,7 +21,6 @@ from ..types.task_summary_response import TaskSummaryResponse
 from .raw_client import AsyncRawAnnotationTasksClient, RawAnnotationTasksClient
 from .types.annotation_task_create_type import AnnotationTaskCreateType
 from .types.create_jobs_request_reasoning_mode import CreateJobsRequestReasoningMode
-from .types.get_agreement_annotation_tasks_request_bucket import GetAgreementAnnotationTasksRequestBucket
 from .types.get_summary_annotation_tasks_request_order import GetSummaryAnnotationTasksRequestOrder
 
 # this is used as the default value for optional parameters
@@ -499,12 +498,7 @@ class AnnotationTasksClient:
         return _response.data
 
     def get_agreement(
-        self,
-        task_uuid: str,
-        *,
-        bucket: typing.Optional[GetAgreementAnnotationTasksRequestBucket] = None,
-        days: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
+        self, task_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> TaskAgreementResponse:
         """
         Get human-vs-human and human-vs-evaluator agreement metrics for a task
@@ -513,12 +507,6 @@ class AnnotationTasksClient:
         ----------
         task_uuid : str
             Annotation task to act on
-
-        bucket : typing.Optional[GetAgreementAnnotationTasksRequestBucket]
-            How to bucket points in the trend series
-
-        days : typing.Optional[int]
-            Trailing window in days for the trend series
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -539,7 +527,7 @@ class AnnotationTasksClient:
             task_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
         )
         """
-        _response = self._raw_client.get_agreement(task_uuid, bucket=bucket, days=days, request_options=request_options)
+        _response = self._raw_client.get_agreement(task_uuid, request_options=request_options)
         return _response.data
 
     def get_summary(
@@ -1172,12 +1160,7 @@ class AsyncAnnotationTasksClient:
         return _response.data
 
     async def get_agreement(
-        self,
-        task_uuid: str,
-        *,
-        bucket: typing.Optional[GetAgreementAnnotationTasksRequestBucket] = None,
-        days: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
+        self, task_uuid: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> TaskAgreementResponse:
         """
         Get human-vs-human and human-vs-evaluator agreement metrics for a task
@@ -1186,12 +1169,6 @@ class AsyncAnnotationTasksClient:
         ----------
         task_uuid : str
             Annotation task to act on
-
-        bucket : typing.Optional[GetAgreementAnnotationTasksRequestBucket]
-            How to bucket points in the trend series
-
-        days : typing.Optional[int]
-            Trailing window in days for the trend series
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1220,9 +1197,7 @@ class AsyncAnnotationTasksClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get_agreement(
-            task_uuid, bucket=bucket, days=days, request_options=request_options
-        )
+        _response = await self._raw_client.get_agreement(task_uuid, request_options=request_options)
         return _response.data
 
     async def get_summary(

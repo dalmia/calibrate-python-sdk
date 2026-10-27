@@ -4,6 +4,8 @@ import typing
 
 import pydantic
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from .evaluator_agreement import EvaluatorAgreement
+from .evaluators_with_humans_block import EvaluatorsWithHumansBlock
 from .human_agreement_block import HumanAgreementBlock
 
 
@@ -13,22 +15,17 @@ class TaskAgreementResponse(UniversalBaseModel):
     ID of the task
     """
 
-    bucket: str = pydantic.Field()
-    """
-    Time bucket used for the trend series
-    """
-
-    days: int = pydantic.Field()
-    """
-    Length of the trailing window in days
-    """
-
     human_human: HumanAgreementBlock = pydantic.Field()
     """
     Agreement between annotators who labelled the same items
     """
 
-    evaluators: typing.List[typing.Dict[str, typing.Any]] = pydantic.Field()
+    evaluators_with_humans: EvaluatorsWithHumansBlock = pydantic.Field()
+    """
+    Agreement between the evaluators and the annotators, across every evaluator in `evaluators`
+    """
+
+    evaluators: typing.List[EvaluatorAgreement] = pydantic.Field()
     """
     Agreement between each evaluator and the annotators, plus that evaluator's own results and the human results, one entry per linked evaluator
     """
