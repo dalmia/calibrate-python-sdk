@@ -6,8 +6,14 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .list_traces_request_output_type import ListTracesRequestOutputType
+    from .list_traces_request_sort_order import ListTracesRequestSortOrder
     from .trace_ingest_input import TraceIngestInput
-_dynamic_imports: typing.Dict[str, str] = {"TraceIngestInput": ".trace_ingest_input"}
+_dynamic_imports: typing.Dict[str, str] = {
+    "ListTracesRequestOutputType": ".list_traces_request_output_type",
+    "ListTracesRequestSortOrder": ".list_traces_request_sort_order",
+    "TraceIngestInput": ".trace_ingest_input",
+}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -31,4 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["TraceIngestInput"]
+__all__ = ["ListTracesRequestOutputType", "ListTracesRequestSortOrder", "TraceIngestInput"]

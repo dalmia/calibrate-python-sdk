@@ -119,9 +119,18 @@ if typing.TYPE_CHECKING:
     from .test_run_status_response import TestRunStatusResponse
     from .tool_call import ToolCall
     from .tool_call_output import ToolCallOutput
+    from .trace_eval_run_status import TraceEvalRunStatus
     from .trace_ingest_response import TraceIngestResponse
+    from .trace_list_response import TraceListResponse
     from .trace_metadata_entry import TraceMetadataEntry
     from .trace_output import TraceOutput
+    from .trace_score_average import TraceScoreAverage
+    from .trace_score_average_output_type import TraceScoreAverageOutputType
+    from .trace_score_result import TraceScoreResult
+    from .trace_score_result_evaluator_type import TraceScoreResultEvaluatorType
+    from .trace_score_result_output_type import TraceScoreResultOutputType
+    from .trace_summary import TraceSummary
+    from .trace_summary_input import TraceSummaryInput
     from .trace_tool_call import TraceToolCall
     from .trace_turn import TraceTurn
     from .turn_text import TurnText
@@ -244,9 +253,18 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TestRunStatusResponse": ".test_run_status_response",
     "ToolCall": ".tool_call",
     "ToolCallOutput": ".tool_call_output",
+    "TraceEvalRunStatus": ".trace_eval_run_status",
     "TraceIngestResponse": ".trace_ingest_response",
+    "TraceListResponse": ".trace_list_response",
     "TraceMetadataEntry": ".trace_metadata_entry",
     "TraceOutput": ".trace_output",
+    "TraceScoreAverage": ".trace_score_average",
+    "TraceScoreAverageOutputType": ".trace_score_average_output_type",
+    "TraceScoreResult": ".trace_score_result",
+    "TraceScoreResultEvaluatorType": ".trace_score_result_evaluator_type",
+    "TraceScoreResultOutputType": ".trace_score_result_output_type",
+    "TraceSummary": ".trace_summary",
+    "TraceSummaryInput": ".trace_summary_input",
     "TraceToolCall": ".trace_tool_call",
     "TraceTurn": ".trace_turn",
     "TurnText": ".turn_text",
@@ -393,9 +411,18 @@ __all__ = [
     "TestRunStatusResponse",
     "ToolCall",
     "ToolCallOutput",
+    "TraceEvalRunStatus",
     "TraceIngestResponse",
+    "TraceListResponse",
     "TraceMetadataEntry",
     "TraceOutput",
+    "TraceScoreAverage",
+    "TraceScoreAverageOutputType",
+    "TraceScoreResult",
+    "TraceScoreResultEvaluatorType",
+    "TraceScoreResultOutputType",
+    "TraceSummary",
+    "TraceSummaryInput",
     "TraceToolCall",
     "TraceTurn",
     "TurnText",

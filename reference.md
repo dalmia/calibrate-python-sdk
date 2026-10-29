@@ -4425,6 +4425,181 @@ client.workspace.current()
 </details>
 
 ## Traces
+<details><summary><code>client.traces.<a href="src/calibrate/traces/client.py">list</a>(...) -> TraceListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List ingested traces, newest first
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.traces.list()
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `typing.Optional[str]` — Return only traces from this agent
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**conversation_id:** `typing.Optional[str]` — Return only the turns of this conversation. Requires `agent_id`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `typing.Optional[str]` — Return only traces containing this text in their message ID, conversation ID, conversation history, output, or metadata
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**output_type:** `typing.Optional[ListTracesRequestOutputType]` — Return only traces whose output is of this kind. `response` covers every trace carrying a reply, including one that also issued tool calls. `tool_call` covers traces that only issued tool calls
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**labels:** `typing.Optional[typing.List[str]]` — Return only traces carrying at least one of these labels. Repeat the parameter for each label
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**score:** `typing.Optional[typing.List[str]]` — Return only traces whose latest scoring run matches this condition. Each is written as `<evaluator ID>:<condition>`, where the condition is `passed`, `failed`, or one of `=`, `!=`, `<`, `<=`, `>`, `>=` followed by a number, such as `>=4`. Repeat the parameter to require every condition at once
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**created_after:** `typing.Optional[datetime.datetime]` — Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**created_before:** `typing.Optional[datetime.datetime]` — Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sort_by_evaluator:** `typing.Optional[str]` — Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sort_order:** `typing.Optional[ListTracesRequestSortOrder]` — Whether `sort_by_evaluator` puts the highest scores first or the lowest. Ignored without it
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**include_content:** `typing.Optional[bool]` — Also return each trace's full input, output and metadata. Use `limit` and `offset` to page through them
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**include_score_averages:** `typing.Optional[bool]` — Also return each evaluator's mean score over every matching trace, not just this page. Costs a pass over those traces, so ask for it when the filters change rather than on every page
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` — Maximum number of items to return
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `typing.Optional[int]` — Number of items to skip before returning results
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.traces.<a href="src/calibrate/traces/client.py">create</a>(...) -> TraceIngestResponse</code></summary>
 <dl>
 <dd>
