@@ -142,7 +142,7 @@ if typing.TYPE_CHECKING:
         VersionCreateResponse,
     )
     from .errors import UnprocessableEntityError
-    from . import agent_tests, agents, annotation_tasks, annotators, datasets, evaluators, tests, traces, workspace
+    from . import agent_tests, agents, annotation_tasks, annotators, datasets, evaluators, organizations, tests, traces
     from ._default_clients import DefaultAioHttpClient, DefaultAsyncHttpxClient
     from .agent_tests import (
         GetBenchmarkAgentTestsRequestMode,
@@ -337,9 +337,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "annotators": ".annotators",
     "datasets": ".datasets",
     "evaluators": ".evaluators",
+    "organizations": ".organizations",
     "tests": ".tests",
     "traces": ".traces",
-    "workspace": ".workspace",
 }
 
 
@@ -532,7 +532,7 @@ __all__ = [
     "annotators",
     "datasets",
     "evaluators",
+    "organizations",
     "tests",
     "traces",
-    "workspace",
 ]

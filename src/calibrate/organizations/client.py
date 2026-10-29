@@ -5,21 +5,21 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.current_workspace_response import CurrentWorkspaceResponse
-from .raw_client import AsyncRawWorkspaceClient, RawWorkspaceClient
+from .raw_client import AsyncRawOrganizationsClient, RawOrganizationsClient
 
 
-class WorkspaceClient:
+class OrganizationsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
-        self._raw_client = RawWorkspaceClient(client_wrapper=client_wrapper)
+        self._raw_client = RawOrganizationsClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> RawWorkspaceClient:
+    def with_raw_response(self) -> RawOrganizationsClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        RawWorkspaceClient
+        RawOrganizationsClient
         """
         return self._raw_client
 
@@ -44,24 +44,24 @@ class WorkspaceClient:
         client = Calibrate(
             api_key="YOUR_API_KEY",
         )
-        client.workspace.current()
+        client.organizations.current()
         """
         _response = self._raw_client.current(request_options=request_options)
         return _response.data
 
 
-class AsyncWorkspaceClient:
+class AsyncOrganizationsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._raw_client = AsyncRawWorkspaceClient(client_wrapper=client_wrapper)
+        self._raw_client = AsyncRawOrganizationsClient(client_wrapper=client_wrapper)
 
     @property
-    def with_raw_response(self) -> AsyncRawWorkspaceClient:
+    def with_raw_response(self) -> AsyncRawOrganizationsClient:
         """
         Retrieves a raw implementation of this client that returns raw responses.
 
         Returns
         -------
-        AsyncRawWorkspaceClient
+        AsyncRawOrganizationsClient
         """
         return self._raw_client
 
@@ -91,7 +91,7 @@ class AsyncWorkspaceClient:
 
 
         async def main() -> None:
-            await client.workspace.current()
+            await client.organizations.current()
 
 
         asyncio.run(main())

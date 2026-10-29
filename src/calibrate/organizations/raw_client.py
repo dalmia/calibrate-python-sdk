@@ -15,7 +15,7 @@ from ..types.http_validation_error import HttpValidationError
 from pydantic import ValidationError
 
 
-class RawWorkspaceClient:
+class RawOrganizationsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
@@ -71,7 +71,7 @@ class RawWorkspaceClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
 
-class AsyncRawWorkspaceClient:
+class AsyncRawOrganizationsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 

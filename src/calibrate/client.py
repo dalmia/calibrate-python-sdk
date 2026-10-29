@@ -16,9 +16,9 @@ if typing.TYPE_CHECKING:
     from .annotators.client import AnnotatorsClient, AsyncAnnotatorsClient
     from .datasets.client import AsyncDatasetsClient, DatasetsClient
     from .evaluators.client import AsyncEvaluatorsClient, EvaluatorsClient
+    from .organizations.client import AsyncOrganizationsClient, OrganizationsClient
     from .tests.client import AsyncTestsClient, TestsClient
     from .traces.client import AsyncTracesClient, TracesClient
-    from .workspace.client import AsyncWorkspaceClient, WorkspaceClient
 
 
 class Calibrate:
@@ -112,7 +112,7 @@ class Calibrate:
         self._datasets: typing.Optional[DatasetsClient] = None
         self._annotation_tasks: typing.Optional[AnnotationTasksClient] = None
         self._annotators: typing.Optional[AnnotatorsClient] = None
-        self._workspace: typing.Optional[WorkspaceClient] = None
+        self._organizations: typing.Optional[OrganizationsClient] = None
         self._traces: typing.Optional[TracesClient] = None
 
     @property
@@ -172,12 +172,12 @@ class Calibrate:
         return self._annotators
 
     @property
-    def workspace(self):
-        if self._workspace is None:
-            from .workspace.client import WorkspaceClient  # noqa: E402
+    def organizations(self):
+        if self._organizations is None:
+            from .organizations.client import OrganizationsClient  # noqa: E402
 
-            self._workspace = WorkspaceClient(client_wrapper=self._client_wrapper)
-        return self._workspace
+            self._organizations = OrganizationsClient(client_wrapper=self._client_wrapper)
+        return self._organizations
 
     @property
     def traces(self):
@@ -295,7 +295,7 @@ class AsyncCalibrate:
         self._datasets: typing.Optional[AsyncDatasetsClient] = None
         self._annotation_tasks: typing.Optional[AsyncAnnotationTasksClient] = None
         self._annotators: typing.Optional[AsyncAnnotatorsClient] = None
-        self._workspace: typing.Optional[AsyncWorkspaceClient] = None
+        self._organizations: typing.Optional[AsyncOrganizationsClient] = None
         self._traces: typing.Optional[AsyncTracesClient] = None
 
     @property
@@ -355,12 +355,12 @@ class AsyncCalibrate:
         return self._annotators
 
     @property
-    def workspace(self):
-        if self._workspace is None:
-            from .workspace.client import AsyncWorkspaceClient  # noqa: E402
+    def organizations(self):
+        if self._organizations is None:
+            from .organizations.client import AsyncOrganizationsClient  # noqa: E402
 
-            self._workspace = AsyncWorkspaceClient(client_wrapper=self._client_wrapper)
-        return self._workspace
+            self._organizations = AsyncOrganizationsClient(client_wrapper=self._client_wrapper)
+        return self._organizations
 
     @property
     def traces(self):

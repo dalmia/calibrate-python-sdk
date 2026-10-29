@@ -4360,8 +4360,8 @@ client.annotators.update(
 </dl>
 </details>
 
-## Workspace
-<details><summary><code>client.workspace.<a href="src/calibrate/workspace/client.py">current</a>() -> CurrentWorkspaceResponse</code></summary>
+## Organizations
+<details><summary><code>client.organizations.<a href="src/calibrate/organizations/client.py">current</a>() -> CurrentWorkspaceResponse</code></summary>
 <dl>
 <dd>
 
@@ -4396,7 +4396,7 @@ client = Calibrate(
     environment=CalibrateEnvironment.DEFAULT,
 )
 
-client.workspace.current()
+client.organizations.current()
 
 ```
 </dd>
