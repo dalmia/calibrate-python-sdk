@@ -6,10 +6,18 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import AnnotationTaskCreateType, CreateJobsRequestReasoningMode, GetSummaryAnnotationTasksRequestOrder
+    from .types import (
+        AnnotationTaskCreateType,
+        CreateJobsRequestReasoningMode,
+        GetAgreementAnnotationTasksRequestDateField,
+        GetSummaryAnnotationTasksRequestDateField,
+        GetSummaryAnnotationTasksRequestOrder,
+    )
 _dynamic_imports: typing.Dict[str, str] = {
     "AnnotationTaskCreateType": ".types",
     "CreateJobsRequestReasoningMode": ".types",
+    "GetAgreementAnnotationTasksRequestDateField": ".types",
+    "GetSummaryAnnotationTasksRequestDateField": ".types",
     "GetSummaryAnnotationTasksRequestOrder": ".types",
 }
 
@@ -35,4 +43,10 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["AnnotationTaskCreateType", "CreateJobsRequestReasoningMode", "GetSummaryAnnotationTasksRequestOrder"]
+__all__ = [
+    "AnnotationTaskCreateType",
+    "CreateJobsRequestReasoningMode",
+    "GetAgreementAnnotationTasksRequestDateField",
+    "GetSummaryAnnotationTasksRequestDateField",
+    "GetSummaryAnnotationTasksRequestOrder",
+]

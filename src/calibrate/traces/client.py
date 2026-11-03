@@ -76,10 +76,10 @@ class TracesClient:
             Return only traces whose latest scoring run matches this condition. Each is written as `<evaluator ID>:<condition>`, where the condition is `passed`, `failed`, or one of `=`, `!=`, `<`, `<=`, `>`, `>=` followed by a number, such as `>=4`. Repeat the parameter to require every condition at once
 
         created_after : typing.Optional[dt.datetime]
-            Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC
+            Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC. Omit for no earliest date
 
         created_before : typing.Optional[dt.datetime]
-            Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC
+            Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick
@@ -265,10 +265,10 @@ class AsyncTracesClient:
             Return only traces whose latest scoring run matches this condition. Each is written as `<evaluator ID>:<condition>`, where the condition is `passed`, `failed`, or one of `=`, `!=`, `<`, `<=`, `>`, `>=` followed by a number, such as `>=4`. Repeat the parameter to require every condition at once
 
         created_after : typing.Optional[dt.datetime]
-            Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC
+            Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC. Omit for no earliest date
 
         created_before : typing.Optional[dt.datetime]
-            Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC
+            Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick

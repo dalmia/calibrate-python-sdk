@@ -154,6 +154,8 @@ if typing.TYPE_CHECKING:
     from .annotation_tasks import (
         AnnotationTaskCreateType,
         CreateJobsRequestReasoningMode,
+        GetAgreementAnnotationTasksRequestDateField,
+        GetSummaryAnnotationTasksRequestDateField,
         GetSummaryAnnotationTasksRequestOrder,
     )
     from .client import AsyncCalibrate, Calibrate
@@ -243,8 +245,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EvaluatorVersionCreate": ".types",
     "EvaluatorsWithHumansBlock": ".types",
     "ExpectedToolCall": ".types",
+    "GetAgreementAnnotationTasksRequestDateField": ".annotation_tasks",
     "GetBenchmarkAgentTestsRequestMode": ".agent_tests",
     "GetRunAgentTestsRequestMode": ".agent_tests",
+    "GetSummaryAnnotationTasksRequestDateField": ".annotation_tasks",
     "GetSummaryAnnotationTasksRequestOrder": ".annotation_tasks",
     "HttpValidationError": ".types",
     "HumanAgreementBlock": ".types",
@@ -438,8 +442,10 @@ __all__ = [
     "EvaluatorVersionCreate",
     "EvaluatorsWithHumansBlock",
     "ExpectedToolCall",
+    "GetAgreementAnnotationTasksRequestDateField",
     "GetBenchmarkAgentTestsRequestMode",
     "GetRunAgentTestsRequestMode",
+    "GetSummaryAnnotationTasksRequestDateField",
     "GetSummaryAnnotationTasksRequestOrder",
     "HttpValidationError",
     "HumanAgreementBlock",

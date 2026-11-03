@@ -3985,6 +3985,37 @@ client.annotation_tasks.get_agreement(
 <dl>
 <dd>
 
+**date_field:** `typing.Optional[GetAgreementAnnotationTasksRequestDateField]` 
+
+Which date `start` and `end` apply to:
+
+- `row_added`: when the row was added to the task
+- `annotator_answered`: when the annotator first gave the answer in their latest labelling job. Editing does not change this date
+
+Omit to use `row_added`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**start:** `typing.Optional[datetime.datetime]` — Return only rows or answers dated at or after this time (ISO 8601). A time with no timezone is read as UTC. Omit for no earliest date
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**end:** `typing.Optional[datetime.datetime]` — Return only rows or answers dated before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>
@@ -4075,6 +4106,37 @@ client.annotation_tasks.get_summary(
 <dd>
 
 **disagreement_only:** `typing.Optional[bool]` — When true, keep only rows where the evaluator disagreed with at least one annotator
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**date_field:** `typing.Optional[GetSummaryAnnotationTasksRequestDateField]` 
+
+Which date `start` and `end` apply to:
+
+- `row_added`: when the row was added to the task
+- `annotator_answered`: when the annotator first gave the answer in their latest labelling job. Editing does not change this date
+
+Omit to use `row_added`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**start:** `typing.Optional[datetime.datetime]` — Return only rows or answers dated at or after this time (ISO 8601). A time with no timezone is read as UTC. Omit for no earliest date
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**end:** `typing.Optional[datetime.datetime]` — Return only rows or answers dated before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
     
 </dd>
 </dl>
@@ -4524,7 +4586,7 @@ client.traces.list()
 <dl>
 <dd>
 
-**created_after:** `typing.Optional[datetime.datetime]` — Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC
+**created_after:** `typing.Optional[datetime.datetime]` — Return only traces created at or after this time (ISO 8601). A time with no timezone is read as UTC. Omit for no earliest date
     
 </dd>
 </dl>
@@ -4532,7 +4594,7 @@ client.traces.list()
 <dl>
 <dd>
 
-**created_before:** `typing.Optional[datetime.datetime]` — Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC
+**created_before:** `typing.Optional[datetime.datetime]` — Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
     
 </dd>
 </dl>
