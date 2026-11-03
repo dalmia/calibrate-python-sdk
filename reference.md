@@ -4602,7 +4602,7 @@ client.traces.list()
 <dl>
 <dd>
 
-**sort_by_evaluator:** `typing.Optional[str]` — Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick
+**sort_by_evaluator:** `typing.Optional[str]` — Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
     
 </dd>
 </dl>

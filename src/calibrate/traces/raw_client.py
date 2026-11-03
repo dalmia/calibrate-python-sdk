@@ -80,7 +80,7 @@ class RawTracesClient:
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
 
         sort_by_evaluator : typing.Optional[str]
-            Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick
+            Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
 
         sort_order : typing.Optional[ListTracesRequestSortOrder]
             Whether `sort_by_evaluator` puts the highest scores first or the lowest. Ignored without it
@@ -310,7 +310,7 @@ class AsyncRawTracesClient:
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
 
         sort_by_evaluator : typing.Optional[str]
-            Order traces by this evaluator's score on each trace's latest scoring run. Traces it has not scored come last whichever direction you pick
+            Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
 
         sort_order : typing.Optional[ListTracesRequestSortOrder]
             Whether `sort_by_evaluator` puts the highest scores first or the lowest. Ignored without it

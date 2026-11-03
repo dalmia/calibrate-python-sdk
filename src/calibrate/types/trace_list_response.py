@@ -35,7 +35,7 @@ class TraceListResponse(UniversalBaseModel):
 
     score_averages: typing.Optional[typing.List[TraceScoreAverage]] = pydantic.Field(default=None)
     """
-    One entry per evaluator that scored at least one matching trace, averaged over every matching trace rather than this page. Ask for it with `include_score_averages`
+    One average for each evaluator linked to the agent that scored at least one trace matching the filters, covering all the matching traces it scored rather than this page. Ask for it with `include_score_averages`
     """
 
     if IS_PYDANTIC_V2:

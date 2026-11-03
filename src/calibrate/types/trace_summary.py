@@ -105,7 +105,7 @@ class TraceSummary(UniversalBaseModel):
 
     results: typing.Optional[typing.List[TraceScoreResult]] = pydantic.Field(default=None)
     """
-    Results for each evaluator on the latest scoring run
+    Results on the latest scoring run from the evaluators linked to the agent
     """
 
     if IS_PYDANTIC_V2:
