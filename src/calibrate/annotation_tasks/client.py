@@ -21,6 +21,7 @@ from ..types.task_agreement_response import TaskAgreementResponse
 from ..types.task_summary_response import TaskSummaryResponse
 from .raw_client import AsyncRawAnnotationTasksClient, RawAnnotationTasksClient
 from .types.annotation_task_create_type import AnnotationTaskCreateType
+from .types.create_jobs_request_evaluator_reasoning_modes_value import CreateJobsRequestEvaluatorReasoningModesValue
 from .types.create_jobs_request_reasoning_mode import CreateJobsRequestReasoningMode
 from .types.get_agreement_annotation_tasks_request_date_field import GetAgreementAnnotationTasksRequestDateField
 from .types.get_summary_annotation_tasks_request_date_field import GetSummaryAnnotationTasksRequestDateField
@@ -335,6 +336,9 @@ class AnnotationTasksClient:
         evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         comments_enabled: typing.Optional[bool] = OMIT,
         reasoning_mode: typing.Optional[CreateJobsRequestReasoningMode] = OMIT,
+        evaluator_reasoning_modes: typing.Optional[
+            typing.Dict[str, typing.Optional[CreateJobsRequestEvaluatorReasoningModesValue]]
+        ] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CreateJobsResponse:
         """
@@ -366,6 +370,9 @@ class AnnotationTasksClient:
         reasoning_mode : typing.Optional[CreateJobsRequestReasoningMode]
             How the labelling form treats the reasoning box on each judgement. `optional` shows it, `required` shows it and asks the annotator to fill it in, `hidden` leaves it out
 
+        evaluator_reasoning_modes : typing.Optional[typing.Dict[str, typing.Optional[CreateJobsRequestEvaluatorReasoningModesValue]]]
+            Map of evaluator ID to how the labelling form treats the reasoning box for that evaluator, with the same values as `reasoning_mode`. Every ID must be an evaluator on these jobs, otherwise you get a 400. An evaluator left out uses `reasoning_mode`
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -395,6 +402,7 @@ class AnnotationTasksClient:
             evaluator_ids=evaluator_ids,
             comments_enabled=comments_enabled,
             reasoning_mode=reasoning_mode,
+            evaluator_reasoning_modes=evaluator_reasoning_modes,
             request_options=request_options,
         )
         return _response.data
@@ -1015,6 +1023,9 @@ class AsyncAnnotationTasksClient:
         evaluator_ids: typing.Optional[typing.Sequence[str]] = OMIT,
         comments_enabled: typing.Optional[bool] = OMIT,
         reasoning_mode: typing.Optional[CreateJobsRequestReasoningMode] = OMIT,
+        evaluator_reasoning_modes: typing.Optional[
+            typing.Dict[str, typing.Optional[CreateJobsRequestEvaluatorReasoningModesValue]]
+        ] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> CreateJobsResponse:
         """
@@ -1045,6 +1056,9 @@ class AsyncAnnotationTasksClient:
 
         reasoning_mode : typing.Optional[CreateJobsRequestReasoningMode]
             How the labelling form treats the reasoning box on each judgement. `optional` shows it, `required` shows it and asks the annotator to fill it in, `hidden` leaves it out
+
+        evaluator_reasoning_modes : typing.Optional[typing.Dict[str, typing.Optional[CreateJobsRequestEvaluatorReasoningModesValue]]]
+            Map of evaluator ID to how the labelling form treats the reasoning box for that evaluator, with the same values as `reasoning_mode`. Every ID must be an evaluator on these jobs, otherwise you get a 400. An evaluator left out uses `reasoning_mode`
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1083,6 +1097,7 @@ class AsyncAnnotationTasksClient:
             evaluator_ids=evaluator_ids,
             comments_enabled=comments_enabled,
             reasoning_mode=reasoning_mode,
+            evaluator_reasoning_modes=evaluator_reasoning_modes,
             request_options=request_options,
         )
         return _response.data

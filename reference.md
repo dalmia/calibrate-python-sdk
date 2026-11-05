@@ -3720,6 +3720,14 @@ client.annotation_tasks.create_labelling_jobs(
 <dl>
 <dd>
 
+**evaluator_reasoning_modes:** `typing.Optional[typing.Dict[str, typing.Optional[CreateJobsRequestEvaluatorReasoningModesValue]]]` — Map of evaluator ID to how the labelling form treats the reasoning box for that evaluator, with the same values as `reasoning_mode`. Every ID must be an evaluator on these jobs, otherwise you get a 400. An evaluator left out uses `reasoning_mode`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
     
 </dd>

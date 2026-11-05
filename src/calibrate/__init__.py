@@ -153,6 +153,7 @@ if typing.TYPE_CHECKING:
     from .agents import AgentCreateInteractionType, AgentCreateType
     from .annotation_tasks import (
         AnnotationTaskCreateType,
+        CreateJobsRequestEvaluatorReasoningModesValue,
         CreateJobsRequestReasoningMode,
         GetAgreementAnnotationTasksRequestDateField,
         GetSummaryAnnotationTasksRequestDateField,
@@ -213,6 +214,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ChatMessage": ".types",
     "ChatMessageRole": ".types",
     "ChatTurn": ".types",
+    "CreateJobsRequestEvaluatorReasoningModesValue": ".annotation_tasks",
     "CreateJobsRequestReasoningMode": ".annotation_tasks",
     "CreateJobsResponse": ".types",
     "CurrentWorkspaceResponse": ".types",
@@ -410,6 +412,7 @@ __all__ = [
     "ChatMessage",
     "ChatMessageRole",
     "ChatTurn",
+    "CreateJobsRequestEvaluatorReasoningModesValue",
     "CreateJobsRequestReasoningMode",
     "CreateJobsResponse",
     "CurrentWorkspaceResponse",
