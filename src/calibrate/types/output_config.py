@@ -10,7 +10,7 @@ from .output_scale_entry import OutputScaleEntry
 class OutputConfig(UniversalBaseModel):
     scale: typing.Optional[typing.List[OutputScaleEntry]] = pydantic.Field(default=None)
     """
-    The ordered scale points that make up the rubric, each with its label
+    The rows of the rating scale, each a number and its label. For a rating evaluator, give the label for the worst result the lowest number and the label for the best result the highest number
     """
 
     if IS_PYDANTIC_V2:

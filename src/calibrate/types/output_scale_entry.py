@@ -15,17 +15,17 @@ class OutputScaleEntry(UniversalBaseModel):
     value: typing.Any
     name: str = pydantic.Field()
     """
-    Short label for this scale point
+    Short label for this row
     """
 
     description: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Rubric text for this level, added to the judge prompt. Omit to leave this level undescribed
+    Rubric text for this row, added to the judge prompt. Omit to leave this row undescribed
     """
 
     color: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Color to show for this level. Omit for the default
+    Color to show for this row. Omit for the default
     """
 
     if IS_PYDANTIC_V2:

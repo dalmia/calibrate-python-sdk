@@ -25,7 +25,7 @@ class EvaluatorVersionCreate(UniversalBaseModel):
 
     output_config: typing.Optional[OutputConfig] = pydantic.Field(default=None)
     """
-    The scale points and their labels. Required for a `rating` evaluator. A `binary` evaluator uses the default Correct/Wrong labels unless you set your own
+    The rows of the rating scale, each a number and its label. Required for a `rating` evaluator. For a rating evaluator, give the label for the worst result the lowest number and the label for the best result the highest number. A `binary` evaluator uses the default Correct/Wrong labels unless you set your own
     """
 
     variables: typing.Optional[typing.List[VariableSpec]] = pydantic.Field(default=None)

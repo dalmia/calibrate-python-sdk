@@ -2775,7 +2775,7 @@ client.evaluators.create_version(
 <dl>
 <dd>
 
-**output_config:** `typing.Optional[OutputConfig]` — The scale points and their labels. Required for a `rating` evaluator. A `binary` evaluator uses the default Correct/Wrong labels unless you set your own
+**output_config:** `typing.Optional[OutputConfig]` — The rows of the rating scale, each a number and its label. Required for a `rating` evaluator. For a rating evaluator, give the label for the worst result the lowest number and the label for the best result the highest number. A `binary` evaluator uses the default Correct/Wrong labels unless you set your own
     
 </dd>
 </dl>
