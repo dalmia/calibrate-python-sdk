@@ -7,10 +7,12 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .trace_eval_run_status import TraceEvalRunStatus
+from .trace_feedback import TraceFeedback
 from .trace_metadata_entry import TraceMetadataEntry
 from .trace_output import TraceOutput
 from .trace_score_result import TraceScoreResult
 from .trace_summary_input import TraceSummaryInput
+from .trace_summary_source import TraceSummarySource
 from .trace_tool_call import TraceToolCall
 
 
@@ -71,6 +73,19 @@ class TraceSummary(UniversalBaseModel):
     labels: typing.List[str] = pydantic.Field()
     """
     Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable
+    """
+
+    source: TraceSummarySource = pydantic.Field()
+    """
+    Where the trace came from:
+    
+    - `api`: sent to `POST /traces`
+    - `chat`: a reply the agent gave on its chat link
+    """
+
+    feedback: typing.Optional[TraceFeedback] = pydantic.Field(default=None)
+    """
+    The verdict and comment given on the trace, through the API or on the chat link
     """
 
     input: typing.Optional[TraceSummaryInput] = pydantic.Field(default=None)

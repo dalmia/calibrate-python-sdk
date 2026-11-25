@@ -388,6 +388,12 @@ Agent behavioral config. The keys depend on `type`.
 {"traces": {"scoring": {"enabled": false}}}
 ```
 
+- `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+```json
+{"talk_to_agent": {"messages_per_day": 50}}
+```
+
 Every request Calibrate makes to your endpoint carries the header
 `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
 to tag the trace you send back or to skip sending one.
@@ -595,6 +601,12 @@ Agent behavioral config. The keys depend on `type`.
 
 ```json
 {"traces": {"scoring": {"enabled": false}}}
+```
+
+- `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+```json
+{"talk_to_agent": {"messages_per_day": 50}}
 ```
 
 Every request Calibrate makes to your endpoint carries the header
@@ -4610,6 +4622,33 @@ client.traces.list()
 <dl>
 <dd>
 
+**source:** `typing.Optional[ListTracesRequestSource]` 
+
+Return only traces from this source:
+
+- `api`: sent to `POST /traces`
+- `chat`: a reply the agent gave on its chat link
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**feedback:** `typing.Optional[ListTracesRequestFeedback]` 
+
+Return only traces with this feedback:
+
+- `correct`: marked correct
+- `wrong`: marked wrong
+- `any`: marked either way
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **sort_by_evaluator:** `typing.Optional[str]` — Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
     
 </dd>
@@ -4774,6 +4813,103 @@ client.traces.create(
 <dd>
 
 **labels:** `typing.Optional[typing.List[str]]` — Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**feedback:** `typing.Optional[TraceFeedbackIngest]` — A verdict on the agent's output, if you already have one. Omit if you have none
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.traces.<a href="src/calibrate/traces/client.py">set_feedback</a>(...) -> TraceFeedbackResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Set whether the agent's output on a trace was correct, replacing any earlier feedback, or clear it
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.traces.set_feedback(
+    trace_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**trace_uuid:** `str` — The trace to give feedback on
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**is_correct:** `typing.Optional[bool]` — Whether the agent's output for this turn was correct. `null` clears the feedback
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**comment:** `typing.Optional[str]` — What was right or wrong about the agent's output. Omit if you have none
     
 </dd>
 </dl>

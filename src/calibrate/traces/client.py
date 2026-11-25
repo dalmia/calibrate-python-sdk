@@ -5,13 +5,17 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
+from ..types.trace_feedback_ingest import TraceFeedbackIngest
+from ..types.trace_feedback_response import TraceFeedbackResponse
 from ..types.trace_ingest_response import TraceIngestResponse
 from ..types.trace_list_response import TraceListResponse
 from ..types.trace_metadata_entry import TraceMetadataEntry
 from ..types.trace_output import TraceOutput
 from .raw_client import AsyncRawTracesClient, RawTracesClient
+from .types.list_traces_request_feedback import ListTracesRequestFeedback
 from .types.list_traces_request_output_type import ListTracesRequestOutputType
 from .types.list_traces_request_sort_order import ListTracesRequestSortOrder
+from .types.list_traces_request_source import ListTracesRequestSource
 from .types.trace_ingest_input import TraceIngestInput
 
 # this is used as the default value for optional parameters
@@ -44,6 +48,8 @@ class TracesClient:
         score: typing.Optional[typing.Sequence[str]] = None,
         created_after: typing.Optional[dt.datetime] = None,
         created_before: typing.Optional[dt.datetime] = None,
+        source: typing.Optional[ListTracesRequestSource] = None,
+        feedback: typing.Optional[ListTracesRequestFeedback] = None,
         sort_by_evaluator: typing.Optional[str] = None,
         sort_order: typing.Optional[ListTracesRequestSortOrder] = None,
         include_content: typing.Optional[bool] = None,
@@ -80,6 +86,19 @@ class TracesClient:
 
         created_before : typing.Optional[dt.datetime]
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
+
+        source : typing.Optional[ListTracesRequestSource]
+            Return only traces from this source:
+
+            - `api`: sent to `POST /traces`
+            - `chat`: a reply the agent gave on its chat link
+
+        feedback : typing.Optional[ListTracesRequestFeedback]
+            Return only traces with this feedback:
+
+            - `correct`: marked correct
+            - `wrong`: marked wrong
+            - `any`: marked either way
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
@@ -125,6 +144,8 @@ class TracesClient:
             score=score,
             created_after=created_after,
             created_before=created_before,
+            source=source,
+            feedback=feedback,
             sort_by_evaluator=sort_by_evaluator,
             sort_order=sort_order,
             include_content=include_content,
@@ -145,6 +166,7 @@ class TracesClient:
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
         labels: typing.Optional[typing.Sequence[str]] = OMIT,
+        feedback: typing.Optional[TraceFeedbackIngest] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TraceIngestResponse:
         """
@@ -172,6 +194,9 @@ class TracesClient:
 
         labels : typing.Optional[typing.Sequence[str]]
             Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
+
+        feedback : typing.Optional[TraceFeedbackIngest]
+            A verdict on the agent's output, if you already have one. Omit if you have none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -202,7 +227,54 @@ class TracesClient:
             conversation_id=conversation_id,
             metadata=metadata,
             labels=labels,
+            feedback=feedback,
             request_options=request_options,
+        )
+        return _response.data
+
+    def set_feedback(
+        self,
+        trace_uuid: str,
+        *,
+        is_correct: typing.Optional[bool] = OMIT,
+        comment: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> TraceFeedbackResponse:
+        """
+        Set whether the agent's output on a trace was correct, replacing any earlier feedback, or clear it
+
+        Parameters
+        ----------
+        trace_uuid : str
+            The trace to give feedback on
+
+        is_correct : typing.Optional[bool]
+            Whether the agent's output for this turn was correct. `null` clears the feedback
+
+        comment : typing.Optional[str]
+            What was right or wrong about the agent's output. Omit if you have none
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        TraceFeedbackResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.traces.set_feedback(
+            trace_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        )
+        """
+        _response = self._raw_client.set_feedback(
+            trace_uuid, is_correct=is_correct, comment=comment, request_options=request_options
         )
         return _response.data
 
@@ -233,6 +305,8 @@ class AsyncTracesClient:
         score: typing.Optional[typing.Sequence[str]] = None,
         created_after: typing.Optional[dt.datetime] = None,
         created_before: typing.Optional[dt.datetime] = None,
+        source: typing.Optional[ListTracesRequestSource] = None,
+        feedback: typing.Optional[ListTracesRequestFeedback] = None,
         sort_by_evaluator: typing.Optional[str] = None,
         sort_order: typing.Optional[ListTracesRequestSortOrder] = None,
         include_content: typing.Optional[bool] = None,
@@ -269,6 +343,19 @@ class AsyncTracesClient:
 
         created_before : typing.Optional[dt.datetime]
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
+
+        source : typing.Optional[ListTracesRequestSource]
+            Return only traces from this source:
+
+            - `api`: sent to `POST /traces`
+            - `chat`: a reply the agent gave on its chat link
+
+        feedback : typing.Optional[ListTracesRequestFeedback]
+            Return only traces with this feedback:
+
+            - `correct`: marked correct
+            - `wrong`: marked wrong
+            - `any`: marked either way
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
@@ -322,6 +409,8 @@ class AsyncTracesClient:
             score=score,
             created_after=created_after,
             created_before=created_before,
+            source=source,
+            feedback=feedback,
             sort_by_evaluator=sort_by_evaluator,
             sort_order=sort_order,
             include_content=include_content,
@@ -342,6 +431,7 @@ class AsyncTracesClient:
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
         labels: typing.Optional[typing.Sequence[str]] = OMIT,
+        feedback: typing.Optional[TraceFeedbackIngest] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> TraceIngestResponse:
         """
@@ -369,6 +459,9 @@ class AsyncTracesClient:
 
         labels : typing.Optional[typing.Sequence[str]]
             Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
+
+        feedback : typing.Optional[TraceFeedbackIngest]
+            A verdict on the agent's output, if you already have one. Omit if you have none
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -407,6 +500,61 @@ class AsyncTracesClient:
             conversation_id=conversation_id,
             metadata=metadata,
             labels=labels,
+            feedback=feedback,
             request_options=request_options,
+        )
+        return _response.data
+
+    async def set_feedback(
+        self,
+        trace_uuid: str,
+        *,
+        is_correct: typing.Optional[bool] = OMIT,
+        comment: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> TraceFeedbackResponse:
+        """
+        Set whether the agent's output on a trace was correct, replacing any earlier feedback, or clear it
+
+        Parameters
+        ----------
+        trace_uuid : str
+            The trace to give feedback on
+
+        is_correct : typing.Optional[bool]
+            Whether the agent's output for this turn was correct. `null` clears the feedback
+
+        comment : typing.Optional[str]
+            What was right or wrong about the agent's output. Omit if you have none
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        TraceFeedbackResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.traces.set_feedback(
+                trace_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.set_feedback(
+            trace_uuid, is_correct=is_correct, comment=comment, request_options=request_options
         )
         return _response.data

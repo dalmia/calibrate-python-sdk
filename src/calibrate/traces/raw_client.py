@@ -8,18 +8,23 @@ from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.datetime_utils import serialize_datetime
 from ..core.http_response import AsyncHttpResponse, HttpResponse
+from ..core.jsonable_encoder import encode_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.http_validation_error import HttpValidationError
+from ..types.trace_feedback_ingest import TraceFeedbackIngest
+from ..types.trace_feedback_response import TraceFeedbackResponse
 from ..types.trace_ingest_response import TraceIngestResponse
 from ..types.trace_list_response import TraceListResponse
 from ..types.trace_metadata_entry import TraceMetadataEntry
 from ..types.trace_output import TraceOutput
+from .types.list_traces_request_feedback import ListTracesRequestFeedback
 from .types.list_traces_request_output_type import ListTracesRequestOutputType
 from .types.list_traces_request_sort_order import ListTracesRequestSortOrder
+from .types.list_traces_request_source import ListTracesRequestSource
 from .types.trace_ingest_input import TraceIngestInput
 from pydantic import ValidationError
 
@@ -42,6 +47,8 @@ class RawTracesClient:
         score: typing.Optional[typing.Sequence[str]] = None,
         created_after: typing.Optional[dt.datetime] = None,
         created_before: typing.Optional[dt.datetime] = None,
+        source: typing.Optional[ListTracesRequestSource] = None,
+        feedback: typing.Optional[ListTracesRequestFeedback] = None,
         sort_by_evaluator: typing.Optional[str] = None,
         sort_order: typing.Optional[ListTracesRequestSortOrder] = None,
         include_content: typing.Optional[bool] = None,
@@ -78,6 +85,19 @@ class RawTracesClient:
 
         created_before : typing.Optional[dt.datetime]
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
+
+        source : typing.Optional[ListTracesRequestSource]
+            Return only traces from this source:
+
+            - `api`: sent to `POST /traces`
+            - `chat`: a reply the agent gave on its chat link
+
+        feedback : typing.Optional[ListTracesRequestFeedback]
+            Return only traces with this feedback:
+
+            - `correct`: marked correct
+            - `wrong`: marked wrong
+            - `any`: marked either way
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
@@ -117,6 +137,8 @@ class RawTracesClient:
                 "score": score,
                 "created_after": serialize_datetime(created_after) if created_after is not None else None,
                 "created_before": serialize_datetime(created_before) if created_before is not None else None,
+                "source": source,
+                "feedback": feedback,
                 "sort_by_evaluator": sort_by_evaluator,
                 "sort_order": sort_order,
                 "include_content": include_content,
@@ -166,6 +188,7 @@ class RawTracesClient:
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
         labels: typing.Optional[typing.Sequence[str]] = OMIT,
+        feedback: typing.Optional[TraceFeedbackIngest] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[TraceIngestResponse]:
         """
@@ -194,6 +217,9 @@ class RawTracesClient:
         labels : typing.Optional[typing.Sequence[str]]
             Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
 
+        feedback : typing.Optional[TraceFeedbackIngest]
+            A verdict on the agent's output, if you already have one. Omit if you have none
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -219,6 +245,9 @@ class RawTracesClient:
                     object_=metadata, annotation=typing.Optional[typing.Sequence[TraceMetadataEntry]], direction="write"
                 ),
                 "labels": labels,
+                "feedback": convert_and_respect_annotation_metadata(
+                    object_=feedback, annotation=typing.Optional[TraceFeedbackIngest], direction="write"
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -232,6 +261,79 @@ class RawTracesClient:
                     TraceIngestResponse,
                     parse_obj_as(
                         type_=TraceIngestResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def set_feedback(
+        self,
+        trace_uuid: str,
+        *,
+        is_correct: typing.Optional[bool] = OMIT,
+        comment: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[TraceFeedbackResponse]:
+        """
+        Set whether the agent's output on a trace was correct, replacing any earlier feedback, or clear it
+
+        Parameters
+        ----------
+        trace_uuid : str
+            The trace to give feedback on
+
+        is_correct : typing.Optional[bool]
+            Whether the agent's output for this turn was correct. `null` clears the feedback
+
+        comment : typing.Optional[str]
+            What was right or wrong about the agent's output. Omit if you have none
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[TraceFeedbackResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"traces/{encode_path_param(trace_uuid)}/feedback",
+            method="PUT",
+            json={
+                "is_correct": is_correct,
+                "comment": comment,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TraceFeedbackResponse,
+                    parse_obj_as(
+                        type_=TraceFeedbackResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -272,6 +374,8 @@ class AsyncRawTracesClient:
         score: typing.Optional[typing.Sequence[str]] = None,
         created_after: typing.Optional[dt.datetime] = None,
         created_before: typing.Optional[dt.datetime] = None,
+        source: typing.Optional[ListTracesRequestSource] = None,
+        feedback: typing.Optional[ListTracesRequestFeedback] = None,
         sort_by_evaluator: typing.Optional[str] = None,
         sort_order: typing.Optional[ListTracesRequestSortOrder] = None,
         include_content: typing.Optional[bool] = None,
@@ -308,6 +412,19 @@ class AsyncRawTracesClient:
 
         created_before : typing.Optional[dt.datetime]
             Return only traces created before this time (ISO 8601). A time with no timezone is read as UTC. Omit for no latest date
+
+        source : typing.Optional[ListTracesRequestSource]
+            Return only traces from this source:
+
+            - `api`: sent to `POST /traces`
+            - `chat`: a reply the agent gave on its chat link
+
+        feedback : typing.Optional[ListTracesRequestFeedback]
+            Return only traces with this feedback:
+
+            - `correct`: marked correct
+            - `wrong`: marked wrong
+            - `any`: marked either way
 
         sort_by_evaluator : typing.Optional[str]
             Order traces by this evaluator's score on each trace's latest scoring run. Traces this evaluator has not scored come last whichever direction you pick, and an evaluator not linked to the agent counts as having scored none
@@ -347,6 +464,8 @@ class AsyncRawTracesClient:
                 "score": score,
                 "created_after": serialize_datetime(created_after) if created_after is not None else None,
                 "created_before": serialize_datetime(created_before) if created_before is not None else None,
+                "source": source,
+                "feedback": feedback,
                 "sort_by_evaluator": sort_by_evaluator,
                 "sort_order": sort_order,
                 "include_content": include_content,
@@ -396,6 +515,7 @@ class AsyncRawTracesClient:
         conversation_id: typing.Optional[str] = OMIT,
         metadata: typing.Optional[typing.Sequence[TraceMetadataEntry]] = OMIT,
         labels: typing.Optional[typing.Sequence[str]] = OMIT,
+        feedback: typing.Optional[TraceFeedbackIngest] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[TraceIngestResponse]:
         """
@@ -424,6 +544,9 @@ class AsyncRawTracesClient:
         labels : typing.Optional[typing.Sequence[str]]
             Your own tags for this turn, such as an environment or a release. Matched exactly when filtering, so keep the spelling stable. Omit if you have none
 
+        feedback : typing.Optional[TraceFeedbackIngest]
+            A verdict on the agent's output, if you already have one. Omit if you have none
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -449,6 +572,9 @@ class AsyncRawTracesClient:
                     object_=metadata, annotation=typing.Optional[typing.Sequence[TraceMetadataEntry]], direction="write"
                 ),
                 "labels": labels,
+                "feedback": convert_and_respect_annotation_metadata(
+                    object_=feedback, annotation=typing.Optional[TraceFeedbackIngest], direction="write"
+                ),
             },
             headers={
                 "content-type": "application/json",
@@ -462,6 +588,79 @@ class AsyncRawTracesClient:
                     TraceIngestResponse,
                     parse_obj_as(
                         type_=TraceIngestResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def set_feedback(
+        self,
+        trace_uuid: str,
+        *,
+        is_correct: typing.Optional[bool] = OMIT,
+        comment: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[TraceFeedbackResponse]:
+        """
+        Set whether the agent's output on a trace was correct, replacing any earlier feedback, or clear it
+
+        Parameters
+        ----------
+        trace_uuid : str
+            The trace to give feedback on
+
+        is_correct : typing.Optional[bool]
+            Whether the agent's output for this turn was correct. `null` clears the feedback
+
+        comment : typing.Optional[str]
+            What was right or wrong about the agent's output. Omit if you have none
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[TraceFeedbackResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"traces/{encode_path_param(trace_uuid)}/feedback",
+            method="PUT",
+            json={
+                "is_correct": is_correct,
+                "comment": comment,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TraceFeedbackResponse,
+                    parse_obj_as(
+                        type_=TraceFeedbackResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

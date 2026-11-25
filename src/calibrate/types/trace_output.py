@@ -18,6 +18,11 @@ class TraceOutput(UniversalBaseModel):
     Tool calls the agent issued for this turn. Omit for plain text replies
     """
 
+    stopped_early: typing.Optional[bool] = pydantic.Field(default=None)
+    """
+    True when the agent was stopped after calling tools as many times in a row as it may, before it replied
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

@@ -120,6 +120,9 @@ if typing.TYPE_CHECKING:
     from .tool_call import ToolCall
     from .tool_call_output import ToolCallOutput
     from .trace_eval_run_status import TraceEvalRunStatus
+    from .trace_feedback import TraceFeedback
+    from .trace_feedback_ingest import TraceFeedbackIngest
+    from .trace_feedback_response import TraceFeedbackResponse
     from .trace_ingest_response import TraceIngestResponse
     from .trace_list_response import TraceListResponse
     from .trace_metadata_entry import TraceMetadataEntry
@@ -131,6 +134,7 @@ if typing.TYPE_CHECKING:
     from .trace_score_result_output_type import TraceScoreResultOutputType
     from .trace_summary import TraceSummary
     from .trace_summary_input import TraceSummaryInput
+    from .trace_summary_source import TraceSummarySource
     from .trace_tool_call import TraceToolCall
     from .trace_turn import TraceTurn
     from .turn_text import TurnText
@@ -254,6 +258,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolCall": ".tool_call",
     "ToolCallOutput": ".tool_call_output",
     "TraceEvalRunStatus": ".trace_eval_run_status",
+    "TraceFeedback": ".trace_feedback",
+    "TraceFeedbackIngest": ".trace_feedback_ingest",
+    "TraceFeedbackResponse": ".trace_feedback_response",
     "TraceIngestResponse": ".trace_ingest_response",
     "TraceListResponse": ".trace_list_response",
     "TraceMetadataEntry": ".trace_metadata_entry",
@@ -265,6 +272,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TraceScoreResultOutputType": ".trace_score_result_output_type",
     "TraceSummary": ".trace_summary",
     "TraceSummaryInput": ".trace_summary_input",
+    "TraceSummarySource": ".trace_summary_source",
     "TraceToolCall": ".trace_tool_call",
     "TraceTurn": ".trace_turn",
     "TurnText": ".turn_text",
@@ -412,6 +420,9 @@ __all__ = [
     "ToolCall",
     "ToolCallOutput",
     "TraceEvalRunStatus",
+    "TraceFeedback",
+    "TraceFeedbackIngest",
+    "TraceFeedbackResponse",
     "TraceIngestResponse",
     "TraceListResponse",
     "TraceMetadataEntry",
@@ -423,6 +434,7 @@ __all__ = [
     "TraceScoreResultOutputType",
     "TraceSummary",
     "TraceSummaryInput",
+    "TraceSummarySource",
     "TraceToolCall",
     "TraceTurn",
     "TurnText",

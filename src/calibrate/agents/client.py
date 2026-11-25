@@ -224,6 +224,12 @@ class AgentsClient:
             {"traces": {"scoring": {"enabled": false}}}
             ```
 
+            - `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+            ```json
+            {"talk_to_agent": {"messages_per_day": 50}}
+            ```
+
             Every request Calibrate makes to your endpoint carries the header
             `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
             to tag the trace you send back or to skip sending one.
@@ -352,6 +358,12 @@ class AgentsClient:
 
             ```json
             {"traces": {"scoring": {"enabled": false}}}
+            ```
+
+            - `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+            ```json
+            {"talk_to_agent": {"messages_per_day": 50}}
             ```
 
             Every request Calibrate makes to your endpoint carries the header
@@ -707,6 +719,12 @@ class AsyncAgentsClient:
             {"traces": {"scoring": {"enabled": false}}}
             ```
 
+            - `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+            ```json
+            {"talk_to_agent": {"messages_per_day": 50}}
+            ```
+
             Every request Calibrate makes to your endpoint carries the header
             `X-Calibrate-Eval: 1`. Read it to tell a test run from a real user, for example
             to tag the trace you send back or to skip sending one.
@@ -851,6 +869,12 @@ class AsyncAgentsClient:
 
             ```json
             {"traces": {"scoring": {"enabled": false}}}
+            ```
+
+            - `talk_to_agent.messages_per_day`: how many replies the agent's chat link may give in a day, counted from midnight UTC. From 1 up to `max_chat_replies_per_day` from `GET /org-limits/me`. Omit to use the workspace's `talk_to_agent.default_messages_per_day`
+
+            ```json
+            {"talk_to_agent": {"messages_per_day": 50}}
             ```
 
             Every request Calibrate makes to your endpoint carries the header
