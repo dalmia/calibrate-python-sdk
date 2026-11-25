@@ -292,7 +292,7 @@ client.agents.create(
     type="agent",
     config={
         "system_prompt": "You are a helpful assistant.",
-        "llm": {"model": "google/gemini-2.5-flash"},
+        "llm": {"model": "google/gemini-3.5-flash-lite"},
         "stt": {"provider": "google"},
         "tts": {"provider": "google"},
         "settings": {"agent_speaks_first": True, "max_assistant_turns": 50}
@@ -351,7 +351,7 @@ Agent behavioral config. The keys depend on `type`.
 
 **`type=agent`**, built inside Calibrate:
 - `system_prompt`: the agent's instructions
-- `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+- `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-3.5-flash-lite`
 - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
 - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
 - `settings.agent_speaks_first`, `settings.max_assistant_turns`
@@ -560,7 +560,7 @@ Agent behavioral config. The keys depend on `type`.
 
 **`type=agent`**, built inside Calibrate:
 - `system_prompt`: the agent's instructions
-- `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-2.5-flash`
+- `llm.model`: `provider/model`, e.g. `openai/gpt-4.1` or `google/gemini-3.5-flash-lite`
 - `stt.provider`: `deepgram`, `openai`, `cartesia`, `elevenlabs`, `google`, `sarvam`, or `smallest`
 - `tts.provider`: `cartesia`, `openai`, `google`, `elevenlabs`, `sarvam`, or `smallest`
 - `settings.agent_speaks_first`, `settings.max_assistant_turns`
