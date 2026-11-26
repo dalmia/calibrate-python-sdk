@@ -32,7 +32,7 @@ class AnnotationItemPayload(UniversalBaseModel):
 
     evaluator_results: typing.Optional[typing.Dict[str, typing.Any]] = pydantic.Field(default=None)
     """
-    Evaluator scores to record, keyed by evaluator ID. Each evaluator ID must be linked to the task. Put the score in `value`, a bool for binary or a number within the scale for rating, with optional `reasoning` and `version_number`. Omit `version_number` to record against the evaluator's live version. An item recording a tool call takes the tool-call evaluator and no other, and every other item takes any evaluator except that one
+    Evaluator scores to record, keyed by evaluator ID. Each evaluator ID must be linked to the task. Put the score in `value`, a bool for binary or a number within the scale for rating, with optional `reasoning` and `version_number`. Omit `version_number` to record against the evaluator's live version. An item recording a tool call takes only tool-call evaluators, and every other item takes any evaluator that is not a tool-call evaluator
     """
 
     if IS_PYDANTIC_V2:

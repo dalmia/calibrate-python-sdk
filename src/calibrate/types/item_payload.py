@@ -73,17 +73,17 @@ class ItemPayload(UniversalBaseModel):
 
     tool_calls: typing.Optional[typing.List[ToolCall]] = pydantic.Field(default=None)
     """
-    Tool calls the agent made in place of a text reply. With no text reply, sending this marks the item as a tool call for a person to judge. For `llm` and `llm-general` tasks
+    Tool calls the agent made. With no text reply, sending at least one marks the item as a tool call, which only a tool-call evaluator scores. Omit when the agent made no tool calls. For `llm` and `llm-general` tasks
     """
 
     expected_tool_calls: typing.Optional[typing.List[ToolCall]] = pydantic.Field(default=None)
     """
-    Tool calls the agent should have made. Sending this marks the item as a tool call for a person to judge. For `llm` and `llm-general` tasks
+    Tool calls the agent should have made, shown to the judge beside the calls the agent made. Omit to judge without expected calls. Sending this marks the item as a tool call, which only a tool-call evaluator scores. For `llm` and `llm-general` tasks
     """
 
     actual_tool_calls: typing.Optional[typing.List[ToolCall]] = pydantic.Field(default=None)
     """
-    Tool calls the agent made. Sending this marks the item as a tool call for a person to judge. For `llm` and `llm-general` tasks
+    Tool calls the agent made. Sending this marks the item as a tool call, which only a tool-call evaluator scores. Omit for an item judged on its text reply. For `llm` and `llm-general` tasks
     """
 
     evaluator_variables: typing.Optional[typing.Dict[str, typing.Optional[typing.Dict[str, typing.Any]]]] = (

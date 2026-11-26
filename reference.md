@@ -2581,7 +2581,7 @@ What the evaluator judges:
 - `llm`: a reply with its conversation history
 - `llm-general`: a standalone input and output pair
 - `conversation`: a full conversation
-- `tool-call`: whether the agent called the right tool, labelled by a person
+- `tool-call`: the tool calls an agent made
     
 </dd>
 </dl>
@@ -3399,7 +3399,7 @@ client.annotation_tasks.set_evaluators(
 <dl>
 <dd>
 
-**evaluator_ids:** `typing.List[str]` — The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+**evaluator_ids:** `typing.List[str]` — The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. A task holding tool-call items always keeps one tool-call evaluator, so Tool call correctness is linked back if none is left. Each must be one you created or a built-in default
     
 </dd>
 </dl>
@@ -3818,7 +3818,7 @@ client.annotation_tasks.create_evaluator_run(
 <dl>
 <dd>
 
-**evaluators:** `typing.List[EvaluatorRunRequestEntry]` — The evaluators to run. Each must be linked to the task
+**evaluators:** `typing.List[EvaluatorRunRequestEntry]` — The evaluators to run. Each must be linked to the task. Items that none of the chosen evaluators can judge are left out, and so are evaluators that can judge none of the chosen items, so `item_count` and `evaluator_count` can be lower than what you sent
     
 </dd>
 </dl>

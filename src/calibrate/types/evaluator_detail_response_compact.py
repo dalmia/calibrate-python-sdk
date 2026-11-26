@@ -35,7 +35,7 @@ class EvaluatorDetailResponseCompact(UniversalBaseModel):
     - `llm`: a reply with its conversation history
     - `llm-general`: a standalone input and output pair
     - `conversation`: a full conversation
-    - `tool-call`: whether the agent called the right tool, labelled by a person
+    - `tool-call`: the tool calls an agent made
     """
 
     data_type: EvaluatorDetailResponseCompactDataType = pydantic.Field()

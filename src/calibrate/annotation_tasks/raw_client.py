@@ -269,7 +269,7 @@ class RawAnnotationTasksClient:
             Annotation task to act on
 
         evaluator_ids : typing.Sequence[str]
-            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. A task holding tool-call items always keeps one tool-call evaluator, so Tool call correctness is linked back if none is left. Each must be one you created or a built-in default
 
         optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
             Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
@@ -594,7 +594,7 @@ class RawAnnotationTasksClient:
             Annotation task to act on
 
         evaluators : typing.Sequence[EvaluatorRunRequestEntry]
-            The evaluators to run. Each must be linked to the task
+            The evaluators to run. Each must be linked to the task. Items that none of the chosen evaluators can judge are left out, and so are evaluators that can judge none of the chosen items, so `item_count` and `evaluator_count` can be lower than what you sent
 
         item_ids : typing.Optional[typing.Sequence[str]]
             Item IDs to run on. **Required when `select_all=false`**. Ignored when `select_all=true`
@@ -1149,7 +1149,7 @@ class AsyncRawAnnotationTasksClient:
             Annotation task to act on
 
         evaluator_ids : typing.Sequence[str]
-            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. Each must be one you created or a built-in default
+            The full ordered set of evaluators the task should end up linked to, in display order. Missing ones are unlinked, new ones are linked, and the order sets their position. Send an empty list to unlink all. A task holding tool-call items always keeps one tool-call evaluator, so Tool call correctness is linked back if none is left. Each must be one you created or a built-in default
 
         optional_evaluator_ids : typing.Optional[typing.Sequence[str]]
             Which of `evaluator_ids` annotators may leave blank. Applied as a whole set, so an ID left out becomes required again. Optional evaluators do not hold a labelling job back from completing. Omit to leave every evaluator as it is
@@ -1474,7 +1474,7 @@ class AsyncRawAnnotationTasksClient:
             Annotation task to act on
 
         evaluators : typing.Sequence[EvaluatorRunRequestEntry]
-            The evaluators to run. Each must be linked to the task
+            The evaluators to run. Each must be linked to the task. Items that none of the chosen evaluators can judge are left out, and so are evaluators that can judge none of the chosen items, so `item_count` and `evaluator_count` can be lower than what you sent
 
         item_ids : typing.Optional[typing.Sequence[str]]
             Item IDs to run on. **Required when `select_all=false`**. Ignored when `select_all=true`
