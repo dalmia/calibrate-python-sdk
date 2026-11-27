@@ -15,9 +15,10 @@ from ..types.agent_create_response import AgentCreateResponse
 from ..types.agent_response import AgentResponse
 from ..types.evaluator_link_response import EvaluatorLinkResponse
 from ..types.http_validation_error import HttpValidationError
+from ..types.paginated_response_agent_evaluator_response import PaginatedResponseAgentEvaluatorResponse
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
-from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
+from ..types.trace_variables_response import TraceVariablesResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .types.agent_create_interaction_type import AgentCreateInteractionType
 from .types.agent_create_type import AgentCreateType
@@ -557,7 +558,7 @@ class RawAgentsClient:
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[PaginatedResponseEvaluatorResponse]:
+    ) -> HttpResponse[PaginatedResponseAgentEvaluatorResponse]:
         """
         List evaluators linked to an agent
 
@@ -580,7 +581,7 @@ class RawAgentsClient:
 
         Returns
         -------
-        HttpResponse[PaginatedResponseEvaluatorResponse]
+        HttpResponse[PaginatedResponseAgentEvaluatorResponse]
             Successful Response
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -596,9 +597,9 @@ class RawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    PaginatedResponseEvaluatorResponse,
+                    PaginatedResponseAgentEvaluatorResponse,
                     parse_obj_as(
-                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
+                        type_=PaginatedResponseAgentEvaluatorResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -667,6 +668,88 @@ class RawAgentsClient:
                     EvaluatorLinkResponse,
                     parse_obj_as(
                         type_=EvaluatorLinkResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def update_evaluator_trace_variables(
+        self,
+        agent_uuid: str,
+        evaluator_uuid: str,
+        *,
+        trace_variables: typing.Dict[str, str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[TraceVariablesResponse]:
+        """
+        Choose which part of a trace fills each variable of an evaluator
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent the evaluator is linked to
+
+        evaluator_uuid : str
+            The evaluator whose variables to fill
+
+        trace_variables : typing.Dict[str, str]
+            Which part of a trace fills each variable, keyed by variable name. Each value is one of:
+
+            - `input`: the trace's input
+            - `output.response`: the agent's reply
+            - `output.tool_calls`: the tool calls the agent issued
+            - `labels`: the trace's labels
+            - `conversation_id`: the conversation ID sent with the trace
+            - `message_id`: the message ID sent with the trace
+            - `metadata.<key>`: the metadata entry with that key
+
+            Every variable needs a value. Replaces the stored choices, and an empty object clears them
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[TraceVariablesResponse]
+            Successful Response
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators/{encode_path_param(evaluator_uuid)}/trace-variables",
+            method="PUT",
+            json={
+                "trace_variables": trace_variables,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TraceVariablesResponse,
+                    parse_obj_as(
+                        type_=TraceVariablesResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1222,7 +1305,7 @@ class AsyncRawAgentsClient:
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[PaginatedResponseEvaluatorResponse]:
+    ) -> AsyncHttpResponse[PaginatedResponseAgentEvaluatorResponse]:
         """
         List evaluators linked to an agent
 
@@ -1245,7 +1328,7 @@ class AsyncRawAgentsClient:
 
         Returns
         -------
-        AsyncHttpResponse[PaginatedResponseEvaluatorResponse]
+        AsyncHttpResponse[PaginatedResponseAgentEvaluatorResponse]
             Successful Response
         """
         _response = await self._client_wrapper.httpx_client.request(
@@ -1261,9 +1344,9 @@ class AsyncRawAgentsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    PaginatedResponseEvaluatorResponse,
+                    PaginatedResponseAgentEvaluatorResponse,
                     parse_obj_as(
-                        type_=PaginatedResponseEvaluatorResponse,  # type: ignore
+                        type_=PaginatedResponseAgentEvaluatorResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1332,6 +1415,88 @@ class AsyncRawAgentsClient:
                     EvaluatorLinkResponse,
                     parse_obj_as(
                         type_=EvaluatorLinkResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 422:
+                raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        HttpValidationError,
+                        parse_obj_as(
+                            type_=HttpValidationError,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def update_evaluator_trace_variables(
+        self,
+        agent_uuid: str,
+        evaluator_uuid: str,
+        *,
+        trace_variables: typing.Dict[str, str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[TraceVariablesResponse]:
+        """
+        Choose which part of a trace fills each variable of an evaluator
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent the evaluator is linked to
+
+        evaluator_uuid : str
+            The evaluator whose variables to fill
+
+        trace_variables : typing.Dict[str, str]
+            Which part of a trace fills each variable, keyed by variable name. Each value is one of:
+
+            - `input`: the trace's input
+            - `output.response`: the agent's reply
+            - `output.tool_calls`: the tool calls the agent issued
+            - `labels`: the trace's labels
+            - `conversation_id`: the conversation ID sent with the trace
+            - `message_id`: the message ID sent with the trace
+            - `metadata.<key>`: the metadata entry with that key
+
+            Every variable needs a value. Replaces the stored choices, and an empty object clears them
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[TraceVariablesResponse]
+            Successful Response
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"agents/{encode_path_param(agent_uuid)}/evaluators/{encode_path_param(evaluator_uuid)}/trace-variables",
+            method="PUT",
+            json={
+                "trace_variables": trace_variables,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    TraceVariablesResponse,
+                    parse_obj_as(
+                        type_=TraceVariablesResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

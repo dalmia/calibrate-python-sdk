@@ -7,6 +7,10 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .agent_create_response import AgentCreateResponse
+    from .agent_evaluator_response import AgentEvaluatorResponse
+    from .agent_evaluator_response_data_type import AgentEvaluatorResponseDataType
+    from .agent_evaluator_response_evaluator_type import AgentEvaluatorResponseEvaluatorType
+    from .agent_evaluator_response_output_type import AgentEvaluatorResponseOutputType
     from .agent_response import AgentResponse
     from .agent_response_interaction_type import AgentResponseInteractionType
     from .agent_response_type import AgentResponseType
@@ -87,6 +91,7 @@ if typing.TYPE_CHECKING:
     from .model_run_summary import ModelRunSummary
     from .output_config import OutputConfig
     from .output_scale_entry import OutputScaleEntry
+    from .paginated_response_agent_evaluator_response import PaginatedResponseAgentEvaluatorResponse
     from .paginated_response_agent_summary import PaginatedResponseAgentSummary
     from .paginated_response_agent_test_run_list_item import PaginatedResponseAgentTestRunListItem
     from .paginated_response_annotation_task_response import PaginatedResponseAnnotationTaskResponse
@@ -137,6 +142,7 @@ if typing.TYPE_CHECKING:
     from .trace_summary_source import TraceSummarySource
     from .trace_tool_call import TraceToolCall
     from .trace_turn import TraceTurn
+    from .trace_variables_response import TraceVariablesResponse
     from .turn_text import TurnText
     from .validation_error import ValidationError
     from .validation_error_loc_item import ValidationErrorLocItem
@@ -145,6 +151,10 @@ if typing.TYPE_CHECKING:
     from .version_create_response import VersionCreateResponse
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateResponse": ".agent_create_response",
+    "AgentEvaluatorResponse": ".agent_evaluator_response",
+    "AgentEvaluatorResponseDataType": ".agent_evaluator_response_data_type",
+    "AgentEvaluatorResponseEvaluatorType": ".agent_evaluator_response_evaluator_type",
+    "AgentEvaluatorResponseOutputType": ".agent_evaluator_response_output_type",
     "AgentResponse": ".agent_response",
     "AgentResponseInteractionType": ".agent_response_interaction_type",
     "AgentResponseType": ".agent_response_type",
@@ -225,6 +235,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ModelRunSummary": ".model_run_summary",
     "OutputConfig": ".output_config",
     "OutputScaleEntry": ".output_scale_entry",
+    "PaginatedResponseAgentEvaluatorResponse": ".paginated_response_agent_evaluator_response",
     "PaginatedResponseAgentSummary": ".paginated_response_agent_summary",
     "PaginatedResponseAgentTestRunListItem": ".paginated_response_agent_test_run_list_item",
     "PaginatedResponseAnnotationTaskResponse": ".paginated_response_annotation_task_response",
@@ -275,6 +286,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TraceSummarySource": ".trace_summary_source",
     "TraceToolCall": ".trace_tool_call",
     "TraceTurn": ".trace_turn",
+    "TraceVariablesResponse": ".trace_variables_response",
     "TurnText": ".turn_text",
     "ValidationError": ".validation_error",
     "ValidationErrorLocItem": ".validation_error_loc_item",
@@ -307,6 +319,10 @@ def __dir__():
 
 __all__ = [
     "AgentCreateResponse",
+    "AgentEvaluatorResponse",
+    "AgentEvaluatorResponseDataType",
+    "AgentEvaluatorResponseEvaluatorType",
+    "AgentEvaluatorResponseOutputType",
     "AgentResponse",
     "AgentResponseInteractionType",
     "AgentResponseType",
@@ -387,6 +403,7 @@ __all__ = [
     "ModelRunSummary",
     "OutputConfig",
     "OutputScaleEntry",
+    "PaginatedResponseAgentEvaluatorResponse",
     "PaginatedResponseAgentSummary",
     "PaginatedResponseAgentTestRunListItem",
     "PaginatedResponseAnnotationTaskResponse",
@@ -437,6 +454,7 @@ __all__ = [
     "TraceSummarySource",
     "TraceToolCall",
     "TraceTurn",
+    "TraceVariablesResponse",
     "TurnText",
     "ValidationError",
     "ValidationErrorLocItem",

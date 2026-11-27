@@ -635,7 +635,7 @@ For `type=connection`, changing `agent_url` or `agent_headers` resets the connec
 </dl>
 </details>
 
-<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list_evaluators</a>(...) -> PaginatedResponseEvaluatorResponse</code></summary>
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">list_evaluators</a>(...) -> PaginatedResponseAgentEvaluatorResponse</code></summary>
 <dl>
 <dd>
 
@@ -797,6 +797,111 @@ client.agents.link_evaluators(
 <dd>
 
 **evaluator_ids:** `typing.List[str]` — The evaluators to link to the agent. Ones that are already linked are skipped. Each must be one you created or a built-in default
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/calibrate/agents/client.py">update_evaluator_trace_variables</a>(...) -> TraceVariablesResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Choose which part of a trace fills each variable of an evaluator
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from calibrate import Calibrate
+from calibrate.environment import CalibrateEnvironment
+
+client = Calibrate(
+    api_key="<value>",
+    environment=CalibrateEnvironment.DEFAULT,
+)
+
+client.agents.update_evaluator_trace_variables(
+    agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    evaluator_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    trace_variables={
+        "key": "value"
+    },
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_uuid:** `str` — The agent the evaluator is linked to
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluator_uuid:** `str` — The evaluator whose variables to fill
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**trace_variables:** `typing.Dict[str, str]` 
+
+Which part of a trace fills each variable, keyed by variable name. Each value is one of:
+
+- `input`: the trace's input
+- `output.response`: the agent's reply
+- `output.tool_calls`: the tool calls the agent issued
+- `labels`: the trace's labels
+- `conversation_id`: the conversation ID sent with the trace
+- `message_id`: the message ID sent with the trace
+- `metadata.<key>`: the metadata entry with that key
+
+Every variable needs a value. Replaces the stored choices, and an empty object clears them
     
 </dd>
 </dl>

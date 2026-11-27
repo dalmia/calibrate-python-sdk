@@ -7,9 +7,10 @@ from ..core.request_options import RequestOptions
 from ..types.agent_create_response import AgentCreateResponse
 from ..types.agent_response import AgentResponse
 from ..types.evaluator_link_response import EvaluatorLinkResponse
+from ..types.paginated_response_agent_evaluator_response import PaginatedResponseAgentEvaluatorResponse
 from ..types.paginated_response_agent_summary import PaginatedResponseAgentSummary
-from ..types.paginated_response_evaluator_response import PaginatedResponseEvaluatorResponse
 from ..types.resolve_agent_names_response import ResolveAgentNamesResponse
+from ..types.trace_variables_response import TraceVariablesResponse
 from ..types.verify_connection_response import VerifyConnectionResponse
 from .raw_client import AsyncRawAgentsClient, RawAgentsClient
 from .types.agent_create_interaction_type import AgentCreateInteractionType
@@ -404,7 +405,7 @@ class AgentsClient:
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> PaginatedResponseEvaluatorResponse:
+    ) -> PaginatedResponseAgentEvaluatorResponse:
         """
         List evaluators linked to an agent
 
@@ -427,7 +428,7 @@ class AgentsClient:
 
         Returns
         -------
-        PaginatedResponseEvaluatorResponse
+        PaginatedResponseAgentEvaluatorResponse
             Successful Response
 
         Examples
@@ -486,6 +487,64 @@ class AgentsClient:
         """
         _response = self._raw_client.link_evaluators(
             agent_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+        )
+        return _response.data
+
+    def update_evaluator_trace_variables(
+        self,
+        agent_uuid: str,
+        evaluator_uuid: str,
+        *,
+        trace_variables: typing.Dict[str, str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> TraceVariablesResponse:
+        """
+        Choose which part of a trace fills each variable of an evaluator
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent the evaluator is linked to
+
+        evaluator_uuid : str
+            The evaluator whose variables to fill
+
+        trace_variables : typing.Dict[str, str]
+            Which part of a trace fills each variable, keyed by variable name. Each value is one of:
+
+            - `input`: the trace's input
+            - `output.response`: the agent's reply
+            - `output.tool_calls`: the tool calls the agent issued
+            - `labels`: the trace's labels
+            - `conversation_id`: the conversation ID sent with the trace
+            - `message_id`: the message ID sent with the trace
+            - `metadata.<key>`: the metadata entry with that key
+
+            Every variable needs a value. Replaces the stored choices, and an empty object clears them
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        TraceVariablesResponse
+            Successful Response
+
+        Examples
+        --------
+        from calibrate import Calibrate
+
+        client = Calibrate(
+            api_key="YOUR_API_KEY",
+        )
+        client.agents.update_evaluator_trace_variables(
+            agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            evaluator_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            trace_variables={"key": "value"},
+        )
+        """
+        _response = self._raw_client.update_evaluator_trace_variables(
+            agent_uuid, evaluator_uuid, trace_variables=trace_variables, request_options=request_options
         )
         return _response.data
 
@@ -923,7 +982,7 @@ class AsyncAgentsClient:
         limit: typing.Optional[int] = None,
         offset: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> PaginatedResponseEvaluatorResponse:
+    ) -> PaginatedResponseAgentEvaluatorResponse:
         """
         List evaluators linked to an agent
 
@@ -946,7 +1005,7 @@ class AsyncAgentsClient:
 
         Returns
         -------
-        PaginatedResponseEvaluatorResponse
+        PaginatedResponseAgentEvaluatorResponse
             Successful Response
 
         Examples
@@ -1021,5 +1080,71 @@ class AsyncAgentsClient:
         """
         _response = await self._raw_client.link_evaluators(
             agent_uuid, evaluator_ids=evaluator_ids, request_options=request_options
+        )
+        return _response.data
+
+    async def update_evaluator_trace_variables(
+        self,
+        agent_uuid: str,
+        evaluator_uuid: str,
+        *,
+        trace_variables: typing.Dict[str, str],
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> TraceVariablesResponse:
+        """
+        Choose which part of a trace fills each variable of an evaluator
+
+        Parameters
+        ----------
+        agent_uuid : str
+            The agent the evaluator is linked to
+
+        evaluator_uuid : str
+            The evaluator whose variables to fill
+
+        trace_variables : typing.Dict[str, str]
+            Which part of a trace fills each variable, keyed by variable name. Each value is one of:
+
+            - `input`: the trace's input
+            - `output.response`: the agent's reply
+            - `output.tool_calls`: the tool calls the agent issued
+            - `labels`: the trace's labels
+            - `conversation_id`: the conversation ID sent with the trace
+            - `message_id`: the message ID sent with the trace
+            - `metadata.<key>`: the metadata entry with that key
+
+            Every variable needs a value. Replaces the stored choices, and an empty object clears them
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        TraceVariablesResponse
+            Successful Response
+
+        Examples
+        --------
+        import asyncio
+
+        from calibrate import AsyncCalibrate
+
+        client = AsyncCalibrate(
+            api_key="YOUR_API_KEY",
+        )
+
+
+        async def main() -> None:
+            await client.agents.update_evaluator_trace_variables(
+                agent_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                evaluator_uuid="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                trace_variables={"key": "value"},
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.update_evaluator_trace_variables(
+            agent_uuid, evaluator_uuid, trace_variables=trace_variables, request_options=request_options
         )
         return _response.data
