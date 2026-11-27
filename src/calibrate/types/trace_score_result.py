@@ -64,6 +64,11 @@ class TraceScoreResult(UniversalBaseModel):
     ID of the evaluator version that produced this result
     """
 
+    variable_values: typing.Optional[typing.Dict[str, typing.Optional[str]]] = pydantic.Field(default=None)
+    """
+    The value each variable of the evaluator was given for this trace, by variable name. Kept as it was when the trace was scored, even if the agent later fills the variable from another part of the trace
+    """
+
     passed: bool = pydantic.Field()
     """
     Whether this evaluator passed. A binary result passes on 1. A rating passes at the top of its scale
